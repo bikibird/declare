@@ -1,4 +1,4 @@
-# declare
+# Declare
 Speech Synthesizer for PICO-8.
 
 ## Notes
