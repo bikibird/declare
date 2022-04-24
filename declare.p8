@@ -17,19 +17,20 @@ do
 	local play=false
 	buffer=0x8000
 	words=split("odd,at,hut,ought,cow,hide,ed,hurt,ate,it,eat,oat,toy,hood,two")
+--phoneme, duration, aspiration onset ms, voice onset ms, attack ms, f1a, f1b, f2a, f2a,f3a,f3b
+	data=split("aa,267,700,700,1220,1220,2600,2600,ae,278,620,650,1660,1490,2430,2470,ah,188,620,620,1220,1220,2550,2550,ao,283,600,630,990,1040,2570,2600,aw,167,640,420,1230,940,2550,2350,ay,189,660,400,1200,1880,2550,2500,eh,263,530,620,1680,1530,2500,2530,er,267,450,474,1379,1379,0,0,ey,192,480,330,1720,2020,2520,2600,ih,243,400,470,1800,1600,2570,2600,iy,265,310,290,2020,2070,2960,2960,ow,282,540,450,1100,900,2300,2300,oy,192,550,360,960,1820,2400,2450,uh,192,450,500,1100,1180,2350,2390,uw,237,350,320,1250,900,2200,2200")
 
-	data=split("aa,267,768,768,1333,1333,ae,278,620,650,1660,1490,ah,188,620,620,1220,1220,ao,283,600,630,990,1040,aw,167,750,500,1000,900,ay,189,580,500,1150,2000,eh,263,530,620,1680,1530,er,267,450,474,1379,1379,ey,192,427,400,700,1900,ih,243,400,470,1800,1600,iy,265,310,290,2020,2070,ow,282,450,469,1050,1122,oy,192,469,400,700,1900,uh,237,378,378,997,997")
-
-	phone_reference=split("aa,ae,ah,ao,aw,ay,eh,er,ey,ih,iy,ow,oy,uh")
+	phone_reference={}
 	phone=1
 	phoneme={}
-	local phoneme_count=#data\6-1
+	local phoneme_count=#data\8-1
 	for i=0,phoneme_count do
-		local name=data[i*6+1]
+		local name=data[i*8+1]
+		add(phone_reference,name)
 		phoneme[name]={}
-		phoneme[name][1]=data[i*6+2]*5.5125  --duration
+		phoneme[name][1]=data[i*8+2]*5.5125  --duration
 		for j=3,6 do
-			phoneme[name][j-1]=5512.5/data[i*6+j]
+			phoneme[name][j-1]=5512.5/data[i*8+j]
 		end
 	end
 
@@ -60,24 +61,10 @@ do
 	noise=function(t,duration,intensity)
 		return rnd(intensity*2)-1
 	end
-	--[[formant=function(t,duration,w_from,w_to)
-		return cos(t/(w_from+(w_from-w_to)*t/duration))
-	end]]
 	formant=function(t,duration,w_from,w_to)
 		return cos(t/w_from)
 	end
-	--[[function declare_phone(phone,s)
-		formant0=declare_voice
-		volume1=v1 -- relative volume of formants v1 +v2 = 1
-		volume2=v2
 
-		sustain=s -- maximum volume.  Ranges between zero and 127.
-		length=duration[phone+1]*5.512-- how many samples to play
-		n0,n1,n2=0,0,0
-		l0,l1,l2=0,0,0
-		t=0
-		play=true
-	end]]
 
 	voicing={} 
 	frication={} 
@@ -91,6 +78,7 @@ do
 				{glottis,f0,creak,hiss}, --formant 0 , creak, hiss
 				{formant,phone[2],phone[3]},
 				{formant,phone[4],phone[5]},
+				{formant,phone[6],phone[7]},
 			}
 		)
 	end
@@ -127,13 +115,13 @@ end
 
 function _update()
 	if (btnp(right)) then
-		phone=(phone+1)%#phoneme
+		phone=(phone+1)%#phone_reference
 		synth(phoneme[phone_reference[phone+1]],formant0,.2,.1)
 
 	end
 	if btnp(left) then
-		phone=(phone-1)%#phoneme
-		if (phone<0)  phone=0
+		phone-=1
+		if (phone<0)  phone=#phone_reference-1
 		synth(phoneme[phone_reference[phone+1]],formant0,.2,.1)
 	end
 	--if (btnp(fire2)) declare_phone(phone,64)
