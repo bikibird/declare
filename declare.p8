@@ -7,68 +7,44 @@ __lua__
 left,right,up,down,fire1,fire2=0,1,2,3,4,5
 black,dark_blue,dark_purple,dark_green,brown,dark_gray,light_gray,white,red,orange,yellow,green,blue,indigo,pink,peach=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 do
-	index=0
 	t=0
-	declare_volume=64
-	formant0=35	--5512.5/pitch
-	local n0, n1,n2=0
-	local formant1,formant2,volume1,volume2,voice,delay,attack,sustain=0,0,0,0,0,0,0
-	voice =40
-	local play=false
+	formant0=39	--5512.5/pitch
 	buffer=0x8000
 	words=split("odd,at,hut,ought,cow,hide,ed,hurt,ate,it,eat,oat,toy,hood,two")
---phoneme, duration, aspiration onset ms, voice onset ms, attack ms, f1a, f1b, f2a, f2a,f3a,f3b
-	data=split("aa,267,700,700,1220,1220,2600,2600,ae,278,620,650,1660,1490,2430,2470,ah,188,620,620,1220,1220,2550,2550,ao,283,600,630,990,1040,2570,2600,aw,167,640,420,1230,940,2550,2350,ay,189,660,400,1200,1880,2550,2500,eh,263,530,620,1680,1530,2500,2530,er,267,450,474,1379,1379,0,0,ey,192,480,330,1720,2020,2520,2600,ih,243,400,470,1800,1600,2570,2600,iy,265,310,290,2020,2070,2960,2960,ow,282,540,450,1100,900,2300,2300,oy,192,550,360,960,1820,2400,2450,uh,192,450,500,1100,1180,2350,2390,uw,237,350,320,1250,900,2200,2200")
 
+--data=split("aa,267,715,1100,715,1100,ae,278,660,1730,660,1730,ah,188,630,1200,630,1200,ao,283,570,840,570,840,aw,283,700,1520,440,1025,ay,250,750,1150,270,1900,eh,263,530,1850,530,1850,er,267,450,1380,450,1380,ey,192,480,700,400,1900,ih,243,400,2000,400,2000,iy,265,265,2290,265,2290,ow,282,540,1100,450,1100,oy,192,550,960,360,1820,uh,192,450,1100,500,1180,uw,237,350,1250,320,900")
+--"ate hide toy"
+data=split("ey,250,480,700,-.0001,.0002,ay,265,710,1100,-.0006,.0002,oy,192,550,960,-.0001,.0002")
 	phone_reference={}
-	phone=1
+
 	phoneme={}
-	local phoneme_count=#data\8-1
+	local phoneme_count=#data\6-1
 	for i=0,phoneme_count do
-		local name=data[i*8+1]
+		local name=data[i*6+1]
 		add(phone_reference,name)
 		phoneme[name]={}
-		phoneme[name][1]=data[i*8+2]*5.5125  --duration
-		for j=3,6 do
-			phoneme[name][j-1]=5512.5/data[i*8+j]
-		end
+		phoneme[name][1]=data[i*6+2]*5.5125  --duration
+		phoneme[name][2]=5512.5/data[i*6+3]  --f1 wavelength
+		phoneme[name][3]=5512.5/data[i*6+4] --f2 wavelength
+		phoneme[name][4]=data[i*6+5] --f1 step
+		phoneme[name][5]=data[i*6+6] --f2 step
 	end
-
-
---[[	square=function (t, wavelength, width) --square
-		return t>width and 1 or -1
-	end,
-
-	saw=function(t,wavelength)
-		return t%wavelength/wavelength*2-1 
-
-	end,
-
-	triangle=function(t,wavelength)
-
-		return abs(t%wavelength-wavelength/2)/wavelength*2 -.5
-	end,
-	mountain=function(t,w1)
-		local sample = abs(t%w1-w1/2)/w1*2 -.5
-		return (sample <0 and 0 or sample)*2-.5
-	end,]]
 	glottis=function(t,duration,f0,creak,hiss) -- w2 width of triangle
-		--print(f0,80,0,8)
-		--if (f0==0) return rnd(hiss)-hiss/2
-		local n0,w2=t%f0,f0*(1-creak)
-		return n0 < w2 and (w2-abs(n0*2-w2))/w2*2  or rnd(hiss)-hiss/2
+		if (f0==0) return rnd(hiss)-hiss/2
+		local n0,w=t%f0,f0*(1-creak)
+		return n0 < w and (w-abs(n0*2-w))/w*2  or rnd(hiss)-hiss/2
 	end
 	noise=function(t,duration,intensity)
 		return rnd(intensity*2)-1
 	end
-	formant=function(t,duration,w_from,w_to)
-		return cos(t/w_from)
+	formant=function(t,duration,w1,delta)
+		--if (t<duration/2) return cos(t/w1)
+		return cos(t/(w1-delta*t))
+		--if (t>2*duration/3) return cos(t/w2)
+		--return cos(t/(w1+(w2-w1)*(t/duration)))
 	end
-
-
 	voicing={} 
 	frication={} 
-
 	function synth(phone,f0,creak,hiss)
 		add
 		(
@@ -76,28 +52,24 @@ do
 			{	
 				phone[1], --duration
 				{glottis,f0,creak,hiss}, --formant 0 , creak, hiss
-				{formant,phone[2],phone[3]},
-				{formant,phone[4],phone[5]},
-				{formant,phone[6],phone[7]},
+				{formant,phone[2],phone[4]}, --f1
+				{formant,phone[3],phone[5]}, --f2
 			}
 		)
 	end
-
+	frequency=300
 	function declare()
 		if #voicing >0 then
 			local length=voicing[1][1]
-			print(t,80,0,8)
-			--local n0,w2=t%f0,f0*(1-.2)
 			while stat(108)<1536 do
 				for i=0,511 do
-					sample=1
+				sample=1
 					for j=2,4 do
 						sample*=voicing[1][j][1](t,length,unpack(voicing[1][j],2))
 					end
-		
+					
 					sample=sample*64+128
 					poke(buffer+i,sample)
-				--	n0 +=1
 					t += 1
 					if  t>length then
 						serial(0x808,buffer,i+1)
@@ -105,15 +77,37 @@ do
 						t=0
 						return
 					end
+				--	sample=cos(t/(5512.5/frequency))*50+128
+				--	poke(buffer+i,sample)
+				--	t+=1
 				end
 				serial(0x808,buffer,512)	
 			end
-			
 		end
 	end
 end
-
+function keypress(key)
+	if(key==13)input_waiting=true
+	input_buffer..=key
+end
+function input()
+	input_buffer=""
+	input_waiting=false
+end
+function _init()
+	poke(0x5F2D, 1)  --enable keyboard
+	phone=1
+	input()
+end
 function _update()
+	while stat(30) do
+		keypress(stat(31))
+	end
+	if input_waiting then
+		synth(input_buffer,formant0,.2,.1)
+		input()
+	end
+	if (btnp(up)) frequency+=100
 	if (btnp(right)) then
 		phone=(phone+1)%#phone_reference
 		synth(phoneme[phone_reference[phone+1]],formant0,.2,.1)
@@ -124,13 +118,14 @@ function _update()
 		if (phone<0)  phone=#phone_reference-1
 		synth(phoneme[phone_reference[phone+1]],formant0,.2,.1)
 	end
-	--if (btnp(fire2)) declare_phone(phone,64)
+	if (btnp(fire2)) synth(phoneme[phone_reference[phone+1]],formant0,.2,.1)
 	declare()
 end
 function _draw()
 	cls()
 	print(phone_reference[phone+1],0,0)
 	print(words[phone+1],0,10)
+	--print(frequency,1,1)
 	for i=0,256 do
 	 y1=y2
 	 y2=128-peek(buffer+i)/2
@@ -139,5 +134,5 @@ function _draw()
 	 line(0,64,127,64,2)
 	 
 	end
-
+	print(">"..input_buffer,120,0)
    end
