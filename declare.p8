@@ -7,8 +7,12 @@ buffer=0x8000
 -- see https://www.fon.hum.uva.nl/david/ma_ssp/doc/Klatt-1980-JAS000971.pdf for background
 
 impulse=1000 --for glottal click train
-w0=5512.5\175 --voice fundemental wavelength
+
 --for vocal fold filter
+voicing_f0=1
+voicing_formants=1.175
+voicing_breathiness=0
+w0=5512.5\(140*voicing_f0)--140--140--175 --voice fundemental wavelength
 rgp={y0=0,y1=0,y2=0}	--{y0=0,y1=128\w0,y2=256\w0} 
 rgz={y0=0,y1=0,y2=0}
 rgs={y0=0,y1=0,y2=0}
@@ -16,54 +20,51 @@ uglotx=0
 volume=1
 aspiration=1
 duration,av,ah,af,av_step,ah_step,_af_step=0,0,0,0,0,0,0
-
+names=split"aa,ae,ah,ao,aw,ay,eh,er,ey,ih,iy,ow,oy,uh,uw"
 sounds={}
 
 --cascade formants
 vowel_formants=
 {
-	--f_start,step, bw_start,step
-	aa={{1300,240},{830,220}},
-	ae={{2060,200},{670,50}},
-	ay={{1450,330,2040,300},{870,310,590,140}},
---[[	ah={{},{}},
-	ao={{},{}},
-	aw={{},{}},
-	ay={{},{}},
-	eh={{},{}},
-	er={{},{}},
-	ey={{},{}},
-	ih={{},{}},
-	iy={{},{}},
-	ow={{},{}},
-	oy={{},{}},
-	uh={{},{}},
-	uw={{},{}},
-]]	
+
+
+	--f_start, bw_start, f_end, bw_end
+
+
+	aa={{1220,70,1220,70},{700,130,700,130}},
+	ae={{1660,150,1660,150},{620,70,620,70}},
+	ah={{1220,50,1220,50},{620,80,620,80}},
+	ao={{990,100,1040,100},{600,630,90,90}},
+	aw={{1100,70,900,70},{540,80,450,80}},
+	ay={{1200,70,1880,100},{660,100,400,70}},
+	eh={{1720,100,1220,100},{480,70,330,50}},
+	er={{2310,80,2040,3000},{1410,30,1440,40},{540,130,520,130}},
+	ey={{1680,90,1530,90},{530,60,620,60}},
+	ih={{1800,100,1600,100},{400,50,470,50}},
+	iy={{2020,100,2070,100},{310,70,290,50}},
+	ow={{1100,70,900,70},{540,80,450,80}},
+	oy={{960,50,1820,50},{550,60,360,80}},
+	uh={{1100,100,1180,100},{450,80,500,80}},
+	uw={{2200,140,2200,140},{1250,110,900,110},{350,70,320,70}}
 }
 offglide=
 {
 	--f_step, bw_step
-	aa={{0,0},{0.0}},
-	ae={{-0.2176870748,0.09070294785},{0.126984127,0.08163265306}},
-	ay={{0.7644962747,-0.03887269193},{-0.3628117914,-0.2202785876}},
-
-
---[[	
-	ah={{},{}},
-	ao={{},{}},
-	aw={{},{}},
-	ay={{},{}},
-	eh={{},{}},
-	er={{},{}},
-	ey={{},{}},
-	ih={{},{}},
-	iy={{},{}},
-	ow={{},{}},
-	oy={{},{}},
-	uh={{},{}},
-	uw={{},{}},
-]]	
+	aa={{0,0},{0,0}},
+	ae={{0,0},{0,0}},
+	ah={{0,0},{0,0}},
+	ao={{0.06478781989,0},{0.03887269193,0}},
+	aw={{-0.2591512796,0},{-0.1166180758,0}},
+	ay={{0.8811143505,-0.33689666340},{.03887269193,-0.03887269193}},
+	eh={{-0.38872691930,0.1943634597},{0,0.02591512796}},
+	er={{-0.2881152461,0.03201280512,-0.02134187008},{0.2347605709,0.01067093504,0}},
+	ey={{0.1943634597,-0.1166180758},{0,0}},
+	ih={{-0.2591512796,0.09070294785},{0,0}},
+	iy={{0.06478781989,0},{-0.02591512796,-0.01943634597}},
+	ow={{-0.2591512796,-0.1166180758},{0,0}},
+	oy={{1.114350502,-0.2461937156},{-0.02591512796,0}},
+	uh={{0.1036605118,0.06478781989},{0,0}},
+	uw={{0,-0.4535147392,-0.03887269193},{0,0,0}}
 }
 phonemes={}
 for p,f in pairs(vowel_formants) do
@@ -73,10 +74,11 @@ for p,f in pairs(vowel_formants) do
 		cascade={unpack(f)},
 		frames=
 		{
-			{300,0,0,0,2,0,0,{0,0},{0,0}},
+			--{300,0,0,0,2,0,0,{0,0,0},{0,0,0}},
 			{600,2000,2000,0,0,0,0,unpack(offglide[p])},
 			{200,2000,1000,0,0,0,0,unpack(offglide[p])},
-			{320,1000,0,0,0,0,0,{0,0},{0,0}},
+			{320,1000,0,0,0,0,0,{0,0,0},{0,0,0}},
+			{4000,0,0,0,0,0,0,{0,0,0},{0,0,0}},
 		}
 	})
 end
@@ -138,12 +140,13 @@ c_factor=split"-1,-0.9886666433,-0.9774617316,-0.9663838091,-0.9554314367,-0.944
 	
 		noise=gaussian_noise()
 			-- radiaion characteristic is a zero at the origin
-		uglot=uglot2-uglotx + ah*noise
+		uglot=uglot2-uglotx + ah*noise +noise*voicing_breathiness
 		uglotx=uglot2
 
 		return uglot
 	end
 	function formant(x,s) --s[1]=f s[2] =bw
+	--	printh(s[2].." "..s[1],"log")
 		local b=b_factor[s[2]\10+1]*cos(-s[1]/5512.5)  -- calculate b coefficient
 
 		local c=c_factor[s[2]\10+1] -- look up c coefficient
@@ -163,6 +166,7 @@ c_factor=split"-1,-0.9886666433,-0.9774617316,-0.9663838091,-0.9554314367,-0.944
 					sample=glottis()
 					for i=1,#cascade do
 						sample=formant(sample,cascade[i])
+						--printh(i.." "..f_step[i].." "..cascade[i][2].." "..bw_step[i],"log")
 						if (flr(cascade[i][1])!=cascade[i][3]) cascade[i][1]+=f_step[i] --increment frequency
 						if (flr(cascade[i][2])!=cascade[i][4]) cascade[i][2]+=bw_step[i] --increment bandwidth
 					end
@@ -209,21 +213,24 @@ function _update()
 
 	if (btnp(fire2)) then
 		sounds={}
-		for s in all(phonemes.ay) do
-			local cascade={}
-			for c in all(s.cascade) do
-				add(cascade,{unpack(c)})
-				cascade[#cascade].y0=0
-				cascade[#cascade].y1=0
-				cascade[#cascade].y2=0
-			end	
-			for f in all(s.frames) do
-				local d=f[1] --duration
-				-- add {duration,av,av_step,ah,ah_step,af,af_step,cascade}
-				add(sounds,{d,f[2],(f[3]-f[2])/d,f[4],(f[5]-f[4])/d,f[6],(f[7]-f[6])/d,cascade,f[8],f[9]})
-			end	
-			--stop()
-		end		
+		for p in all (names) do
+			for s in all(phonemes[p]) do
+
+				local cascade={}
+				for c in all(s.cascade) do
+					add(cascade,{unpack(c)})
+					cascade[#cascade].y0=0
+					cascade[#cascade].y1=0
+					cascade[#cascade].y2=0
+				end	
+				for f in all(s.frames) do
+					local d=f[1] --duration
+					-- add {duration,av,av_step,ah,ah_step,af,af_step,cascade}
+					add(sounds,{d,f[2],(f[3]-f[2])/d,f[4],(f[5]-f[4])/d,f[6],(f[7]-f[6])/d,cascade,f[8],f[9]})
+				end	
+				--stop()
+			end		
+		end	
 	end	
 end
 function _draw()
