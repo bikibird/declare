@@ -149,26 +149,25 @@ phone=
 		{180,0,2000,0,0,0,0,0,{{2200,140},{1250,110},{350,70}}},
 		{840,2000,0,0,0,0,0,1,{{2200,140},{900,110},{320,70}}},
 	},
-	hh={{300,0,0,0,2,0,0,2}}
-
---[[	yuw=
+	hh={{300,0,0,0,2,0,0,2}},
+	y=
 	{
-		{250,0,750,0,0,0,0,formants[1].y,formants[1].y},
-		{380,750,2000,0,0,0,0,formants[1].y,formants[1].uw},
-		{800,2000,1500,0,0,0,0,formants[1].uw,formants[2].uw},
+		{250,0,750,0,0,0,0,0,{{3020,500},{2070,250},{260,40}}},
+		{380,750,2000,0,0,0,0,3},
+	},
+	r=
+	{
+		{250,0,750,0,0,0,0,0,{{1380,120},{1060,100},{310,70}}},
+		{380,750,2000,0,0,0,0,3},
+	},
+	l=
+	{
+		{250,0,750,0,0,0,0,0,{{2880,280},{1050,100},{310,50}}},
+		{380,750,2000,0,0,0,0,3},
 	}
-]]	
-}
---Uppercase consonant proceeds vowel.  Lowercase consonant follows vowel.
-consonant=
-{
-	hh=function()  -- a sound before, b sound after
-		return {{300,0,0,0,2,0,0,formants[1][b],formants[1][b]},unpack(after[v])}	
-	end
+
 
 }
-
-
 
 --[[
 phone[" "]={{120,0,0,0,0,0,0,formants[1].aa,formants[1].aa}}
@@ -177,44 +176,7 @@ phone["."]={{500,0,0,0,0,0,0,formants[1].aa,formants[1].aa}}
 phone["!"]={{500,0,0,0,0,0,0,formants[1].aa,formants[1].aa}}
 phone["?"]={{500,0,0,0,0,0,0,formants[1].aa,formants[1].aa}}
 ]]
-function phonate(speech)
-	voicing_duration=0
-	for phoneme in all (split(speech)) do
-		local c1,c2
-		local p=phone[phoneme]
-		--{280,0,2000,0,0,0,0,0,{{2300,70},{1100,70},{540,80}}},
-		for i=1,#p do
-			local c,f_glide,bw_glide={},{},{}
-			local f=p[i] --frame
-			local d=f[1] --duration
-			local blend=f[8]
-			
-			
-			if blend ==0 then  --do not blend
-				c1=f[9] --from formants
-				c2=f[9] --to formants
-			elseif blend == 1 then --blend from previous
-				c2 =f[9]
-			elseif blend ==2 then --blend from next sound (hh)	
-				c1=
-			end
-			for k=1,3 do
-				add(c,{unpack(c1[k])})
-				c[k].y0=0
-				c[k].y1=0
-				c[k].y2=0
-				add(f_glide,(c2[k][1]-c[k][1])/d)
-				add(bw_glide,(c2[k][2]-c[k][2])/d)
-			end
 
-			add(sounds,{d,f[2],(f[3]-f[2])/d,f[4],(f[5]-f[4])/d,f[6],(f[7]-f[6])/d,c,f_glide,bw_glide})
-			voicing_duration+=d
-		end	
-		--stop()
-	end	
-	w0=5512.5\voicing_f0
-	voicing_tone = w0*.1/voicing_duration
-end
 
 
 
@@ -286,6 +248,49 @@ c_factor=split"-1,-0.9886666433,-0.9774617316,-0.9663838091,-0.9554314367,-0.944
 		s.y0=(1-b-c)*x + b*s.y1 + c*s.y2
 		return s.y0
 	end
+	function phonate(speech)
+		voicing_duration=0
+		local phonemes=split(speech)
+		for i=1,#phonemes do
+			local c1,c2
+			local p=phone[phonemes[i]]
+			for j=1,#p do
+				local c,f_glide,bw_glide={},{},{}
+				local f=p[j] --frame
+				local d=f[1] --duration
+				local blend=f[8]
+				if blend ==0 then  --do not blend
+					c1=f[9] --from formants
+					c2=f[9] --to formants
+				elseif blend == 1 then --blend from previous
+					c2 =f[9]
+				elseif blend ==2 then --blend from next sound (hh blend)	
+					c1=phone[phonemes[i+1]][1][9]  --get cascade from first frame of next phoneme
+					c2=c1
+				elseif blend ==3 then --blend from next sound (sonorant pre blend)	
+					c1=c2 
+					c2=phone[phonemes[i+1]][1][9]	
+				elseif blend ==4 then --blend from next sound (sonorant post blend)	
+					c1=phone[phonemes[i-1]][1][9]		
+					c2=f[9] 
+				end
+				for k=1,3 do
+					add(c,{unpack(c1[k])})
+					c[k].y0=0
+					c[k].y1=0
+					c[k].y2=0
+					add(f_glide,(c2[k][1]-c[k][1])/d)
+					add(bw_glide,(c2[k][2]-c[k][2])/d)
+				end
+	
+				add(sounds,{d,f[2],(f[3]-f[2])/d,f[4],(f[5]-f[4])/d,f[6],(f[7]-f[6])/d,c,f_glide,bw_glide})
+				voicing_duration+=d
+			end	
+			--stop()
+		end	
+		w0=5512.5\voicing_f0
+		voicing_tone = w0*.1/voicing_duration
+	end
 	function declare()
 		if #sounds >0 then
 			while stat(108)<1920 do
@@ -337,7 +342,7 @@ function _init()
 	phone_list=split"aa,ae,ah,ao,aw,ay,eh,er,ey,ih,iy,ow,oy,uh,uw"
 	words=split"odd,at,hut,ought,cow,hide,ed,hurt,ate,it,eat,oat,toy,hood,two"
 end
-function _update()
+function _update60()
 	declare()
 	if (btnp(right)) phone_index=(phone_index+1)%#phone_list
 	if (btnp(left)) phone_index-=1	
@@ -353,7 +358,8 @@ function _update()
 		--	phonate(phone[","])
 --	phonate"hay,.,.,haw,.,.,aar,.,.,yuw"
 --phonate"haa,.,hae,.,hah,.,hao,.,haw,.,hay,.,heh,.,her,.,hih,.,hiy,.,how,."--",hoy.,huh,,huw"
-phonate(phone_list[phone_index+1])
+--phonate("l,"..phone_list[phone_index+1]..",l,"..phone_list[phone_index+1])
+phonate("l,"..phone_list[phone_index+1]..",r,iy")
 	end	
 end
 function _draw()
