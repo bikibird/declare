@@ -347,3 +347,45 @@ bandwidths are only about 20% higher for women.
 To get the source waveform in praat see https://www.fon.hum.uva.nl/praat/manual/Source-filter_synthesis_4__Using_existing_sounds.html
 
 space pause 50 ticks, comma pause, 100 ticks.  period, !, ?, 200 ticks
+
+The RNP-RNZ pair is
+effectively removed from the cascade circuit during
+the synthesis of non-nasalized speech sounds if FNP
+= FNZ.
+
+C     NASAL ZERO-PAIR RNZ:
+420     YZC=ANZ*Y1C + BNZ*YLNZ1C + CNZ*YLNZ2C
+        YLNZ2C=YLNZ1C
+        YLNZ1C=Y1C
+C     NASAL RESONATOR RNP:
+        YPC=ANP*YZC + BNP*YLNP1C + CNP*YLNP2C
+        YLNP2C=YLNP1C
+        YLNP1C=YPC
+        ULIPSV=YPC
+
+Effects of stress level: When we examine the effects of
+stress level in more detail, we find that primary and secondary
+stressed vowels have significantly higher f0 than unstressed
+vowels for both male and female speakers. For all data pooled,
+there is no significant difference between secondary and
+primary stressed vowels. If we analyse the speaker groups
+separately, there is no difference for female speakers. For male
+speakers the difference is significant. Furthermore, the
+significant interaction between Stress and Sex can be
+explained by the fact that the difference between unstressed
+and stressed (i.e. primary and secondary stressed pooled) is
+larger for the male speakers than for the female speakers; the
+differences are 2 semitones and 1 semitone, respectively.
+
+Stress level has a significant effect
+on vowel duration and for this parameter all three levels are
+significantly different. If we express the mean durations in
+milliseconds, they are 53, 66, and 79 ms for unstressed,
+secondary stressed and primary stressed vowels, respectively.
+The significant effect of Sex is due to longer mean durations
+for the female speakers. If we look at the speaker groups
+separately we may see that the difference is almost entirely
+caused by the markedly longer primary stressed vowels in the
+female group (85 ms vs. 78 ms) which explains the significant
+interaction between Stress and Sex.
+
