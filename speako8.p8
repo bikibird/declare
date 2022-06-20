@@ -16,17 +16,20 @@ voicing_breathiness=0
 --voicing_stress={0,.02,.01,}
 --w0=5512.5\(voicing_f0)--140--140--175 --voice fundemental wavelength
 rgp={y0=0,y1=0,y2=0}	--{y0=0,y1=128\w0,y2=256\w0} 
+rnp={y0=0,y1=0,y2=0}
+rnz={y0=0,y1=0,y2=0}
 rgz={y0=0,y1=0,y2=0}
 rgs={y0=0,y1=0,y2=0}
+
 uglotx=0
 volume=1
 aspiration=1
 duration,av,ah,af,av_step,ah_step,_af_step=0,0,0,0,0,0,0
 vowel_list=split"aa,ae,ah,ao,aw,ay,eh,er,ey,ih,iy,ow,oy,uh,uw"
 sounds={}
-cascade={}
+cascade,old_cascade={},{}
 _noise=0
-
+sample=0
 --cascade formants
 --[[formants=
 {
@@ -210,7 +213,7 @@ phone=
 		{70,0,2000,0,0,0,0,0,{{2550,200},{1200,70},{660,100}},2},
 		{350,2000,2000,0,0,0,0,0,{{2550,200},{1200,70},{660,100}},2},
 		{350,2000,2000,0,0,0,0,0,{{2550,200},{1880,100},{400,70}},2},
-		{117,2000,0,0,0,0,0,0,{{2550,200},{1200,70},{660,100}},2},
+		{117,2000,0,0,0,0,0,0,{{2550,200},{1880,100},{400,70}},2},
 	},
 	EH1=
 	{
@@ -259,7 +262,7 @@ phone=
 		{70,0,2000,0,0,0,0,0,{{2400,130},{960,50},{550,60}},2},
 		{350,2000,2000,0,0,0,0,0,{{2400,130},{960,50},{550,60}},2},
 		{350,2000,2000,0,0,0,0,0,{{2400,130},{1820,50},{360,80}},2},
-		{117,2000,0,0,0,0,0,0,{{2400,130},{960,50},{550,60}},2},
+		{117,2000,0,0,0,0,0,0,{{2400,130},{1820,50},{360,80}},2},
 	},
 	UH1=
 	{
@@ -377,15 +380,15 @@ phone=
 	},
 	HH=
 	{
-		{100,0,0,0,2,0,0,1,{{2200,140},{1250,110},{350,70}},1},
-		{200,0,0,2,2,0,0,1,{{2200,140},{1250,110},{350,70}},1},
-		{100,0,0,2,0,0,0,1,{{2200,140},{1250,110},{350,70}},1},
+		{400,0,0,0,2,0,0,1,nil,1},
+		{30,0,0,2,2,0,0,1,nil,1},
+		{100,0,0,2,0,0,0,1,nil,1},
 	},
 	L=
 	{
-		{300,0,2000,0,0,0,0,0,{{2880,280},{1050,100},{310,50}},1},
+		{100,0,2000,0,0,0,0,0,{{2880,280},{1050,100},{310,50}},1},
 		{300,2000,2000,0,0,0,0,0,{{2880,280},{1050,100},{310,50}},1},
-		{300,2000,0,0,0,0,0,0,{{2880,280},{1050,100},{310,50}},1},
+		{500,2000,1000,0,0,0,0,0,{{2880,280},{1050,100},{310,50}},1},
 
 	},
 --	F1 in the range 350-550Hz
@@ -393,13 +396,8 @@ phone=
 --F3 in the range 2,200- 2,700Hz
 	LL=
 	{
-		{300,0,2000,0,0,0,0,0,{{2880,280},{1050,100},{310,50}},1},
-		{200,2000,2000,0,0,0,0,0,{{2880,280},{690,100},{310,50}},1},
-		{200,2000,2000,0,0,0,0,0,{{2880,280},{690,100},{310,50}},1},
-		{300,2000,2000,0,0,0,0,0,{{2880,280},{1050,100},{310,50}},1},
-	--	{300,2000,0,0,0,0,0,0,{{2880,280},{1050,100},{310,50}},1},
-		
-
+		{1,2000,2000,0,0,0,0,0,{{2880,280},{1050,100},{310,50}},1},
+		{500,2000,1000,0,0,0,0,0,{{2880,280},{1050,100},{310,50}},1},
 	},
 	M=
 	{
@@ -417,15 +415,15 @@ phone=
 	},
 	W=
 	{
-		{300,0,2000,0,0,0,0,0,{{2150,60},{610,80},{290,50}},1},
-		{300,2000,2000,0,0,0,0,0,{{2150,60},{610,80},{290,50}},1},
-		{300,2000,0,0,0,0,0,0,{{2150,60},{610,80},{290,50}},1},
+		{200,0,2000,0,0,0,0,0,{{2150,60},{610,80},{290,50}},1},
+		{400,2000,2000,0,0,0,0,0,{{2150,60},{610,80},{290,50}},1},
+		{200,2000,0,0,0,0,0,0,{{2150,60},{610,80},{290,50}},1},
 	},
 	Y=
 	{
-		{300,0,2000,0,0,0,0,0,{{3020,500},{2070,250},{260,40}},1},
-		{300,2000,2000,0,0,0,0,0,{{3020,500},{2070,250},{260,40}},1},
-		{300,2000,0,0,0,0,0,0,{{3020,500},{2070,250},{260,40}},1},
+		{200,0,2000,0,0,0,0,0,{{3020,500},{2070,250},{260,40}},1},
+		{400,2000,2000,0,0,0,0,0,{{3020,500},{2070,250},{260,40}},1},
+		{200,2000,0,0,0,0,0,0,{{3020,500},{2070,250},{260,40}},1},
 	},
 }
 phone["_"]=1
@@ -523,32 +521,34 @@ function gaussian_noise()
 	end
 	function phonate(speech)
 		voicing_duration=0
-		local phonemes=split(speech,"/")
+		local phonemes=split(speech," ")
 		local attack,decay=1,1 --1/0 enable/disable attack, 0/1 enable/disable decay
 		local c1,c2
 		for i=1,#phonemes do
 			local p=phone[phonemes[i]]
 			if type(p)=="number" then
+				--add(sounds,{d,av1,(av2-av1)/d,ah1,(ah2-ah1)/d,af1,(af2-af1)/d,c,f_glide,bw_glide,s,c2})
 				add(sounds,{p*900+p*rnd(200),0,0,0,0,0,0,{},{},{},1})
+				--add(sounds,{p*900+p*rnd(200),nil})
 				attack,decay=1,1
 			else
-				if (type(phonemes[i+1])=="number" or i==#phonemes) decay=0
+				if (p[1][8]==2)attack=1
+				if (type(phone[phonemes[i+1]])=="number" or i==#phonemes) decay=0
 				for j=2-attack,#p-decay do
 					local c,f_glide,bw_glide={},{},{}
-					local p=phone[phonemes[i]]
 					local f=p[j] --frame
 					local d=f[1] --duration
 					local s=f[10] --stress
-					d-=.1*rnd(d) --duration
+					--d-=.1*rnd(d) --duration
 					local blend=f[8]
 					--c1 and c2
 					if  blend ==1 then --[hh]
+						printh(#phone[phonemes[i+1]][1][9],"log")
 						c1=phone[phonemes[i+1]][1][9]  --get cascade from first frame of next phoneme
 						c2=c1
 					elseif j==1 then  --attack
 						c1=f[9] --do not blend from previous sound formants
 						c2=c1
-						attack =0	
 					else	
 						c2=f[9]
 					end		
@@ -560,9 +560,6 @@ function gaussian_noise()
 						c[k].y2=0
 						add(f_glide,2*(c2[k][1]-c[k][1])/d)
 						add(bw_glide,2*(c2[k][2]-c[k][2])/d)
-				--		printh(c[k][1],"log")
-				--		printh(c2[k][1],"log")
-				--		printh((c2[k][1]-c[k][1])/d,"log")
 					end
 
 					local av1,av2,ah1,ah2,af1,af2=f[2],f[3],f[4],f[5],f[6],f[7]
@@ -570,7 +567,8 @@ function gaussian_noise()
 					c1=c2
 					voicing_duration+=d
 				end	
-				decay=1 --disable decay
+				attack, decay=0,1 --disable attack and decay
+
 			end
 
 		end	
@@ -584,30 +582,38 @@ function gaussian_noise()
 					if duration < 1 then
 						old_cascade = cascade
 						duration,av,av_step,ah,ah_step,af,af_step,cascade,f_step,bw_step,stress,c2=unpack(sounds[1])
-						w0=5512.5\(voicing_f0[stress])
-						if (#old_cascade == #cascade) then
-							for i=1,#cascade do
-								cascade[i].y0=old_cascade[i].y0
-								cascade[i].y1=old_cascade[i].y1
-								cascade[i].y2=old_cascade[i].y2
+						--if av then -- av nil for silence
+							w0=5512.5\(voicing_f0[stress])
+							if (#old_cascade == #cascade) then
+								for i=1,#cascade do
+									cascade[i].y0=old_cascade[i].y0
+									cascade[i].y1=old_cascade[i].y1
+									cascade[i].y2=old_cascade[i].y2
+								end
 							end
-						end
-					end	 
-					sample=glottis()
-					for i=1,#cascade do
-						sample=formant(sample,cascade[i])
-
-						--{{1380,120},{1060,100},{310,70}}
-						--printh(cascade[i][1]>c2[i][1],"log")
-						if (cascade[i][1]\10 != c2[i][1]\10) cascade[i][1]+=f_step[i] --increment frequency
-						
-						if (cascade[i][2]\10!=c2[i][2]\10) cascade[i][2]+=bw_step[i] --increment bandwidth
+						--end	
 					end
+					--if av then  -- av is nil for silence	 
+						sample=glottis()
+						for i=1,#cascade do
+							sample=formant(sample,cascade[i])
 
+							--{{1380,120},{1060,100},{310,70}}
+								if (cascade[i][1]\10 != c2[i][1]\10) cascade[i][1]+=f_step[i] --increment frequency
+								
+								if (cascade[i][2]\10!=c2[i][2]\10) then
+									--printh(i,"log")
+									--printh(#bw_step ,"log")
+									cascade[i][2]+=bw_step[i] --increment bandwidth
+									
+								end 
+		
+						end
+						av+=av_step
+						ah+=ah_step
+						af+=af_step
+					--end	
 					poke(buffer+i,sample*volume+128)
-					av+=av_step
-					ah+=ah_step
-					af+=af_step
 					duration -=1
 					if duration < 1 then
 						deli(sounds,1)
@@ -648,8 +654,8 @@ function _update()
 --phonate"R,UH1,R,AH0,LL,.0"
 --phonate"L/OY1/AH0/LL/."
 --phonate"L/OY1/AH0/LL/./R/UH1/R/AH2/LL/./L/AO1/Y/ER0/./L/EH1/R/IY0/."
-phonate"HH/AH1"
-
+--phonate"L/AH1/L/IY0/."
+phonate"W AY1 . AA1 R . Y UW1 . HH IY1 R ."
 
 	end	
 end
