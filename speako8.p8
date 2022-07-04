@@ -74,10 +74,22 @@ sample=0
 --blend= 0 (sonorant) 1 (HH) 2(no blend)
 phone=
 {
+	AA=
+	{
+		{{76,1000,0,0,0,0,0,0,{{2600,160},{1220,70},{700,130},{-250,100}}}},
+		{{380,1000,4,0,0,0,0,2,{{2600,160},{1220,70},{700,130},{-250,100}}}},
+		{{127,1000,4,0,0,0,0,0,{{2600,160},{1220,70},{700,130},{-250,100}}}},
+	},
+	AE=
+	{
+		{{76,1000,0,0,0,0,0,0,{{2430,320},{1660,150},{620,170},{-250,100}}}},
+		{{380,1000,4,0,0,0,0,2,{{2430,320},{1660,150},{620,170},{-250,100}}}},
+		{{127,1000,4,0,0,0,0,0,{{2430,320},{1660,150},{620,170},{-250,100}}}},
+	},
 	AH=
 	{
 		{{136,1000,0,0,0,0,0,0,{{2550,140},{1220,50},{620,80},{-250,100}}}},
-		{{680,1000,4,0,0,0,0,2,{{2550,140},{1220,50},{620,80},{-250,100}}}},
+		{{380,1000,4,0,0,0,0,2,{{2550,140},{1220,50},{620,80},{-250,100}}}},
 		{{227,1000,4,0,0,0,0,0,{{2550,140},{1220,50},{620,80},{-250,100}}}},
 	},
 	AO=
@@ -182,12 +194,19 @@ phone=
 		},	
 		{{90,1000,4,0,0,0,0,0,{{2200,140},{900,110},{320,70},{-250,100}}}},
 	},
+	H=  --aspiration allophone after the t in tack
+	{
+		{{10,0,0,2,0,0,0,0,nil}},
+		{{100,0,1,0,1,0,0,1,nil}},
+		{{10,0,0,1,0,0,0,1,nil}},
+	},
 	HH=
 	{
-		{{400,0,0,0,2,0,0,0,nil}},
-		{{30,0,0,2,2,0,0,1,nil}},
-		{{100,0,0,2,0,0,0,1,nil}},
+		{{30,0,0,2,0,0,0,0,nil}},
+		{{200,200,1,0,1,0,0,1,nil}},
+		{{10,0,0,1,0,0,0,1,nil}},
 	},
+	
 	L=
 	{
 		{{100,1000,0,0,0,0,0,0,{{2880,280},{1050,100},{310,50},{-250,100}}}},
@@ -199,7 +218,7 @@ phone=
 	{
 		{{1,1000,0,0,0,0,0,0,{{2880,280},{1050,100},{310,50},{-250,100}}}},
 		{
-			{100,1000,4,0,0,0,0,2.4,{{2880,280},{1050,100},{310,50},{-250,100}}},
+			{100,1000,4,0,0,0,0,2,{{2880,280},{1050,100},{310,50},{-250,100}}},
 			{200,750,4,0,0,0,0,0,{{2880,280},{850,100},{470,50},{-250,100}}},
 		},	
 		{
@@ -251,6 +270,25 @@ phone=
 		{{200,1000,0,0,0,0,0,0,{{1380,120},{1060,100},{310,70},{-250,100}}}},
 		{{390,1000,4,0,0,0,0,2,{{1380,120},{1060,100},{310,70},{-250,100}}}},
 		{{200,800,4,0,0,0,0,0,{{1380,120},{1060,100},{310,70},{-250,100}}}},
+	},
+
+	S=
+	{
+		{{30,0,0,.1,0,0,0,0,{{2550,300}}}},
+		{{400,0,0,.1,0,0,0,0,{{2550,300}}}},
+		{{30,0,0,.1,0,0,0,0,{{2550,300}}}},
+	},
+	SCHWA=
+	{
+		{{10,1000,0,0,0,0,0,0,{{2550,140},{1220,50},{620,80},{-250,100}}}},
+		{{270,1000,4,0,0,0,0,2,{{2550,140},{1220,50},{620,80},{-250,100}}}},
+		{{10,1000,4,0,0,0,0,0,{{2550,140},{1220,50},{620,80},{-250,100}}}},
+	},
+	SH=
+	{
+		{{30,0,0,.05,0,0,0,0,{{2400,60},{2000,200}}}},
+		{{600,0,0,.05,0,0,0,0,{{2400,60},{2000,200}}}},
+		{{30,0,0,.05,0,0,0,0,{{2400,60},{2000,200}}}},
 	},
 	W=
 	{
@@ -318,8 +356,8 @@ function glottis()
 	ylgp2,ylgp1=ylgp1,ygp
 
 --     GLOTTAL ZERO PAIR RGZ:
-	ygz=0.9899658832*ygp + 0.008973522614*ylgz1 + 0.00108220316*ylgz2
-	ylgz2, ylgz1=ylgz1,ygp
+--	ygz=0.9899658832*ygp + 0.008973522614*ylgz1 + 0.00108220316*ylgz2
+-- ylgz2, ylgz1=ylgz1,ygp
 --     QUASI-SINUSOIDAL VOICING PRODUCED BY IMPULSE INTO RGP AND RGS:
 	ygs=a200*x0 + b200*ylgs1 + c200*ylgs2
 	ylgs2,ylgs1=ylgs1,ygs
@@ -330,13 +368,14 @@ function glottis()
 	--uglot2=ygz + ygs
 	uglot2=ygp + ygs
 --     RADIATION CHARACTERISTIC IS A ZERO AT THE ORIGIN
-	uglot=uglot2-uglotx
-	uglotx=uglot2
-	
-	noise=gaussian_noise()
+uglot=uglot2-uglotx
+uglotx=uglot2
 
-	uglot+= ah*noise +noise*voicing_breathiness
-	return uglot
+noise=gaussian_noise()
+
+uglot+= ah*noise --  +noise*voicing_breathiness
+return uglot
+
 	end
 	function formant(x0,s) --s[1]=f s[2] =bw
 		local f,bw=s[1],s[2]\10+1
@@ -400,25 +439,29 @@ function glottis()
 						local c,f_glide,bw_glide={},{},{}
 						local d,blend,cascade=f[1],f[8],f[9]
 						--c1 and c2
+						c2=cascade
 						if (j==1) then
-							c1=f[9]  --attack, do not blend from prior
+							c1=cascade  --attack, do not blend from prior
 							av1=f[2]
 						end		
 						if not cascade then  -- hh blend
 							c1=phone[next_phoneme][1][1][9]  --get cascade from first frame of next phoneme
 							c2=c1
-							
 						end
-						c2=f[9]
+						if (#c1 != #c2) c1=cascade
 						av2=f[2]
 						for k=1,#c1 do
 							add(c,{unpack(c1[k])})
-						
 							c[k].y0=0
 							c[k].y1=0
 							c[k].y2=0
-							add(f_glide,blend*(c2[k][1]-c[k][1])/d)
-							add(bw_glide,blend*(c2[k][2]-c[k][2])/d)
+							if #c1 == #c2 then
+								add(f_glide,blend*(c2[k][1]-c[k][1])/d)
+								add(bw_glide,blend*(c2[k][2]-c[k][2])/d)
+							else
+								add(f_glide,0)
+								add(bw_glide,0)	
+							end	
 						end
 
 						local ah1,ah2,af1,af2=f[4],f[5],f[6],f[7]
@@ -475,7 +518,7 @@ function _init()
 	t=0
 	phone_index=0
 	--phone_list=split"haa,hae,hah,hao,haw,hay,heh,her,hey,hih,hiy,how,hoy,huh,huw"
-	phone_list=split"AA1,AE1,AH1,AO1,AW1,AY1,EH1,ER1,EY1,IH1,IY1,OW1,OY1,UH1,UW1"
+	phone_list=split"AA,AE,AH,AO,AW,AY,EH,ER,EY,IH,IY,OW,OY,UH,UW"
 	words=split"odd,at,hut,ought,cow,hide,ed,hurt,ate,it,eat,oat,toy,hood,two"
 end
 function _update()
@@ -486,9 +529,9 @@ function _update()
 
 	if (btnp(fire2)) then
 		sounds={}
-		
+	print(phone_list[phone_index+1])	
 --phonate(phone_list[phone_index+1])
-phonate"L OY1 AH0 LL . R UH1 R AH0 LL . L AO1 Y ER0 . L EH1 R IY0 ."
+--phonate"L OY1 AH0 LL . R UH1 R AH0 LL . L AO1 Y ER0 . L EH1 R IY0 ."
 --phonate". . M AO1 R N IH0 NG . N AO1 R M AH0 LL . N AO1 R M AH0 N"
 --phonate". . N AO1 R M AH0 N . . N AO1 R M AH0 . . N AO1 R M AH0 N"
 --
@@ -499,6 +542,10 @@ phonate"L OY1 AH0 LL . R UH1 R AH0 LL . L AO1 Y ER0 . L EH1 R IY0 ."
 --phonate"W IY1 N . M EH1 N"
 --phonate". N IH1 M . . M AE1 N . . M IY1 NG"
 --phonate". . M M . . N N . . IY1 IY1"
+phonate"SH IY1 . S AH1 LL . S IY1 . SH AH1 L"
+
+
+
 	end	
 end
 function _draw()
