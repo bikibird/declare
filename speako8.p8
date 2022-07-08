@@ -33,19 +33,29 @@ cascade,old_cascade={},{}
 _noise=0
 sample={}
 
---phoneme={{voiced},{fricative}}
---voiced={beginning_section, middle, end}
---section={duration,source, volume, volume_step, frequency_step}
--- source=1 (noise) 2 (glottis)
+--phoneme={attack, sustain, decay}
+--attack|sustain|decay={duration,{voicing,frication}}
+--viocing|frication={volume, volume_velocity, frequency_velocity,{formants}}
+
+--duration=phone.AA[section][frame][1]
+--track1=phone.AA[section][frame][2]
+--track2=phone.AA[section][frame][3]
+--volume,velocity,blend,formants=unpack(track)
 phone=
 {
 	AA=
 	{
+		
 		{
-			{{76,2,500,0,0,{{2600,160},{1220,70},{700,130},{-250,100}}}},
-			{{380,2,1000,4,2,{{2600,160},{1220,70},{700,130},{-250,100}}}},
-			{{127,2,500,4,0,{{2600,160},{1220,70},{700,130},{-250,100}}}},
-		}
+			{76,{500,0,0,{{2600,160},{1220,70},{700,130},{-250,100}}},{}}
+		},
+		{
+			{380,{1000,4,2,{{2600,160},{1220,70},{700,130},{-250,100}}},{}}
+		},
+		{
+			{127,{500,4,0,{{2600,160},{1220,70},{700,130},{-250,100}}},{}}
+		},
+		
 	},
 	AE=
 	{
@@ -53,7 +63,7 @@ phone=
 			{{76,2,1000,0,0,{{2430,320},{1660,150},{620,170},{-250,100}}}},
 			{{380,2,1000,4,2,{{2430,320},{1660,150},{620,170},{-250,100}}}},
 			{{127,2,1000,4,0,{{2430,320},{1660,150},{620,170},{-250,100}}}},
-		}	
+		}
 	},
 	AH=
 	{
@@ -80,7 +90,8 @@ phone=
 				{350,2,1000,4,0,{{2350,80},{900,70},{450,80},{-250,100}}},
 			},	
 			{{117,2,1000,4,0,{{2350,80},{900,70},{450,80},{-250,100}}}},
-		}
+		},
+		nil
 	},
 	AY=
 	{
@@ -91,7 +102,8 @@ phone=
 				{350,2,1000,4,0,{{2550,200},{1880,100},{400,70},{-250,100}}},
 			},	
 			{{117,2,1000,4,0,{{2550,200},{1880,100},{400,70},{-250,100}}}},
-		}
+		},
+		nil
 	},
 	EH=
 	{
@@ -99,7 +111,8 @@ phone=
 			{{76,2,1000,0,0,{{2520,200},{1720,100},{480,70},{-250,100}}}},
 			{{380,2,1000,4,2,{{2520,200},{1720,100},{480,70},{-250,100}}}},
 			{{127,2,1000,4,0,{{2520,200},{1720,100},{480,70},{-250,100}}}},
-		}
+		},
+		nil
 	},
 	ER=
 	{
@@ -110,7 +123,8 @@ phone=
 				{320,2,1000,4,0,{{1540,110},{1310,60},{420,100},{-250,100}}},
 			},	
 			{{107,2,1000,4,0,{{1540,110},{1310,60},{420,100},{-250,100}}}},
-		}
+		},
+		nil
 	},
 	EY= 
 	{
@@ -121,7 +135,8 @@ phone=
 				{320,2,1000,4,0,{{2600,200},{2020,100},{330,50},{-250,100}}},
 			},	
 			{{107,2,1000,4,0,{{2600,200},{2020,100},{330,50},{-250,100}}}},
-		}
+		},
+		nil
 	},	
 	
 	IH= 
@@ -132,7 +147,8 @@ phone=
 				{400,2,1000,4,2,{{2570,140},{1800,100},{400,50},{-250,100}}},
 			},	
 			{{67,2,1000,4,0,0,{{2570,140},{1600,100},{470,50},{-250,100}}}},
-		}
+		},
+		nil
 	},
 	IY= 
 	{
@@ -143,7 +159,8 @@ phone=
 				
 			},	
 			{{93,2,1000,4,1,{{2960,400},{2070,100},{290,50},{-250,100}}}},
-		}
+		},
+		nil
 	},
 	OW= 
 	{
@@ -154,7 +171,8 @@ phone=
 				{320,2,1000,4,0,{{2300,70},{900,70},{450,80},{-250,100}}},
 			},	
 			{{107,2,1000,4,0,{{2300,70},{900,70},{450,80},{-250,100}}}},
-		}
+		},
+		nil
 	},
 	OY=
 	{
@@ -165,7 +183,8 @@ phone=
 				{350,2,1000,4,0,{{2400,130},{1820,50},{360,80},{-250,100}}},
 			},
 			{{117,2,1000,4,0,{{2400,130},{1820,50},{360,80},{-250,100}}}},
-		}
+		},
+		nil
 	},
 	UH=
 	{
@@ -176,7 +195,8 @@ phone=
 				{200,2,1000,4,0,{{2350,80},{1180,100},{500,80},{-250,100}}},
 			},	
 			{{67,2,1000,4,0,{{2350,80},{1180,100},{500,80},{-250,100}}}},
-		}
+		},
+		nil
 	},
 	UW=
 	{
@@ -187,16 +207,22 @@ phone=
 				{270,2,1000,4,0,{{2200,140},{900,110},{320,70},{-250,100}}},
 			},	
 			{{90,2,1000,4,0,{{2200,140},{900,110},{320,70},{-250,100}}}},
-		}
+		},
+		nil
 	},
 	H=  --aspiration allophone after the t in tack
 	{
-		{{10,1,2,0,0,nil}},
-		{{100,1,1,1,1,nil}},
-		{{10,1,1,0,1,nil}},
+		
+		nil,
+		{
+			{{30,1,2,0,0,nil}},
+			{{200,1,2,1,1,nil}},
+			{{10,1,1,0,1,nil}},
+		}
 	},
 	HH=
 	{
+		nil,
 		{
 			{{30,1,2,0,0,nil}},
 			{{200,1,2,1,1,nil}},
@@ -210,7 +236,8 @@ phone=
 			{{100,2,1000,0,0,{{2880,280},{1050,100},{310,50},{-250,100}}}},
 			{{300,2,1000,4,2.4,{{2880,280},{1050,100},{310,50},{-250,100}}}},
 			{{500,2,500,4,0,{{2880,280},{1050,100},{310,50},{-250,100}}}},
-		}
+		},
+		nil
 	},
 	LL=
 	{
@@ -224,7 +251,8 @@ phone=
 				{200,2,350,4,0,{{2880,280},{850,100},{470,50},{-250,100}}},
 				{100,2,350,4,0,{{2550,140},{1220,50},{620,80},{-250,100}}},
 			},
-		}
+		},
+		nil
 	},
 	M=
 	{
@@ -238,7 +266,8 @@ phone=
 				{100,2,1000,4,0,{{2550,140},{1800,50},{620,80},{-250,0}}},
 
 			},
-		}
+		},
+		nil
 	},
 
 	N=
@@ -253,7 +282,8 @@ phone=
 				{140,2,1000,0,0,{{2600,170},{1600,100},{200,60},{-450,100}}},
 				{100,2,1000,4,0,{{2550,140},{1800,50},{620,80},{-250,0}}},
 			},
-		}
+		},
+		nil
 	},
 	NG=
 	{
@@ -266,7 +296,8 @@ phone=
 				{140,2,1000,4,0,{{2850,280},{1990,150},{200,60},{-450,0}}},
 				{100,2,1000,4,0,{{2550,140},{1800,50},{620,80},{-250,0}}},
 			},
-		}
+		},
+		nil
 	},
 	R=
 	{
@@ -274,7 +305,8 @@ phone=
 			{{200,2,1000,0,0,{{1380,120},{1060,100},{310,70},{-250,100}}}},
 			{{390,2,1000,4,2,{{1380,120},{1060,100},{310,70},{-250,100}}}},
 			{{200,2,800,4,0,{{1380,120},{1060,100},{310,70},{-250,100}}}},
-		}
+		},
+		nil
 	},
 
 	
@@ -284,7 +316,8 @@ phone=
 			{{10,2,1000,0,0,{{2550,140},{1220,50},{620,80},{-250,100}}}},
 			{{270,2,1000,4,2,{{2550,140},{1220,50},{620,80},{-250,100}}}},
 			{{10,2,1000,4,0,{{2550,140},{1220,50},{620,80},{-250,100}}}},
-		}
+		},
+		nil
 	},
 
 
@@ -296,6 +329,7 @@ phone=
 	--  TH --------- SH
 	S=
 	{
+		nil,
 		{
 			{
 				{30,1,.2,0,0,{{2550,300}}},
@@ -305,10 +339,11 @@ phone=
 				{30,1,.2,0,0,{{2550,300}}},
 				{30,2,1000,0,0,0,0,0,0,{{2550,140},{1800,50},{620,80},{-250,0}}}
 			},
-		}	
+		}
 	},
 	CH=
 	{
+		nil,
 		{
 			{
 				{10,1,.06,0,0,{{2400,60},{2000,400}}},
@@ -325,6 +360,7 @@ phone=
 	},
 	SH=
 	{
+		nil,
 		{
 			{
 				{10,1,.06,0,0,{{2400,60},{2000,400}}},
@@ -342,6 +378,7 @@ phone=
 
 	F=
 	{
+		nil,
 		{
 			{
 				{30,1,.002,0,0,{{2550,300}}},
@@ -355,6 +392,7 @@ phone=
 	},
 	TH=
 	{
+		nil,
 		{
 			{
 				{30,1,.002,0,0,{{2400,60},{2000,400}}},
@@ -374,7 +412,8 @@ phone=
 			{{590,2,70,0,0,{{2150,60},{610,80},{290,50},{-250,100}}}},
 			{{215,2,260,2,2,{{2150,60},{610,80},{290,50},{-250,100}}}},
 			{{30,2,260,0,0,{{2150,60},{610,80},{290,50},{-250,100}}}},
-		}
+		},
+		nil
 	},
 	
 	Y=
@@ -383,7 +422,8 @@ phone=
 			{{200,2,1000,0,0,{{3020,500},{2070,250},{260,40},{-250,100}}}},
 			{{400,2,1000,0,2,{{3020,500},{2070,250},{260,40},{-250,100}}}},
 			{{200,2,1000,0,0,{{3020,500},{2070,250},{260,40},{-250,100}}}},
-		}
+		},
+		nil
 	},
 }
 phone["_"]=1
@@ -417,7 +457,7 @@ local a100,a200=1-b100-c100,1-b200-c200
 			return v*n
 		end,
 
-		function(j)	-- glottis
+		function()	-- glottis
 			if t%w0==0 then
 				x0=v*10
 			else
@@ -482,72 +522,87 @@ local a100,a200=1-b100-c100,1-b200-c200
 	end
 	
 	function phonate(speech)
-		voicing_duration=0
+
 		local phonemes=split(speech," ")
 		local attack,decay=1,1 --1/0 enable/disable attack, 0/1 enable/disable decay
-		local c1,c2
+		local c1,c2,c_old,v_old={},{},{},{}
+		function prepare(attack,duration,c1,v1,volume,velocity,blend,cascade)
+			local c,f_glide,bw_glide={},{},{}
+			c2=cascade
+			if attack then
+				c1=cascade  --attack, do not blend from prior
+				v1=volume
+			end		
+			if not cascade then  -- hh blend
+				c1=phone[next_phoneme][1][2][4]  --get cascade from first frame of next phoneme
+				c2=c1
+			end
+			if (#c1 != #c2) c1=cascade
+			v2=volume
+			for m=1,#c1 do
+				add(c,{unpack(c1[m])})
+				c[m].y0=0
+				c[m].y1=0
+				c[m].y2=0
+				add(f_glide,blend*(c2[m][1]-c[m][1])/d)
+				add(bw_glide,blend*(c2[m][2]-c[m][2])/d)
+			end
+			local af1,af2=f[6],f[7]
+			
+			return {d,v1,velocity*(v2-v1)/duration,v2,c,f_glide,bw_glide,stress,c2},c2,v2
+		end	
+		
 		for i=1,#phonemes do
 			local phoneme,stress=unpack_phoneme(phonemes[i])
 			local p=phone[phoneme]
+
 			if type(p)=="number" then
-				add(sounds,{p*900+p*rnd(200),0,0,0,0,0,0,0,0,0,{},{},{},1,{}})
+				add(sounds,{p*900+p*rnd(200),{{0,0,0,{}},{0,0,0,{}}}})
 				attack,decay=1,1
 			else
-				
-				if (p[1][8]==2)attack=1
+--duration=phone.AA[section][frame][1]
+--track1=phone.AA[section][frame][2]
+--track2=phone.AA[section][frame][3]
+--volume,velocity,blend,formants=unpack(track)
+			--	if (p[1][8]==2)attack=1
 				local next_phoneme=unpack_phoneme(phonemes[i+1])
 				if (i==#phonemes or type(phone[next_phoneme])=="number") decay=0
-				for j=2-attack,#p-decay do
-					for f in all(p[j]) do
-						local c,f_glide,bw_glide={},{},{}
-						local d,blend,cascade=f[1],f[8],f[9]
-						--c1 and c2
-						c2=cascade
-						if (j==1) then
-							c1=cascade  --attack, do not blend from prior
-							av1,ah1=f[2],f[4]
-						end		
-						if not cascade then  -- hh blend
-							c1=phone[next_phoneme][1][1][9]  --get cascade from first frame of next phoneme
-							c2=c1
-						end
-						if (#c1 != #c2) c1=cascade
-						av2,ah2=f[2],f[4]
-						for k=1,#c1 do
-							add(c,{unpack(c1[k])})
-							c[k].y0=0
-							c[k].y1=0
-							c[k].y2=0
-							--if #c1 == #c2 then
-								add(f_glide,blend*(c2[k][1]-c[k][1])/d)
-								add(bw_glide,blend*(c2[k][2]-c[k][2])/d)
-							--else
-							--	add(f_glide,0)
-							--	add(bw_glide,0)	
-							--end	
-						end
+				for section=2-attack,#p-decay do
+					for frame in all(p[section]) do
+						--for f in all(section) do
+							print(f)
+							--f={duration,voicing,frication}
+							local c,f_glide,bw_glide={},{},{}
+							--c1 and c2
+							local sound={}
+							--{76,{500,0,0,{{2600,160},{1220,70},{700,130},{-250,100}}}}
+							for track =1,1 do
+								--local modulation=frame[1+track]
 
-						local af1,af2=f[6],f[7]
-						add(sounds,{d,av1,f[3]*(av2-av1)/d,av2,ah1,(ah2-ah1)/d,ah2,af1,(af2-af1)/d,ah2,c,f_glide,bw_glide,stress,c2,f[11]})
-						c1=c2
-						av1,ah1=av2,ah2
-						voicing_duration+=d
+								sound[track],c_old[track],v_old[track]= prepare(j==1,frame[1],c_old[track],v_old[track],unpack(frame[1+track]))
+							
+							end	
+							add(sounds,sound)
+						--end	
 					end
 				end	
 				attack, decay=0,1 --disable attack and decay
 			end
 		end	
-		--w0=5512.5\voicing_f0
-		--voicing_tone = w0*.1/voicing_duration
+
 	end
+				
 	function speako8()
 		if #sounds >0 then
 			while stat(108)<1920 do
 				for i=0,127 do
 					if duration < 1 then
-
+--phoneme={attack, sustain, decay}
+--attack|sustain|decay={duration,{voicing,frication}}
+--viocing|frication={volume, volume_velocity, frequency_velocity,{formants}}
+--{d,v1,velocity*(v2-v1)/duration,c,f_glide,bw_glide,stress,c2}
 						old_cascade = cascade
-						duration,sourcing,v,v_step,v_max,cascade,f_step,bw_step,stress,c2=unpack(sounds[1])
+						duration,v,v_step,v_max,cascade,f_step,bw_step,stress,c2=unpack(sounds[1])
 						t=0
 						w0=5512.5\(voicing_f0[stress])
 					end
@@ -612,9 +667,9 @@ function _update()
 
 --phonate"SH IY1 . S EH1 LL . S IY1 . SH EH2 LL . AA1 N . TH IH1 . S IY1 . SH AO2 R ."
 
-phonate"SH IY1 . S EH1 LL . S IY1 . SH EH2 LL . . TH EY1 . S EH1 LL . S IY1 . SH EH2 LL"
+--phonate"SH IY1 . S EH1 LL . S IY1 . SH EH2 LL . . TH EY1 . S EH1 LL . S IY1 . SH EH2 LL"
 --phonate"SH IH1 N . CH IH1 N"
-
+phonate"AA"
 
 
 
