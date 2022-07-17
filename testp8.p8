@@ -16,7 +16,7 @@ for i=0,127 do
 		if t < voice_open then
 			voice_b=-30/(voice_open*voice_open)
 			voice_a=-30/voice_open/3   ---voice_b*voice_open/3
-			--voice_x= 30 ---100*(w0-1)
+			--rvoice_x= 30 ---100*(w0-1)
 		else
 			voice_a += voice_b
 			voice_x += voice_a
