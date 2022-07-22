@@ -3,28 +3,22 @@ version 34
 __lua__
 left,right,up,down,fire1,fire2=0,1,2,3,4,5
 buffer=0x8000
-
+poke(0x5f36,@0x5f36^^0x20) --turn off PCM channel dampening
 -- see https://www.fon.hum.uva.nl/david/ma_ssp/doc/Klatt-1980-JAS000971.pdf for background
 
-impulse=1000 --for glottal click train
-
 --for vocal fold filter
-voicing_f0={[0]=140,154,147}
-voicing_w0={[0]=5512.5\140,5512.5\154,5512.5\147}
-voicing_tone=0
-voicing_intonation=-1
-voicing_breathiness=0
-sample={}
+--voicing_f0={[0]=140,154,147}
+voicing_w0={[0]=5512.5\130,5512.5\140,5512.5\135}
+
 
 --voicing_stress={0,.02,.01,}
 --w0=5512.5\(voicing_f0)--140--140--175 --voice fundemental wavelength
-rgp_y0,rgp_y1,rgp_y2,rnp_y0,rnp_y1,rnp_y2,rnz_y0,rnz_y1,rnz_y2,rgz_y0,rgz_y1,rgz_y2,rgs_y0,rgs_y1,rgs_y2,rgs_y3,rgs_y4=split"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0"
 
-ygp,ylgp1,ylgp2,ygz,ylgz1,ylgz2,ygs,ylgs1,ylgs2,ylgs3,ylgs4,yzc,ylnz1c,ylnz2c,ypc,ylnp1c,ylnp2c=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
+ygp,ylgp1,ylgp2,ygz,ylgz1,ylgz2,ygs,ylgs1,ylgs2,ylgs3,ylgs4,yzc,ylnz1c,ylnz2c,ypc,ylnp1c,ylnp2c,uglotx,sample=unpack(split"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")
+local sample,x0,t=0,0,0
 			
-
-uglotx=0
+whisper=true  
 volume=1
 aspiration=1
 duration,v,v_step,v_max,cascade,f_step,bw_step,stress,c2,source=0,{},{},{},{},{},{},{},{},{}
@@ -243,12 +237,11 @@ phone=
 		},
 		{
 			{1,2,0,0,0,0,nil},
-			{200,2,2,1,0,0,nil},
+			{200,2,1,1,0,0,nil},
 		},
 		{
 		},
 	},
-	
 	L=
 	{
 		{
@@ -280,30 +273,30 @@ phone=
 	M=
 	{
 		{
-			{130,1,1000,0,0,0,{{2150,200},{1100,150},{400,300},{-450,100}}},
+			{100,1,350,0,0,0,{{2150,200},{1100,150},{400,300},{-450,100}}},
 		},	
 		{
-			{250,1,1000,4,2.4,0,{{2150,200},{1100,150},{400,300},{-450,100}}},
+			{310,1,350,4,2.4,0,{{2150,200},{1100,150},{400,300},{-450,100}}},
 		},	
 		{
-			{130,1,1000,4,0,0,{{2150,200},{1100,150},{400,300},{-450,100}}},
-			{100,1,500,0,.5,0,{{2550,140},{1800,50},{620,80},{-250,0}}},
+			{100,1,350,4,0,0,{{2150,200},{1100,150},{400,300},{-450,100}}},
+			--{100,1,350,0,.5,0,{{2550,140},{1800,50},{620,80},{-250,0}}},
+			{50,1,250,1,1,0,{{2550,140},{1220,50},{620,80},{-250,100}}},
 		},
 	},
 --{450,{0,3,0,0,{{2530,200},{1390,80},{320,200},{-250,100}}},1},
 	N=
 	{
 		{
-			{140,1,1000,0,0,1,{{2600,170},{1600,100},{200,60},{-450,100}}},
+			{140,1,350,0,0,1,{{2600,170},{1600,100},{200,60},{-450,100}}},
 		},	
 		{
-			{230,1,1000,4,2.4,1,{{2600,170},{1600,100},{200,60},{-450,100}}},
+			{230,1,350,4,2.4,1,{{2600,170},{1600,100},{200,60},{-450,100}}},
 	
 		},	
 		{
-			{140,1,1000,0,0,0,{{2600,170},{1600,100},{200,60},{-450,100}}},
-		--	{100,1,1000,0,0,0,{{2550,140},{1800,50},{620,80},{-250,0}}},
-			{100,1,500,0,.5,0,{{2550,140},{1800,50},{620,80},{-250,0}}},
+			{140,1,350,0,0,0,{{2600,170},{1600,100},{200,60},{-450,100}}},
+			{50,1,250,1,1,0,{{2550,140},{1220,50},{620,80},{-250,100}}},
 		},
 	},
 	NG=
@@ -322,13 +315,13 @@ phone=
 	R=
 	{
 		{
-			{100,1,1000,0,0,0,{{1380,120},{1060,100},{310,70},{-250,100}}},
+			{100,1,440,0,0,0,{{1380,120},{1060,100},{310,70},{-250,100}}},
 		},
 		{
-			{700,1,1000,2,2,0,{{1380,120},{1060,100},{310,70},{-250,100}}},
+			{300,1,1000,2,2,0,{{1380,120},{1060,100},{310,70},{-250,100}}},
 		},	
 		{
-			{100,1,800,1,0,0,{{1380,120},{1060,100},{310,70},{-250,100}}},
+			{100,1,440,1,0,0,{{1380,120},{1060,100},{310,70},{-250,100}}},
 		}	
 	},
 	SCHWA=
@@ -352,32 +345,8 @@ phone=
 	-- |       Q       |	
 	--  TH --------- SH
 	--320 1390 2530 200 80 200
-	S=
-	{
-		
-		{
-		},
-		{
-			{450,0,1,0,0,1,{{2530,200},{1390,80},{320,200},{-250,100}}},
-		},
-		{
-		},
-	},
-	--240 1390 2530 70 60 180
-	Z=
-	{
-		
-		{
-		},
-		{
-			{400,1,500,4,0,1,{{2530,200},{1390,80},{320,200},{-250,100}}},
-			
-		},
-		{
-			
-			{50,1,50,1,1,0,{{2550,140},{1220,50},{620,80},{-250,100}}},
-		},
-	},
+
+	--		{duration,source,volume,velocity,shift,frication,{{2530,200},{1390,80},{320,200},{-250,100}}},
 	CH=
 	{
 		--350 1800 2820 200 90 300
@@ -385,78 +354,207 @@ phone=
 			
 		},
 		{
-			{200,0,3.5,0,0,1,{{2820,300},{1800,90},{350,200},{-250,100}}},
+
+			{1,0,70,0,0,1,{{2820,300},{1800,90},{350,200},{-250,100}}},
+			{230,0,150,2,0,1,{{2820,300},{1800,90},{350,200},{-250,100}}},
+			{100,0,150,1,0,1,{{2820,300},{1800,90},{350,200},{-250,100}}},
 
 		},
 		{
 			
 		},
 	},
+	--270 1290 2540 60 80 170
+	DH=
+	{
+		
+		{
+		},
+		{
+			{530,1,250,0,0,1,{{2540,170},{1290,80},{270,60},{-250,100}}},
+		},
+		{
+		},
+	},
+	
+		--340 1100 2080 200 120 150
+	F=
+		{
+			
+			{
+			},
+			{
+				{1,0,15,0,0,1,{{2080,150},{1100,120},{340,200},{-250,100}}},
+				{420,0,25,1,0,1,{{2080,150},{1100,120},{340,200},{-250,100}}},
+			},
+			{
+			},
+		},
+	--320 1390 2530 200 80 200
+	S=
+	{
+		
+		{
+		},
+		{
+			{1,0,20,0,0,1,{{2530,200},{1390,80},{320,200},{-250,100}}},
+			{400,0,40,1,0,1,{{2530,200},{1390,80},{320,200},{-250,100}}},
+		},
+		{
+		},
+	},
+	--300 1840 2750 200 100 300
 	SH=
 	{
 		{
 		},
 		{
-			{1,0,1,0,0,1,{{2750,300},{1840,100},{300,200},{-250,100}}},
-			{500,0,5,4,0,1,{{2750,300},{1840,100},{300,200},{-250,100}}},
-			--{10,nil,{3,.1,0,0,{{2750,300},{1840,100},{300,200},{-250,100}}}},
-			--{500,nil,{3,2,2,0,{{2750,300},{1840,100},{300,200},{-250,100}}}},
-			--{10,{1,100,0,0,{{2750,300},{1840,100},{300,200},{-250,100}},nil}},
-		},
-		{
-		},
-	},
-	F=
-	{
-		
-		{
-		},
-		{
-			{250,0,1,0,0,1,{{2530,200},{1390,80},{320,200},{-250,100}}},
+			{1,0,20,0,0,1,{{2750,300},{1840,100},{300,200},{-250,100}}},
+			{500,0,40,1,0,1,{{2750,300},{1840,100},{300,200},{-250,100}}},
+			
 		},
 		{
 		},
 	},
 
+	K=
+	{
+		--300 1990 2850 250 160 330
+		{
+			
+		},
+		{
+			{200,0,0,0,0,1,{{2850,330},{1900,160},{300,250},{-250,100}}},
+			{150,0,50,1,0,1,{{2850,330},{1900,160},{300,250},{-250,100}}},
+			{100,2,1,0,0,0,{{2850,330},{1900,160},{300,250},{-250,100}}},
+
+		},
+		{
+			
+		},
+	},
+	P=
+	{
+		--400 1100 2150 300 150 220
+		{
+			
+		},
+		{
+			{200,0,0,0,0,1,{{2150,220},{1100,150},{400,300},{-250,100}}},
+			{100,0,50,1,0,1,{{2150,220},{1100,150},{400,300},{-250,100}}},
+			{100,2,1,0,0,0,{{2150,220},{1100,150},{400,300},{-250,100}}},
+
+		},
+		{
+			
+		},
+	},
+	T=
+	{
+		--400 1600 2600 300 120 250
+		{
+			
+		},
+		{
+			{200,0,0,0,0,1,{{2600,250},{1600,120},{400,300},{-250,100}}},
+			{130,0,50,1,0,1,{{2600,250},{1600,120},{400,300},{-250,100}}},
+			{100,2,1.5,0,0,0,{{2600,250},{1600,120},{400,300},{-250,100}}},
+
+		},
+		{
+			
+		},
+	},
+	G=
+	{
+		--300 1990 2850 250 160 330
+		{
+			
+		},
+		{
+			{200,0,0,0,0,1,{{2850,330},{1900,160},{300,250},{-250,100}}},
+			{150,0,50,1,0,1,{{2850,330},{1900,160},{300,250},{-250,100}}},
+			{100,2,1,0,0,0,{{2850,330},{1900,160},{300,250},{-250,100}}},
+
+		},
+		{
+			
+		},
+	},
+
+	B=
+	{
+		--200 1100 2150 60 110 130 
+		{
+			
+		},
+		{
+			{200,0,0,0,0,1,{{2150,130},{1100,110},{200,60},{-250,100}}},
+			{200,1,50,1,0,1,{{2150,130},{1100,110},{200,60},{-250,100}}},
+			--{100,2,1,0,0,0,{{2150,220},{1100,150},{400,300},{-250,100}}},
+
+		},
+		{
+			
+		},
+	},
+	D=
+	{
+		--400 1600 2600 300 120 250
+		{
+			
+		},
+		{
+			{200,0,0,0,0,1,{{2600,250},{1600,120},{400,300},{-250,100}}},
+			{130,0,50,1,0,1,{{2600,250},{1600,120},{400,300},{-250,100}}},
+			{100,2,1.5,0,0,0,{{2600,250},{1600,120},{400,300},{-250,100}}},
+
+		},
+		{
+			
+		},
+	},
+		--320 1290 2540 200 90 200
+	TH=
+	{
+		{
+		},
+		{
+			{460,0,10,0,0,1,{{2540,200},{1290,90},{320,200},{-250,100}}}
+		},
+		{
+		},
+	},
+	 --220 1100 2080 60 90 120
 	V=
 	{
 		{
 		},
 		{
-			{250,1,250,0,0,1,{{2080,150},{1100,120},{340,200},{-250,100}}},
+			{1,1,200,0,0,1,{{2080,120},{1100,90},{220,60},{-250,100}}},
+			{450,1,250,1,0,1,{{2080,120},{1100,90},{220,60},{-250,100}}},
 		},
 		{
 		},
 	},
-	DH=
+
+	--240 1390 2530 70 60 180
+	Z=
 	{
 		
 		{
-			--{30,{1,200,4,2,{{2540,200},{1290,90},{320,200},{-250,100}}},{3,.002,0,0,{{2400,60},{2000,400}}}},
 		},
 		{
-			{500,1,1200,0,0,1,{{2540,200},{1290,90},{320,200},{-250,100}}},
-			--{400,{1,200,4,2,{{2540,200},{1290,90},{320,200},{-250,100}}},{3,.002,0,0,{{2400,60},{2000,400}}}}
-		},
-		{
-			--{30,{1,200,4,2,{{2540,200},{1290,90},{320,200},{-250,100}}},{3,.002,0,0,{{2400,60},{2000,400}}}},
-		},
-	},
-	--320 1290 2540 200 90 200
-	TH=
-	{
-		{
-		--	{1,nil,{2,0,0,{{2400,60},{2400,60},{2000,400},{-250,100}}}},
-		},
-		{
-			--{1,nil,{0,0,0,{{2400,60},{2000,400}}}},
+			{100,1,500,1,1,1,{{2530,180},{1390,60},{240,70},{-250,100}}},
+			{400,1,550,1,0,1,{{2530,180},{1390,60},{240,70},{-250,100}}},
 			
-			{450,0,2,0,0,1,{{2540,200},{1290,90},{320,200},{-250,100}}}
 		},
 		{
-			--{30,nil,{.002,0,0,{{2400,60},{2000,400}}}},
+			{100,1,250,1,1,0,{{2550,140},{1220,50},{620,80},{-250,100}}},
 		},
 	},
+	
+
 	W=
 	{
 		{
@@ -494,8 +592,8 @@ b_factor=split"2,0x1.fd17,0x1.fa32,0x1.f752,0x1.f475,0x1.f19d,0x1.eec9,0x1.ebfa,
 -- c coefficient = exp(-2*pi()*bandwidth/5512.5)  final value needs to be negative
 c_factor=split"1,0x.fd19,0x.fa3a,0x.f764,0x.f497,0x.f1d1,0x.ef13,0x.ec5e,0x.e9b0,0x.e70a,0x.e46c,0x.e1d5,0x.df46,0x.dcbe,0x.da3d,0x.d7c4,0x.d552,0x.d2e7,0x.d083,0x.ce26,0x.cbd0,0x.c981,0x.c738,0x.c4f6,0x.c2bb,0x.c086,0x.be57,0x.bc2f,0x.ba0d,0x.b7f1,0x.b5dc,0x.b3cc,0x.b1c2,0x.afbf,0x.adc1,0x.abc9,0x.a9d6,0x.a7e9,0x.a602,0x.a421,0x.a244,0x.a06e,0x.9e9c,0x.9cd0,0x.9b09,0x.9947,0x.978a,0x.95d3,0x.9420,0x.9272,0x.90c9,0x.8f25,0x.8d86,0x.8beb,0x.8a55,0x.88c4,0x.8737,0x.85af,0x.842b,0x.82ac,0x.8130,0x.7fba,0x.7e47,0x.7cd9,0x.7b6e,0x.7a08,0x.78a6,0x.7748,0x.75ee,0x.7498,0x.7346,0x.71f7,0x.70ad,0x.6f66,0x.6e22,0x.6ce3,0x.6ba7,0x.6a6f,0x.693a,0x.6809,0x.66db,0x.65b0,0x.6489,0x.6366,0x.6245,0x.6128,0x.600e,0x.5ef7,0x.5de4,0x.5cd3,0x.5bc6,0x.5abc,0x.59b5,0x.58b0,0x.57af,0x.56b1,0x.55b5,0x.54bc,0x.53c7,0x.52d4,0x.51e3,0x.50f6,0x.500b,0x.4f22,0x.4e3d,0x.4d5a,0x.4c79,0x.4b9c,0x.4ac0,0x.49e7,0x.4911,0x.483d,0x.476b,0x.469c,0x.45cf,0x.4505,0x.443c,0x.4376,0x.42b3,0x.41f1,0x.4132,0x.4075,0x.3fba,0x.3f01,0x.3e4a,0x.3d95,0x.3ce3,0x.3c32,0x.3b83,0x.3ad7,0x.3a2c,0x.3983,0x.38dc,0x.3837,0x.3794,0x.36f3,0x.3653,0x.35b6,0x.351a,0x.3480,0x.33e8,0x.3351,0x.32bc,0x.3229,0x.3197,0x.3107,0x.3079,0x.2fed,0x.2f62,0x.2ed8,0x.2e50,0x.2dca,0x.2d45,0x.2cc2,0x.2c40,0x.2bbf,0x.2b40,0x.2ac3,0x.2a47,0x.29cc,0x.2953,0x.28db,0x.2864,0x.27ef,0x.277b,0x.2709,0x.2698,0x.2628,0x.25b9,0x.254b,0x.24df,0x.2474,0x.240a,0x.23a2,0x.233b,0x.22d4,0x.226f,0x.220b,0x.21a9,0x.2147,0x.20e6,0x.2087,0x.2029,0x.1fcb,0x.1f6f,0x.1f14,0x.1eba,0x.1e60,0x.1e08,0x.1db1,0x.1d5b,0x.1d06,0x.1cb2,0x.1c5e,0x.1c0c,0x.1bbb,0x.1b6a,0x.1b1b,0x.1acc,0x.1a7e,0x.1a31,0x.19e5,0x.199a,0x.1950,0x.1907,0x.18be,0x.1876,0x.182f,0x.17e9,0x.17a4,0x.175f,0x.171b,0x.16d8,0x.1696,0x.df50,0x.1614,0x.15d3,0x.1594,0x.1556,0x.1518,0x.14da,0x.149e,0x.cbd9,0x.1427,0x.13ec,0x.13b3,0x.137a,0x.1341,0x.1309,0x.12d2,0x.ba15,0x.1265,0x.1230,0x.11fb,0x.11c7,0x.1193,0x.1160,0x.112e,0x.a9de,0x.10cb,0x.109a,0x.106a,0x.103a,0x.100b,0x.0fdd,0x.0faf,0x.9b10,0x.0f54,0x.0f28,0x.0efc,0x.0ed0,0x.0ea5,0x.0e7b,0x.0e51,0x.8d8c,0x.0dfe,0x.0dd6,0x.0dad,0x.0d86,0x.0d5e,0x.0d38,0x.0d11,0x.8136,0x.0cc6,0x.0ca1,0x.0c7c,0x.0c58,0x.0c34,0x.0c11,0x.0bee,0x.0bcb,0x.0ba9,0x.0b87,0x.0b66,0x.0b45,0x.0b24,0x.0b03"
 
-local b100,b200,c100,c200=b_factor[11],b_factor[21],-c_factor[11],-c_factor[21]
-local a100,a200=1-b100-c100,1-b200-c200
+local b100,b200,b50,c100,c200,c50=b_factor[11],b_factor[21],b_factor[6],-c_factor[11],-c_factor[21],-c_factor[6]
+local a100,a200,a50=1-b100-c100,1-b200-c200,1-b50-c50
 
 	function unpack_phoneme(p)
 		if (not p) return
@@ -507,7 +605,7 @@ local a100,a200=1-b100-c100,1-b200-c200
 			return p,0
 		end 
 	end
-	function phonate(speech)
+	function say(speech)
 		local stress,phoneme
 		local phonemes=split(speech," ")
 		local onset,coda=1,1 --1/0 enable/disable onset, 0/1 enable/disable coda
@@ -515,24 +613,27 @@ local a100,a200=1-b100-c100,1-b200-c200
 		for i=1,#phonemes do
 			phoneme,stress=unpack_phoneme(phonemes[i])
 			local p=phone[phoneme]
-			next_phoneme=unpack_phoneme(phonemes[i+1])
+			next_phoneme=phone[unpack_phoneme(phonemes[i+1])]
+			next_silence=type(next_phoneme)=="number"
+			if (next_silence) next_phoneme={{{1,0,0,0,0,0,{},{},{}}}}
+			?type(next_phoneme)
 			if type(p)=="number" then
 				add(sounds,{p*900+p*rnd(200),0,0,0,0,0,{},{},{},0,{}})
 				onset,coda=1,1
 			else
-				if (i==#phonemes or type(phone[next_phoneme])=="number" or consonant[phonemes[i+1]]) coda=0
+				if (i==#phonemes or next_silence or consonant[phonemes[i+1]]) coda=0
 				for section=2-onset,#p-coda do
 					for frame in all(p[section]) do
 						local c,f_glide,bw_glide={},{},{}
-						local d, source,volume,velocity,blend,frication,cascade=unpack(frame)
+						local d, source,volume,velocity,shift,frication,cascade=unpack(frame)
 						c1,v1=c2,v2
 						local c,f_glide,bw_glide={},{},{}
 						c2=cascade
 						if (velocity == 0) v1=volume
-						if (blend == 0) c1=cascade
+						if (shift == 0) c1=cascade
 						if  not cascade then  -- get hh cascade
-							c1=phone[next_phoneme][1][1][2][5]  --get cascade from first frame of next phoneme
-							c2=c1
+								c1=next_phoneme[1][1][7]  --get cascade from first frame of next phoneme
+								c2=c1
 						end
 						if (#c1 != #c2) c1=cascade
 						v2=volume
@@ -541,8 +642,8 @@ local a100,a200=1-b100-c100,1-b200-c200
 							c[m].y0=0
 							c[m].y1=0
 							c[m].y2=0
-							add(f_glide,blend*(c2[m][1]-c[m][1])/d)
-							add(bw_glide,blend*(c2[m][2]-c[m][2])/d)
+							add(f_glide,shift*(c2[m][1]-c[m][1])/d)
+							add(bw_glide,shift*(c2[m][2]-c[m][2])/d)
 						end
 						add(sounds,{d,source,frication,v1,velocity*(v2-v1)/d,v2,c,f_glide,bw_glide,stress,c2})
 					end
@@ -552,8 +653,9 @@ local a100,a200=1-b100-c100,1-b200-c200
 		end	
 	
 	end
-				
-	function speako8()
+		sample=0	
+		y0,y1=0,0	
+		function speako8()
 		if #sounds >0 then
 			while stat(108)<1920 do
 				for i=0,127 do
@@ -562,35 +664,33 @@ local a100,a200=1-b100-c100,1-b200-c200
 						if duration <= 0 and current_sound then
 							duration,source,frication,v,v_step,v_max,cascade,f_step,bw_step,stress,c2=unpack(current_sound)
 							w0=voicing_w0[stress or 1] --5512.5\(voicing_f0[stress or 1])
-							
+							open = .5*w0
 						end
-						sample=v/2 -rnd(v) -- default to frication (or silence if v == 0)
+						sample=v/10       --/10 -- default to frication (or silence if v == 0)
 						if source ==1 then --voiced
-							if t%w0==0 then
-								x0=v*10
+							if t % w0 ==0 then  
+           						x0 =-v/8/(w0-1)
+            					b = -v/8/ open /open
+            					a = -b * open / 3
+								t=0
+							end
+							if (t > open) then
+								x0 = -v/8/(w0-1)
 							else
-								x0=-v*10/(w0-1)
+								a+=b
+								x0-=a	
 							end
-							uglotx=ygp + ygs
-							ygp=a100*x0 + b100*ylgp1 +c100*ylgp2
-							ylgp2,ylgp1=ylgp1,ygp
-							ygs=a200*x0 + b200*ylgs1 + c200*ylgs2
-							ylgs2,ylgs1=ylgs1,ygs
-							ygs=a100*ygs + b100*ylgs3 + c100*ylgs4
-							ylgs4,ylgs3=ylgs3,ygs
-							sample = ygp + ygs-uglotx
-						elseif sourcing ==2 then --aspirated (gaussian noise)
-							local n=0
+							sample=x0
+						elseif source ==2 then --aspirated (gaussian noise)
+							sammple=0
 							for i=1,16 do 
-								n+=.5 - rnd()
+								sample+=rnd()
 							end
-							-- if (t>w0\2) n/=2 
-							sample = n*v
+							sample-=8 -- subtract dc  now centered over -8, 8 
+							if (t>w0\2) sample/=2 -- now centered over -4,4
 						end
 						t+=1
 						for k,resonator in pairs(cascade) do
-							--sample=formant(sample,c)
-
 							local f,bw,a0,b0,c0=resonator[1],resonator[2]\10+1
 							if f >0 then -- formant
 								b0=b_factor[bw]*cos(f/5512.5)  -- calculate b coefficient
@@ -600,7 +700,6 @@ local a100,a200=1-b100-c100,1-b200-c200
 								resonator.y0=(1-b0-c0)*sample + b0*resonator.y1 + c0*resonator.y2
 								sample=resonator.y0
 							elseif f<0 then  -- nasal
-								
 								b0=b100*cos(f/5512.5)  -- calculate b coefficient
 								local a0 =1-b0-c100
 						
@@ -612,14 +711,14 @@ local a100,a200=1-b100-c100,1-b200-c200
 
 								ylnp2c,ylnp1c=ylnp1c,ypc
 								sample=ypc
-								
 							end
-
+							
 							local _c2=c2[k]
 							if (f\10 !=_c2[1]\10) resonator[1]+=f_step[k] --increment frequency
 							if (bw-1 != _c2[2]\10) resonator[2]+=bw_step[k] --increment bandwidth
 						end
-						sample*= 1 - rnd(frication)  -- voiced fricatives
+						--if (source==0) sample/=10
+						sample*=1-rnd(frication)  -- fricatives
 						if (abs(v-v_max) > abs(v_step)) v+=v_step
 						poke(buffer+i,sample*volume+128)
 						duration -=1
@@ -653,39 +752,50 @@ function _update()
 	if (btnp(fire2)) then
 		sounds={}
 --	print(phone_list[phone_index+1])	
---phonate(phone_list[phone_index+1])
---phonate"L OY1 AH0 L . R UH1 ER0 AH0 L . L AO1 Y ER0 . L EH1 ER0 IY0 ."
--- phonate". . M AO1 ER0 N IH0 NG . N AO1 ER0 M AH0 L . N AO1 ER0 M AH0 N"
---phonate"SH IY1 . S EH1 L Z . S IY1 . SH EH2 L Z . AA1 N . DH AH0 . S IY1 . SH AO1 ER0 ."
---phonate"N AO1 R M AH0 LL"
---phonate"AO1 M AY1 ."
---phonate"M . MM"
---phonate". M AO1 R N IY0 NG . N AO1 R M IY0 NG"
---phonate"W IY1 N . M EH1 N"
---phonate". N IH1 M . . M AE1 N . . M IY1 NG"
---phonate". . M M . . N N . . IY1 IY1"
+--say(phone_list[phone_index+1])
+--say"L OY1 AH0 L . R UH1 ER0 AH0 L . L AO1 Y ER0 . L EH1 ER0 IY0 ."
+--say". . M AO1 ER0 N IH0 NG . N AO1 ER0 M AH0 L . N AO1 ER0 M IH1 N ."
+-- say"SH IY1 . S EH1 L Z . S IY1 . SH EH2 L Z . AA1 N . DH AH0 . S IY1 . SH AO1 ER0 ."
+--say"N AO1 R M AH0 LL"
+--say"AO1 M AY1 ."
+--say"M . MM"
+--say". M AO1 R N IY0 NG . N AO1 R M IY0 NG"
+--say"W IY1 N . M EH1 N"
+--say". N IH1 M . . M AE1 N . . M IY1 NG"
+--say". . M M . . N N . . IY1 IY1"
 
 --the fine vine twines in sunshine
---phonate"SH IY1 . S EH1 L . S IY1 . SH EH1 L . AA1 N . TH IY1 . S IY1 . SH AO1 R ."
+--say"SH IY1 . S EH1 L . S IY1 . SH EH1 L . AA1 N . TH IY1 . S IY1 . SH AO1 R ."
 
---phonate"SH IY1 . S EH1 LL . S IY1 . SH EH2 LL . AA1 N . TH IH1 . S IY1 . SH AO2 R ."
+--say"SH IY1 . S EH1 LL . S IY1 . SH EH2 LL . AA1 N . TH IH1 . S IY1 . SH AO2 R ."
 
---phonate"SH IY1 . S EH1 LL . S IY1 . SH EH2 LL . . TH EY1 . S EH1 LL . S IY1 . SH EH2 LL"
---phonate"DH EY1 . DH AH1 . DH EH1 M"
+--say"SH IY1 . S EH1 LL . S IY1 . SH EH2 LL . . TH EY1 . S EH1 LL . S IY1 . SH EH2 LL"
+--say"DH EY1 . DH AH1 . DH EH1 M"
 
---phonate"SH IH1 N . CH IH1 N"
---phonate"DH IY1 . Z UW1"
---phonate"SH IY1"
---phonate"AA1 N"
---phonate"S IY1 SH AO2 ER0 . S IY1 . SH AO2 ER0"
+--say"SH IH1 N . CH IH1 N"
+--say"DH IY1 . Z UW1"
+--say"SH IY1"
+--say"AA1 N"
+--say"S IY1 SH AO2 ER0 . S IY1 . SH AO2 ER0"
 
---phonate"SH"
---phonate"S IY1 SH AO2 ER0 ."
+--say"SH"
+--say"S IY1 SH AO2 ER0 ."
 
 
---phonate"SH IY1 . IH1 Z . S IY1 SH EH1 L"
---phonate"F IH N ."
+--say"SH IY1 . IH1 Z . S IY1 SH EH1 L"
+--say"S IH1 N . SH IH1 N . CH IH1 N . TH IH1 N ."
+--say"F IH1 N . V IH1 N ."
 
+--say"Z IH1 N . DH IH1 M ."
+
+--say"S IH1 N . SH IH1 N . CH IH1 N ." -- TH IH1 N . F IH1 N ."
+
+--say"S UW1 Z EH0 N . CH EY1 S EH1 Z . SH ER1 L IY0 . F AA1 R . F R AH1 M . DH AH0 SCHWA . V AE1 L IY2 ."
+--say". TH IH1 N . T IH1 M . T R AY1 Z . T OW1 S T ."
+--say"TH IH1 N . T IH1 M . T UH1 K . AH0 . P AA1 P . S IH0 K AH1 L ."
+--say"T IH1 M . F L UW1 . AH0 . P EY1 P ER0 . K AY1 T ."
+ --say"AH1"
+say"B EY1 B IY0 ."
 	end	
 end
 function _draw()
