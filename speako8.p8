@@ -677,7 +677,7 @@ local a100,a200,a50=1-b100-c100,1-b200-c200,1-b50-c50
 			if (next_silence) next_phoneme={{{1,0,0,0,0,0,{},{},{}}}}
 			?type(next_phoneme)
 			if type(p)=="number" then
-				add(sounds,{p*900+p*rnd(200),0,0,0,0,0,{},{},{},0,{}})
+				add(sounds,{p*1100+p*rnd(200),0,0,0,0,0,{},{},{},0,{}})
 				onset,coda=1,1
 			else
 				if (i==#phonemes or next_silence or consonant[phonemes[i+1]]) coda=0
@@ -859,7 +859,7 @@ function _update()
 --say"JH AH1 JH . JH AH1 M P IH0 NG . JH AE1 K . F L AE1 SH . IH1 T S . AH0 . G AE1 S S . ."
 -- say"JH AE1 K . F L AE1 SH . IH1 T S . AH0 . G AE1 S . ."
 
-say"DH AH0 . B EY1 ZH . HH Y UW1 . AA1 N . DH AH0 . W AO1 T ER0 Z . AH1 V . DH AH0 . L AA1 K . IH2 M P R EH1 S T . AO1 L . IH2 N K L UW1 D IH0 NG . DH AH0 . F R EH1 N CH . K W IY1 N . B IH0 F AO1 R . SH IY1 . HH ER1 D . DH AE1 T . S IH1 M F AH0 N IY0 . AH0 G EH1 N . JH AH1 S T . AE1 Z . Y AH1 NG . AA1 R TH ER0 . W AO1 N T IH0 D ." 
+say"DH AH0 _ B EY1 ZH _ HH Y UW1 _ AA1 N _ DH AH0 _ W AO1 T ER0 Z _ AH1 V _ DH AH0 _ L AA1 K _ IH2 M P R EH1 S T _ AO1 L , IH2 N K L UW1 D IH0 NG _ DH AH0 _ F R EH1 N CH _ K W IY1 N , B IY0 F AO1 R _ SH IY1 _ HH ER1 D _ DH AE1 T _ S IH1 M F AH0 N IY0 _ AH0 G EH1 N , JH AH1 S T _ AE1 Z _ Y AH1 NG _ AA1 R TH ER0 _ W AO1 N T IH0 D ." 
 
 	end	
 end
