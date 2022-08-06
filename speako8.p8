@@ -647,7 +647,7 @@ do
 
 	
 	local yzc,ylnz1c,ylnz2c,ypc,ylnp1c,ylnp2c,sample,x0,t,duration,buffer=unpack(split"0,0,0,0,0,0,0,0,0,0,0x8000")
-	whisper=true  
+
 	local v,v_step,v_max,f_step,bw_step,c2,source
 
 	 sounds,cascade={},{}
@@ -662,156 +662,157 @@ do
 	c_factor=split"1,0x.fd19,0x.fa3a,0x.f764,0x.f497,0x.f1d1,0x.ef13,0x.ec5e,0x.e9b0,0x.e70a,0x.e46c,0x.e1d5,0x.df46,0x.dcbe,0x.da3d,0x.d7c4,0x.d552,0x.d2e7,0x.d083,0x.ce26,0x.cbd0,0x.c981,0x.c738,0x.c4f6,0x.c2bb,0x.c086,0x.be57,0x.bc2f,0x.ba0d,0x.b7f1,0x.b5dc,0x.b3cc,0x.b1c2,0x.afbf,0x.adc1,0x.abc9,0x.a9d6,0x.a7e9,0x.a602,0x.a421,0x.a244,0x.a06e,0x.9e9c,0x.9cd0,0x.9b09,0x.9947,0x.978a,0x.95d3,0x.9420,0x.9272,0x.90c9,0x.8f25,0x.8d86,0x.8beb,0x.8a55,0x.88c4,0x.8737,0x.85af,0x.842b,0x.82ac,0x.8130,0x.7fba,0x.7e47,0x.7cd9,0x.7b6e,0x.7a08,0x.78a6,0x.7748,0x.75ee,0x.7498,0x.7346,0x.71f7,0x.70ad,0x.6f66,0x.6e22,0x.6ce3,0x.6ba7,0x.6a6f,0x.693a,0x.6809,0x.66db,0x.65b0,0x.6489,0x.6366,0x.6245,0x.6128,0x.600e,0x.5ef7,0x.5de4,0x.5cd3,0x.5bc6,0x.5abc,0x.59b5,0x.58b0,0x.57af,0x.56b1,0x.55b5,0x.54bc,0x.53c7,0x.52d4,0x.51e3,0x.50f6,0x.500b,0x.4f22,0x.4e3d,0x.4d5a,0x.4c79,0x.4b9c,0x.4ac0,0x.49e7,0x.4911,0x.483d,0x.476b,0x.469c,0x.45cf,0x.4505,0x.443c,0x.4376,0x.42b3,0x.41f1,0x.4132,0x.4075,0x.3fba,0x.3f01,0x.3e4a,0x.3d95,0x.3ce3,0x.3c32,0x.3b83,0x.3ad7,0x.3a2c,0x.3983,0x.38dc,0x.3837,0x.3794,0x.36f3,0x.3653,0x.35b6,0x.351a,0x.3480,0x.33e8,0x.3351,0x.32bc,0x.3229,0x.3197,0x.3107,0x.3079,0x.2fed,0x.2f62,0x.2ed8,0x.2e50,0x.2dca,0x.2d45,0x.2cc2,0x.2c40,0x.2bbf,0x.2b40,0x.2ac3,0x.2a47,0x.29cc,0x.2953,0x.28db,0x.2864,0x.27ef,0x.277b,0x.2709,0x.2698,0x.2628,0x.25b9,0x.254b,0x.24df,0x.2474,0x.240a,0x.23a2,0x.233b,0x.22d4,0x.226f,0x.220b,0x.21a9,0x.2147,0x.20e6,0x.2087,0x.2029,0x.1fcb,0x.1f6f,0x.1f14,0x.1eba,0x.1e60,0x.1e08,0x.1db1,0x.1d5b,0x.1d06,0x.1cb2,0x.1c5e,0x.1c0c,0x.1bbb,0x.1b6a,0x.1b1b,0x.1acc,0x.1a7e,0x.1a31,0x.19e5,0x.199a,0x.1950,0x.1907,0x.18be,0x.1876,0x.182f,0x.17e9,0x.17a4,0x.175f,0x.171b,0x.16d8,0x.1696,0x.df50,0x.1614,0x.15d3,0x.1594,0x.1556,0x.1518,0x.14da,0x.149e,0x.cbd9,0x.1427,0x.13ec,0x.13b3,0x.137a,0x.1341,0x.1309,0x.12d2,0x.ba15,0x.1265,0x.1230,0x.11fb,0x.11c7,0x.1193,0x.1160,0x.112e,0x.a9de,0x.10cb,0x.109a,0x.106a,0x.103a,0x.100b,0x.0fdd,0x.0faf,0x.9b10,0x.0f54,0x.0f28,0x.0efc,0x.0ed0,0x.0ea5,0x.0e7b,0x.0e51,0x.8d8c,0x.0dfe,0x.0dd6,0x.0dad,0x.0d86,0x.0d5e,0x.0d38,0x.0d11,0x.8136,0x.0cc6,0x.0ca1,0x.0c7c,0x.0c58,0x.0c34,0x.0c11,0x.0bee,0x.0bcb,0x.0ba9,0x.0b87,0x.0b66,0x.0b45,0x.0b24,0x.0b03"
 
 	local b100,c100=0x1.233b,-0x.52d4
-
-function say(speech)
-	local phonemes=split(speech,"/")
-	local onset,coda=1,1 --1/0 enable/disable onset, 0/1 enable/disable coda
-	local c1,c2={},{}
-	local v_stress, d_stress, p_stress=1,1,0 --unpack(stress)
-
-	for i=1,#phonemes do
-		local stress=tonum(phonemes[i])
-		if stress then
-			local abs_stress=abs(stress)
-			local sign,stress_type,magnitude=sgn(stress),abs_stress\1,abs_stress & 0x.ffff
-			-- -.25 == 25% slower == 1-.25== .75 +.25 ==25% faster 1.25 
-
-			if (stress_type==1) d_stress=1+sign*magnitude
-			if (stress_type==2) v_stress=1+sign*magnitude
-			if (stress_type==3) p_stress=spk8_intonation*sign*magnitude
-		else
-			local p=phone[phonemes[i]]
-			next_p=phone[phonemes[i+1]]
-			next_silence=type(next_p)=="number"
-			if (next_silence) next_p={{{1,0,0,0,0,0,{},{},{}}}}
-			if type(p)=="number"  then
-				add(sounds,{p*1000+rnd(200)})
-				onset,coda=1,1
+	function say(speech)
+		local phonemes=split(speech,"/")
+		local onset,coda=1,1 --1/0 enable/disable onset, 0/1 enable/disable coda
+		local c1,c2={},{}
+		local v_stress, d_stress, p_stress,h_phone=1,1,0 --unpack(stress)
+		for i,phoneme in pairs(phonemes) do
+			local stress=tonum(phoneme)
+			if stress then
+				local abs_stress=abs(stress)
+				local sign,stress_type,magnitude=sgn(stress),abs_stress\1,abs_stress & 0x.ffff
+				-- -.25 == 25% slower == 1-.25== .75 +.25 ==25% faster 1.25 
+	
+				if (stress_type==1) d_stress=1+sign*magnitude
+				if (stress_type==2) v_stress=1+sign*magnitude
+				if (stress_type==3) p_stress=spk8_intonation*sign*magnitude
+			elseif phoneme=="HH" then
+				h_phone,onset=true,1
 			else
-				if (i==#phonemes or next_silence ) coda=0
-				for section=2-onset,#p-coda do
-					for frame in all(p[section]) do
-						local c,f_glide,bw_glide={},{},{}
-						local d, source,volume,velocity,shift,frication,pitch,cascade=unpack(frame)
-						local d2=d*d_stress
-						p_stress+=pitch*spk8_intonation
-						c1,v1=c2,v2
-						c2=cascade
-						if (velocity == 0) v1=volume
-						if (shift == 0) c1=cascade
-						if  not cascade then  -- get hh cascade
-							c1=next_p[1][1][8]  --get cascade from first frame of next phoneme
-							c2=c1
+				local p=phone[phoneme]
+				next_p=phone[phonemes[i+1]]
+				next_silence=type(next_p)=="number"
+
+				if type(p)=="number"  then
+					add(sounds,{p*1000+rnd(200)\1})
+					onset,coda=1,1
+				else
+					if (i==#phonemes or next_silence ) coda=0
+					for section=2-onset,#p-coda do
+						for frame in all(p[section]) do
+							local c,f_glide,bw_glide={},{},{}
+							local d, source,volume,velocity,shift,frication,pitch,cascade=unpack(frame)
+							local d2=d*d_stress
+							p_stress+=pitch*spk8_intonation
+							c1,v1=c2,v2
+							c2=cascade
+							if (velocity == 0) v1=volume
+							if (shift == 0) c1=cascade
+							if (#c1 != #c2) c1=cascade
+							v2=volume
+							for m=1,#c1 do
+								add(c,{unpack(c1[m])})
+								local cm,c2m=c[m],c2[m]
+								cm.y0=0
+								cm.y1=0
+								cm.y2=0
+								add(f_glide,shift*(c2m[1]-cm[1])/d)
+								add(bw_glide,shift*(c2m[2]-cm[2])/d)
+							end
+							if  h_phone then  -- get hh cascade
+								add(sounds,{200,2,0,1,0,1,pitch,c,f_glide,bw_glide,c2,v_stress,p_stress})
+								h_phone=false
+							end
+							add(sounds,{d2,source,frication,v1,velocity*(v2-v1)/d,v2,pitch,c,f_glide,bw_glide,c2,v_stress,p_stress})
 						end
-						if (#c1 != #c2) c1=cascade
-						v2=volume
-						for m=1,#c1 do
-							add(c,{unpack(c1[m])})
-							local cm,c2m=c[m],c2[m]
-							cm.y0=0
-							cm.y1=0
-							cm.y2=0
-							add(f_glide,shift*(c2m[1]-cm[1])/d)
-							add(bw_glide,shift*(c2m[2]-cm[2])/d)
-						end
-						
-						add(sounds,{d2,source,frication,v1,velocity*(v2-v1)/d,v2,pitch,c,f_glide,bw_glide,c2,v_stress,p_stress})
-					end
-				end	
-				onset, coda=0,1 --disable onset and coda
-				v_stress, d_stress, p_stress=1,1,0 
-			end
+					end	
+					onset, coda=0,1 --disable onset and coda
+					v_stress, d_stress, p_stress=1,1,0 
+				end
+			end	
 		end	
-	end	
-	--stop()
-end
+
+	end
 sample=0	
 y0,y1=0,0	
 function speako8()
 	function set_voice()
-		--w0=5512.5\((spk8_f0+spk8_expression*(#cascade>1 and .0178*cascade[2][1]-27 or 0)+p_stress)+spk8_f0*spk8_vibrato*sin(time()*5.5))
 		w0=5512.5\((1+p_stress+spk8_vibrato*sin(time()*5.5))*spk8_f0)
-		
 	end
 	if #sounds >0 then
 		while stat(108)<1920 do
 			for i=0,127 do
 				current_sound=sounds[1]
+				
 				if current_sound then
-						if duration <= 0 and current_sound then
-							duration,source,frication,v,v_step,v_max,pitch,cascade,f_step,bw_step,c2,v_stress,p_stress=unpack(current_sound)
+					if duration < 1 and current_sound then
+						duration,source,frication,v,v_step,v_max,pitch,cascade,f_step,bw_step,c2,v_stress,p_stress=unpack(current_sound)
+					end
+					if source then  --if not silence
+						set_voice()
+						open = .5*w0
+						sample=v/10       --/10 -- default to frication (or silence if v == 0)
+						
+						_source=source*spk8_whisper  -- 0-->0 1-->2 2-->4
+						if _source ==1 then --voiced
+							if t % w0 ==0 then  
+								x0 =-v/8/(w0-1)
+								b = -v/8/ open /open
+								a = -b * open / 3
+								t=0
+								set_voice()
+							end
+							if (t > open) then
+								x0 = -v/8/(w0-1)
+							else
+								a+=b
+								x0-=a 
+							end
+							sample=x0
+						elseif _source > 1 then --aspirated (gaussian noise)
+							sample=-8
+							for i=1,16 do 
+								sample+=rnd()
+							end  --sample centered over 
+							if (t>w0\2) sample/=2 -- now centered over -4,4
+							--if (_source==4)v=2
 						end
-						if source then  --if not silence
-							set_voice()
-							open = .5*w0
-							sample=v/10       --/10 -- default to frication (or silence if v == 0)
-							if source ==1 then --voiced
-								if t % w0 ==0 then  
-									x0 =-v/8/(w0-1)
-									b = -v/8/ open /open
-									a = -b * open / 3
-									t=0
-									set_voice()
-								end
-								if (t > open) then
-									x0 = -v/8/(w0-1)
-								else
-									a+=b
-									x0-=a 
-								end
-								sample=x0
-							elseif source ==2 then --aspirated (gaussian noise)
-								sammple=-8
-								for i=1,16 do 
-									sample+=rnd()
-								end  --sample centered over 
-								if (t>w0\2) sample/=2 -- now centered over -4,4
-							end
-							for k,resonator in pairs(cascade) do
-								local f,bw,a0,b0,c0=resonator[1],resonator[2]\10+1
-								b1=cos(f/5512.5)
-								if f >0 then -- formant
-									b0=b_factor[bw]*b1  -- calculate b coefficient
-									c0=-c_factor[bw] -- look up c coefficient
-									resonator.y2=resonator.y1
-									resonator.y1=resonator.y0
-									resonator.y0=(1-b0-c0)*sample + b0*resonator.y1 + c0*resonator.y2
-									sample=resonator.y0
-								elseif f<0 then  -- nasal
-									b0=b100*b1  -- calculate b coefficient
-									local a0 =1-b0-c100
-							
-									yzc=sample/a0 - b0*ylnz1c/a0 - c100*ylnz2c/a0
-									ylnz2c,ylnz1c=ylnz1c,sample
-
-									b0=b100*cos(0x.0c89)  -- calculate b coefficient cos(270/5512.5)
-									ypc=(1-b0-c100)*yzc+b0*ylnp1c+ c100*ylnp2c
-
-									ylnp2c,ylnp1c=ylnp1c,ypc
-									sample=ypc
-								end
+						for k,resonator in pairs(cascade) do
+							local f,bw,a0,b0,c0=resonator[1],resonator[2]\10+1
+							b1=cos(f/5512.5)
+							if f >0 then -- formant
+								b0=b_factor[bw]*b1  -- calculate b coefficient
+								c0=-c_factor[bw] -- look up c coefficient
+								resonator.y2=resonator.y1
+								resonator.y1=resonator.y0
+								resonator.y0=(1-b0-c0)*sample + b0*resonator.y1 + c0*resonator.y2
+								sample=resonator.y0
+							elseif f<0 then  -- nasal
+								b0=b100*b1  -- calculate b coefficient
+								local a0 =1-b0-c100
 						
-								local c2k=c2[k]
-								if (f\10 !=c2k[1]\10) resonator[1]+=f_step[k] --increment frequency
-								if (bw-1 != c2k[2]\10) resonator[2]+=bw_step[k] --increment bandwidth
+								yzc=sample/a0 - b0*ylnz1c/a0 - c100*ylnz2c/a0
+								ylnz2c,ylnz1c=ylnz1c,sample
+
+								b0=b100*cos(0x.0c89)  -- calculate b coefficient cos(270/5512.5)
+								ypc=(1-b0-c100)*yzc+b0*ylnp1c+ c100*ylnp2c
+
+								ylnp2c,ylnp1c=ylnp1c,ypc
+								sample=ypc
 							end
-							sample*=frication/2-1+rnd(frication)  -- fricatives
-							if (abs(v-v_max) > abs(v_step)) v+=v_step
-						else
-							sample,v_stress=0,1
-						end	
-						t+=1
-						duration -=1
-						poke(buffer+i,sample*spk8_volume*v_stress+128)
-						
 					
-						if duration < 1 then
-							deli(sounds,1)
-							if #sounds == 0 then
-								serial(0x808,buffer,i+1)
-								return
-							end
+							local c2k=c2[k]
+							if (f\10 !=c2k[1]\10) resonator[1]+=f_step[k] --increment frequency
+							if (bw-1 != c2k[2]\10) resonator[2]+=bw_step[k] --increment bandwidth
 						end
+						sample*=frication/2-1+rnd(frication)  -- fricatives
+						if (abs(v-v_max) > abs(v_step)) v+=v_step
+					else
+						sample,v_stress=0,1
+
+					end	
+					t+=1
+					duration -=1
+					poke(buffer+i,sample*spk8_volume*v_stress+128)
+					if duration < 1 then
+						deli(sounds,1)
+
+						if #sounds == 0 then
+							serial(0x808,buffer,i+1)
+							return
+						end
+					end
 					
 				end	
 			end
@@ -832,6 +833,7 @@ function _init()
 	spk8_tract=1  --vocal tract lower for men, higher for women, children
 	spk8_f0=140--voicing pitch 140 man, 200 woman
 	spk8_volume=1
+	spk8_whisper=1
 end
 function _update()
 	speako8()
@@ -874,10 +876,10 @@ function _update()
 
 --say"B AE NG K ER0 . G OW IH NG . G OW IH NG ."
 --say"G UH D . M AO R N IH NG . D AO N ."
-say"S/AH/M/_/2.2/AE/NG/G/R/IY/_/B/2.2/3.02/AE/NG/K/ER/Z/_/G/OW/IH/NG/_/B/2.2/AA/NG/K/ER/Z/S/_/OW/2.2/V/ER/_/B/IH/T/_/K/-2.2/-3.02/OY/N/."
+--say"S/AH/M/_/2.2/AE/NG/G/R/IY/_/B/2.2/3.02/AE/NG/K/ER/Z/_/G/OW/IH/NG/_/B/2.2/AA/NG/K/ER/Z/S/_/OW/2.2/V/ER/_/B/IH/T/_/K/-2.2/-3.02/OY/N/."
 --1 duration, 2 volume, 3 pitch
-say"K/2.2/3.04/EY/T/_/T/UH/K/_/DH/-2.2/AH/_/P/2.2/AA/P/S/IH/K/-2.1/AH/L/."
-say"D/2.2/3.04/EY/V/IH/D/_/B/AA/T/_/G/R/-2.2/-3.02/EY/P/S/."
+--say"K/2.2/3.04/EY/T/_/T/UH/K/_/DH/-2.2/AH/_/P/2.2/AA/P/S/IH/K/-2.1/AH/L/."
+--say"D/2.2/3.04/EY/V/IH/D/_/B/AA/T/_/G/R/-2.2/-3.02/EY/P/S/."
 --say"D/EY/V/1/IH/D/./D/EY/V/IH/D/."
 --say"0/AE/M/B/AE/S/0/AH/D/0/ER/SH/1/IH/P"
 --say"0/AE/M/B/AE/S/0/AH/D/0/ER/SH/1/IH/P"
@@ -885,14 +887,17 @@ say"D/2.2/3.04/EY/V/IH/D/_/B/AA/T/_/G/R/-2.2/-3.02/EY/P/S/."
 --say"0/AH/G/EH/N/././1/AH/G/EH/N/././3/AH/G/EH/N/././4/AH/G/EH/N/."
 --say"-3.05/AH/_/AH/_/3.05/AH/_/3.10/AH"
 --say"K/3.05/EY/T/_/T/UH/K/_/DH/AH/_/P/AA/P/S/IH/K/AH/L/."
---say"UH"
+--say"HH/UH"
+cls()
+say"HH/-1.5/2.2/UH/L/OW/,/W/ER/L/D/."
+--say"HH/AH/."
 	end	
 end
 function _draw()
-	cls()
+cls()
 	line(0,64,127,64,7)
 	for i=1,127 do
 		line(i,127-peek(0x8000+i-1)/2,i,127-peek(0x8000+i)/2,8)
 	end
-	print((phone_index+1).." "..phone_list[phone_index+1].."   "..words[phone_index+1],0,0,7)
+--	print((phone_index+1).." "..phone_list[phone_index+1].."   "..words[phone_index+1],0,0,7)
 end
