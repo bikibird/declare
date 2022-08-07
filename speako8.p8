@@ -5,7 +5,7 @@ left,right,up,down,fire1,fire2=0,1,2,3,4,5
 
 --Todd 10, tat 5, cut 0, caught -6,cow -3,tide 5,ted 2,curt -2,tate -4,kit -4,peat 5,coat 1,toy -2,could 3,two -12
 do
-	phone=
+--[[	phone=
 	{
 		AA= --240
 		{
@@ -38,15 +38,9 @@ do
 		},
 		AH=  --120
 		{
-			{
-				{100,1,500,0,0,0,0,{{2550,140},{1220,50},{620,80},{-250,100}}}
-			},
-			{
-				{610,1,1000,4,3,0,0,{{2550,140},{1220,50},{620,80},{-250,100}}},
-			},	
-			{
-				{100,1,500,4,3,0,0,{{2550,140},{1220,50},{620,80},{-250,100}}}
-			},
+		
+			{660,1,1000,4,3,0,0,{{2550,140},{1220,50},{620,80},{-250,100}}},
+	
 			
 		},
 		AO= --240
@@ -610,13 +604,38 @@ do
 			--	{50,1,250,1,1,0,0,{{2550,140},{1220,50},{620,80},{-250,100}}},
 			}	
 		}
+
 	}
+]]
+
+data=split("aa,1320,1,500,4,3,0,.10,2600,160,1220,70,700,130,-250,100;ae,1270,1,1000,1,2,0,.05,2430,320,1660,150,620,170,-250,100;ah,660,1,1000,4,3,0,0,2550,140,1220,50,620,80,-250,100;ao,1320,1,1000,4,3,0,-.06,2570,80,990,100,600,90,-250,100;aw,720,1,1000,4,3,0,-.03,2550,140,1220,50,620,80,-250,100/720,1,1000,4,0,0,-.03,2960,400,2020,100,310,70,-250,100;ay,690,1,1000,4,3,0,.05,2550,200,1200,70,660,100,-250,100/690,1,1000,4,2,0,.05,2550,200,1880,100,400,70,-250,100;eh,830,1,1000,4,3,0,.02,2520,200,1720,100,480,70,-250,100;er,740,1,1000,4,2,0,-.02,1540,110,1270,60,470,100,-250,100/740,1,1000,4,2,0,-.02,1540,110,1310,60,420,100,-250,100;ey,520,1,500,4,3,0,-.04,2520,200,1720,100,480,70,-250,100/520,1,500,4,0,0,-.04,2600,200,2020,100,330,50,-250,100;ih,720,1,1000,4,3,0,-.04,2570,140,1800,100,400,50,-250,100;iy,880,1,1000,4,3,0,.05,2960,400,2020,100,310,70,-250,100;ow,1210,1,1000,4,3,0,.01,2300,70,1100,70,540,80,-250,100;oy,513,1,1000,3,3,0,-.02,2400,130,960,50,550,60,-250,100/513,1,1000,0,1,0,-.02,2400,130,1820,50,360,80,-250,100/513,1,1000,0,1,0,-.02,2400,130,1820,50,360,80,-250,100;uh,880,1,1000,4,3,0,.03,2350,80,1100,100,450,80,-250,100;uw=390,1,1000,3,3,0,-.12,2200,140,1250,110,350,70,-250,100/390,1,1000,0,1,0,-.12,2200,140,900,110,320,70,-250,100/390,1,1000,0,0,0,-.12,2200,140,900,110,320,70,-250,100;L,440,1,1000,4,3,0,0,2880,280,1050,100,310,50,-250,100;M,390,1,1000,4,3,0,0,2150,200,1100,150,400,300,-450,100;N,360,1,350,4,3,1,0,2600,170,1600,100,200,60,-450,100;NG,440,1,1000,0,0,0,0,2850,280,1990,150,200,60,-450,100",";")
+phone={}
+for phoneme in all(data) do
+	local key=sub(phoneme,1,2)
+	local frames=split(sub(phoneme,4),"/")
+	phone[key]={}
+	for f in all(frames) do
+		local frame_data=split(f)
+		local frame={unpack(frame_data,1,7)}
+		frame[8]={}
+		for i=0,3 do
+			add(frame[8],{unpack(frame_data,8+i*2,9+i*2)})
+		end
+		add(phone[key],frame)
+	end
+end
+
+--	phone[","]=2
+--	phone["."]={{1100,1,0,4,3,0,0,nil},}
+--	phone["-"]={{1100,1,0,11,0,0,0,nil}}
+--	phone["_"]={{1100,1,0,4,0,0,0,nil}}
 
 
-	--2020-900 -->10  -  -10  ((x -900)/1120)*20-10  ==(20*x-18000)/1120-10 == 0.017857*x-26.07142857 ==.0178*x-27
-	phone["_"]=1
-	phone[","]=2
-	phone["."]=3
+
+
+
+
+
 	poke(0x5f36,@0x5f36^^0x20) --turn off PCM channel dampening
 
 	
@@ -625,8 +644,7 @@ do
 	local v,v_step,v_max,f_step,bw_step,c2,source
 
 	 sounds,cascade={},{}
-	--local consonant=split"B,CH,D,DH,F,G,JH,K,L,M,N,NG,P,R,S,SH,T,TH,V,W,Y,Z,ZH"
-	--for cst in all(consonant) do consonant[cst]=1 end
+	
 
 	-- b coefficient first factor = =2*exp(-pi()*bandwidth/5512.5)  
 	b_factor=split"2,0x1.fd17,0x1.fa32,0x1.f752,0x1.f475,0x1.f19d,0x1.eec9,0x1.ebfa,0x1.e92e,0x1.e666,0x1.e3a3,0x1.e0e3,0x1.de27,0x1.db70,0x1.d8bc,0x1.d60c,0x1.d360,0x1.d0b9,0x1.ce14,0x1.cb74,0x1.c8d8,0x1.c63f,0x1.c3aa,0x1.c119,0x1.be8c,0x1.bc02,0x1.b97c,0x1.b6fa,0x1.b47b,0x1.b200,0x1.af89,0x1.ad15,0x1.aaa5,0x1.a838,0x1.a5cf,0x1.a369,0x1.a107,0x1.9ea9,0x1.9c4d,0x1.99f6,0x1.97a1,0x1.9550,0x1.9302,0x1.90b8,0x1.8e71,0x1.8c2e,0x1.89ed,0x1.87b0,0x1.8576,0x1.8340,0x1.810c,0x1.7edc,0x1.7caf,0x1.7a85,0x1.785f,0x1.763b,0x1.741b,0x1.71fd,0x1.6fe3,0x1.6dcc,0x1.6bb8,0x1.69a7,0x1.6798,0x1.658d,0x1.6385,0x1.6180,0x1.5f7e,0x1.5d7e,0x1.5b82,0x1.5988,0x1.5792,0x1.559e,0x1.53ad,0x1.51bf,0x1.4fd3,0x1.4deb,0x1.4c05,0x1.4a22,0x1.4842,0x1.4664,0x1.4489,0x1.42b1,0x1.40dc,0x1.3f09,0x1.3d39,0x1.3b6b,0x1.39a0,0x1.37d8,0x1.3612,0x1.344f,0x1.328f,0x1.30d1,0x1.2f15,0x1.2d5c,0x1.2ba6,0x1.29f2,0x1.2841,0x1.2692,0x1.24e5,0x1.233b,0x1.2193,0x1.1fee,0x1.1e4b,0x1.1cab,0x1.1b0c,0x1.1971,0x1.17d7,0x1.1640,0x1.14ab,0x1.1319,0x1.1189,0x1.0ffb,0x1.0e6f,0x1.0ce5,0x1.0b5e,0x1.09d9,0x1.0857,0x1.06d6,0x1.0558,0x1.03db,0x1.0261,0x1.00e9,0x.ff74,0x.fe00,0x.fc8f,0x.fb1f,0x.f9b2,0x.f847,0x.f6dd,0x.f576,0x.f411,0x.f2ae,0x.f14d,0x.efee,0x.ee91,0x.ed36,0x.ebdd,0x.ea86,0x.e930,0x.e7dd,0x.e68c,0x.e53c,0x.e3ef,0x.e2a3,0x.e15a,0x.e012,0x.decc,0x.dd88,0x.dc45,0x.db05,0x.d9c6,0x.d889,0x.d74e,0x.d615,0x.d4de,0x.d3a8,0x.d274,0x.d142,0x.d012,0x.cee3,0x.cdb6,0x.cc8b,0x.cb61,0x.ca39,0x.c913,0x.c7ee,0x.c6cc,0x.c5aa,0x.c48b,0x.c36d,0x.c251,0x.c136,0x.c01d,0x.bf05,0x.bdef,0x.bcdb,0x.bbc8,0x.bab7,0x.b9a7,0x.b899,0x.b78d,0x.b682,0x.b578,0x.b470,0x.b36a,0x.b265,0x.b161,0x.b05f,0x.af5f,0x.ae5f,0x.ad62,0x.ac66,0x.ab6b,0x.aa71,0x.a979,0x.a883,0x.a78e,0x.a69a,0x.a5a8,0x.a4b7,0x.a3c7,0x.a2d9,0x.a1ec,0x.a100,0x.a016,0x.9f2d,0x.9e45,0x.9d5f,0x.9c7a,0x.9b97,0x.9ab4,0x.99d3,0x.98f3,0x.9815,0x.9738,0x.965c,0x.9581,0x.94a7,0x.93cf,0x.92f8,0x.9222,0x.914e,0x.907a,0x.8fa8,0x.8ed7,0x.8e07,0x.8d39,0x.8c6b,0x.8b9f,0x.8ad4,0x.8a0a,0x.8941,0x.8879,0x.87b3,0x.86ed,0x.8629,0x.8566,0x.84a4,0x.83e3,0x.8323,0x.8264,0x.81a7,0x.80ea,0x.802e,0x.7f74,0x.7eba,0x.7e02,0x.7d4b,0x.7c94,0x.7bdf,0x.7b2b,0x.7a78,0x.79c6,0x.7915,0x.7864,0x.77b5,0x.7707,0x.765a,0x.75ae,0x.7503,0x.7458,0x.73af,0x.7307,0x.725f,0x.71b9,0x.7114,0x.706f,0x.6fcb,0x.6f29,0x.6e87,0x.6de6,0x.6d46,0x.6ca7,0x.6c09,0x.6b6c,0x.6ad0,0x.6a35"
@@ -638,65 +656,61 @@ do
 	local b100,c100=0x1.233b,-0x.52d4
 	function say(speech)
 		local phonemes=split(speech,"/")
-		local onset,coda=1,1 --1/0 enable/disable onset, 0/1 enable/disable coda
+		local onset,c,f_glide,bw_glide,d,source,volume,velocity,shift,frication,pitch,cascade,d2,rate
 		local c1,c2={},{}
-		local v_stress, d_stress, p_stress,h_phone=1,1,0 --unpack(stress)
+		local v_stress, d_stress, p_stress,v1,v2,h_phone=1,1,0,0,0 --unpack(stress)
 		for i,phoneme in pairs(phonemes) do
 			local stress=tonum(phoneme)
 			if stress then
 				local abs_stress=abs(stress)
 				local sign,stress_type,magnitude=sgn(stress),abs_stress\1,abs_stress & 0x.ffff
 				-- -.25 == 25% slower == 1-.25== .75 +.25 ==25% faster 1.25 
-	
 				if (stress_type==1) d_stress=1+sign*magnitude
 				if (stress_type==2) v_stress=1+sign*magnitude
 				if (stress_type==3) p_stress=spk8_intonation*sign*magnitude
 			elseif phoneme=="HH" then
-				h_phone,onset=true,1
+				h_phone=true
+			elseif phoneme=="-" then
+				onset=true
+			elseif phoneme=="_"then
+				local v_coda=v2*d2/d
+				d=100*d_stress
+				add(sounds,{d,source,frication,v_coda,-v_coda/d,0,pitch,c,f_glide,bw_glide,c2,v_stress,p_stress})
 			else
-				local p=phone[phoneme]
-				next_p=phone[phonemes[i+1]]
-				next_silence=type(next_p)=="number"
-
-				if type(p)=="number"  then
-					add(sounds,{p*1000+rnd(200)\1})
-					onset,coda=1,1
-				else
-					if (i==#phonemes or next_silence ) coda=0
-					for section=2-onset,#p-coda do
-						for frame in all(p[section]) do
-							local c,f_glide,bw_glide={},{},{}
-							local d, source,volume,velocity,shift,frication,pitch,cascade=unpack(frame)
-							local d2=d*d_stress
-							p_stress+=pitch*spk8_intonation
-							c1,v1=c2,v2
-							c2=cascade
-							if (velocity == 0) v1=volume
-							if (shift == 0) c1=cascade
-							if (#c1 != #c2) c1=cascade
-							v2=volume
-							for m=1,#c1 do
-								add(c,{unpack(c1[m])})
-								local cm,c2m=c[m],c2[m]
-								cm.y0=0
-								cm.y1=0
-								cm.y2=0
-								add(f_glide,shift*(c2m[1]-cm[1])/d)
-								add(bw_glide,shift*(c2m[2]-cm[2])/d)
-							end
-							if  h_phone then  -- get hh cascade
-								add(sounds,{200,2,0,1,0,1,pitch,c,f_glide,bw_glide,c2,v_stress,p_stress})
-								h_phone=false
-							end
-							add(sounds,{d2,source,frication,v1,velocity*(v2-v1)/d,v2,pitch,c,f_glide,bw_glide,c2,v_stress,p_stress})
-						end
-					end	
-					onset, coda=0,1 --disable onset and coda
-					v_stress, d_stress, p_stress=1,1,0 
+				for frame in all(phone[phoneme]) do
+					c,f_glide,bw_glide={},{},{}
+					d,source,volume,velocity,shift,frication,pitch,cascade=unpack(frame)
+					d2=d*d_stress
+					p_stress+=pitch*spk8_intonation
+					c1,v1=c2,v2  --copy from previous played sound
+					c2=cascade -- c2=this sound
+					if onset then
+						c1,v1=c2,0
+						add(sounds,{1100})
+						onset=false
+					end
+					if (velocity == 0) v1=volume
+					if (shift == 0) c1=cascade
+					if (#c1 != #c2) c1=cascade
+					v2=volume
+					for m=1,#c1 do
+						add(c,{unpack(c1[m])})
+						local cm,c2m=c[m],c2[m]
+						cm.y0=0
+						cm.y1=0
+						cm.y2=0
+						add(f_glide,shift*(c2m[1]-cm[1])/d)
+						add(bw_glide,shift*(c2m[2]-cm[2])/d)
+					end
+					if  h_phone then  -- get hh cascade
+						add(sounds,{200,2,0,1,0,1,pitch,c,f_glide,bw_glide,c2,v_stress,p_stress})
+						h_phone,onset=false,true
+					end
+					add(sounds,{d2,source,frication,v1,velocity*(v2-v1)/d,v2,pitch,c,f_glide,bw_glide,c2,v_stress,p_stress})
 				end
+					v_stress, d_stress, p_stress=1,1,0 
 			end	
 		end	
-
 	end
 sample=0	
 t=0
@@ -803,13 +817,13 @@ function _init()
 	phone_list=split"AA,AE,AH,AO,AW,AY,EH,ER,EY,IH,IY,OW,OY,UH,UW"
 	words=split"odd,at,hut,ought,cow,hide,ed,hurt,ate,it,eat,oat,toy,hood,two"
 	spk8_vibrato=.04  --0 monotone through 3 sing-songy recommended: .75  -- vibrator how much pitch variation. Recommend between .02 and .04
-	spk8_intonation=2--the impact of stress 3 pitch <1 less >1 more
-	spk8_speed=.1 --duration multiplier for voiced sounds. <below 1 faster, above 1 slower
-	spk8_tract=.85  --vocal tract higher for men 1 is average, lower for women .85 average for woment, children
-	spk8_f0=300 --voicing pitch 140 man, 200 woman
-	spk8_volume=.5
+	spk8_intonation=1--the impact of stress 3 pitch <1 less >1 more
+	spk8_speed=1 --duration multiplier for voiced sounds. <below 1 faster, above 1 slower
+	spk8_tract=1  --vocal tract higher for men 1 is average, lower for women .85 average for woment, children
+	spk8_f0=140 --voicing pitch 140 man, 200 woman
+	spk8_volume=1
 	spk8_whisper=1 --1 normal, 2 whisper
-	spk8_quality=.6 --.1 creaky, 1 breathy,2 weak
+	spk8_quality=.5 --.1 creaky, 1 breathy,2 weak
 end
 function _update()
 	speako8()
@@ -853,7 +867,7 @@ function _update()
 
 --say"B AE NG K ER0 . G OW IH NG . G OW IH NG ."
 --say"G UH D . M AO R N IH NG . D AO N ."
-say"S/AH/M/_/2.2/AE/NG/G/R/IY/_/B/2.2/3.02/AE/NG/K/ER/Z/_/G/OW/IH/NG/_/B/2.2/AA/NG/K/ER/Z/S/_/OW/2.2/V/ER/_/B/IH/T/_/K/-2.2/-3.02/OY/N/."
+--say"S/AH/M/_/2.2/AE/NG/G/R/IY/_/B/2.2/3.02/AE/NG/K/ER/Z/_/G/OW/IH/NG/_/B/2.2/AA/NG/K/ER/Z/S/_/OW/2.2/V/ER/_/B/IH/T/_/K/-2.2/-3.02/OY/N/."
 --1 duration, 2 volume, 3 pitch
 --say"K/2.2/3.04/EY/T/_/T/UH/K/_/DH/-2.2/AH/_/P/2.2/AA/P/S/IH/K/-2.1/AH/L/."
 --say"D/2.2/3.04/EY/V/IH/D/_/B/AA/T/_/G/R/-2.2/-3.02/EY/P/S/."
@@ -867,7 +881,7 @@ say"S/AH/M/_/2.2/AE/NG/G/R/IY/_/B/2.2/3.02/AE/NG/K/ER/Z/_/G/OW/IH/NG/_/B/2.2/AA/
 --say"HH/UH"
 
 --say"HH/-1.5/2.2/UH/L/OW/,/W/ER/L/D/."
-
+say"n/ao/er/m/ih/n"
 	end	
 end
 function _draw()
