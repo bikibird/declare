@@ -407,9 +407,14 @@ Syntactic structure symbols are important determiners of sentence stress, rhythm
 
 Segmental duration:
 
-The durational definitions adopted corrspond to the closure for a stop (any burst and aspiration at relase are assumed to be a part of the following segment)
+The durational definitions adopted corrspond to the closure for a stop (any burst and aspiration at release are assumed to be a part of the following segment)
+
+minimum_duration = mindur if stressed syllable.  For unstressed minimum_duration=mindur/2 
+(Rule 7)
 
 Dur=((inherent_duration-minimum_duration)*prcnt)/100)+minimum_duration
+
+
 
 mininum_duration if stressed. prcnt is set to 100 and rules update according to prcnt=prcnt*prcnt1
 
@@ -419,6 +424,49 @@ Split on commas and periods and insert 200ms pause before each clause. (Rule 1)
 
 For each clause lengthen last vowel or syllabic consonsant prcnt*=1.4
 (Rule 2)
+
+shorten all other vowel syllables prcnt*=.6 unless r,l,n,m,ng, which should be lengthened prcnt*=1.4 if phrase final
+(Rule 3)
+
+If not the final syllable of a word shorten syllabe prcnt*=.85
+(Rule 4)
+
+If word is more than one syllable shorten prcnt*=.8
+(Rule 5)
+
+If consonant is not at start of word shorten  prcnt*=.85
+(Rule 6)
+
+Unstressed and 2ndary stress are shortened: (Rule 7)
+
+middle syllable-- prcnt*=.5
+first or last syllable--  prnt*=.7
+r,l prcnt*=.1
+
+An emphasized vowel is lengthened by prcnt*=1.4 (Rule 8)
+
+(Rule 9)
+If word ends in sressed vowel lengthen vowel prcnt*=1.2
+If vowel is before voiced fricative prcnt*=1.6
+if vowel is before voiced plosive prcnt*=1.2
+if vowel is before an unstressed nasal prcnt*=.85
+if vowel is before a voiceless fricative prcnt*=.7
+Othewise no change.
+
+(Rule 9) If syllable not at end of phrase, adjust above numbers prcnt1=.7+ .3*prcnt1
+
+(Rule 10) Ignoring word boundaries 
+If vowel is followed by a vowel prcnt*=1.20
+If vowel is preceded by a vowel prcnt*=.7
+Consonant between two constants prcnt*=.5  (.7*.7=.49 so ignore this rule and apply two below!)
+consonant preceded by a consonant prcnt*=.7
+consonant followed by a consonant prcnt *=.7
+
+(Rule 11) a 1 or 2 stressed vowel or sonorant preceded by a voiceless plosive add 25 ms.
+
+Speed should only apply to pauses!
+
+For stops only apply duration calc to the actual stop.  Burst/aspiration don't go into the calc.
 
 
 

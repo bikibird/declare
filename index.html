@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Declare: Pronouncing Tool for Speako-8</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+<link rel="stylesheet" href="denote.css">
+</head>
+<body>
+	<h1 class="text-center display-4">Declare: Pronouncing Tool for Speako-8</h1>
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-auto">
+				<div class="row justify-content-center">
+					<div>
+						<div id="FileDrop">
+							<div  id="Text">Drop MIDI file here or click to choose file.</div>
+							<input type="file" accept="audio/midi">
+						</div>
+					</div>
+				</div>
+				<div class="row justify-content-center"> 
+					<div class="col-md-auto">
+						<div class="denote-player">
+							<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault();" >
+							</canvas>
+						</div>
+						<button class="btn btn-info" id="denote-play" type="button" disabled>Play</button>
+						<button class="btn btn-info" id="denote-copy" type="button" disabled>Copy SFX</button>
+					</div>
+				</div>
+				<div class="row"> 
+					<div class="col-md">
+						<div id="denote-sfx" class="d-none"></div>
+						<div class="text-info d-none text-right" id="copied"><em> Copied!</em></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-auto">
+				<div class="denote-container"></div>	
+			</div>
+		</div>
+	</div>
+		
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<!-- pronouncing-browser.js is from https://github.com/aparrish/pronouncingjs -->
+	<script src="pronouncing-browser.js"></script>
+	<script src="declare.js"></script>
+
+<script type="text/javascript">
+	var stoppedFlag=true
+	var picoSFXindex=0
+	var picoMusicIndex=0
+	var pico8_gpio = new Proxy(new Array(128),{
+		set: function(gpio, property, value)
+		{
+			var index=parseInt(property)
+			gpio[index] = value
+    		if (index===0)
+			{
+				switch (value)
+				{
+					case 1:  //PICO-8 Waiting for data
+						
+						if (currentMidi?.result?.sfxes && picoSFXindex !== currentMidi.result.sfxes.length )
+						{
+							var sfx=currentMidi.result.sfxes[picoSFXindex]
+							for (let i = 2; i < sfx.length; i+=2)
+							{
+								gpio[i/2]=parseInt(sfx[i]+sfx[i+1],16)
+							}
+							picoSFXindex++
+							gpio[0]=2  //Sent SFX data
+						}
+						else
+						{
+							if (currentMidi?.result?.music && picoMusicIndex !== currentMidi.result.music.length)
+							{
+								var music=currentMidi.result.music[picoMusicIndex]
+								music.forEach((byte,i)=>
+								{
+									gpio[i+1]=byte
+								})
+								picoMusicIndex++
+								gpio[0]=3 //Sent Music data
+							}
+							else
+							{
+								//picoSFXindex=0
+								//picoMusicIndex=0
+								gpio[0]=10 //transfer complete
+								
+							}	
+						}
+						break
+					case 5:  //PICO 8 Play request Ackknowledged
+						stoppedFlag=false
+						document.querySelector("#denote-play").innerHTML="Stop"
+						document.querySelector(".denote-player").classList.add("denote-player-playing")
+						break
+					case 7:  //PICO 8 Stop request Acknowledged
+						stoppedFlag=true
+						document.querySelector("#denote-play").innerHTML="Play"
+						document.querySelector(".denote-player").classList.remove("denote-player-playing")
+						break	
+					case 9:  //PICO 8 Reset request Acknowledged
+						document.querySelector("#denote-play").setAttribute("disabled",true)
+						document.querySelector("#denote-copy").setAttribute("disabled",true)
+						stoppedFlag=true
+						document.querySelector("#denote-play").innerHTML="Play"	
+						picoSFXindex=0
+						picoMusicIndex=0
+						gpio[0]=0 //request to send data
+						break		
+					case 11:  //PICO 8 transfer complete acknowledged
+						document.querySelector("#denote-play").removeAttribute("disabled")
+						document.querySelector("#denote-copy").removeAttribute("disabled")
+						break
+				}
+			}
+    		return true
+		}})
+	
+
+	if (!(window.File && window.FileReader && window.FileList && window.Blob))
+	{
+		document.querySelector("#FileDrop #Text").textContent ="Reading files not supported by this browser";
+	} 
+	else
+	{
+		const fileDrop = document.querySelector("#FileDrop");
+
+		fileDrop.addEventListener("dragenter", () =>
+			fileDrop.classList.add("Hover")
+		)
+
+		fileDrop.addEventListener("dragleave", () =>
+			fileDrop.classList.remove("Hover")
+		)
+
+		fileDrop.addEventListener("drop", () =>
+			fileDrop.classList.remove("Hover")
+		)
+
+		document.querySelector("#FileDrop input").addEventListener("change", (e) => 
+		{
+			const files = e.target.files
+			if (files.length > 0) {
+				const file = files[0]
+				document.querySelector("#FileDrop #Text").textContent = file.name
+				parseFile(file)
+				
+			}
+		})
+		document.querySelector("#FileDrop input").addEventListener("click", (e) => 
+		{
+			p8_create_audio_context()
+			p8_run_cart() 
+		})
+		document.querySelector("#FileDrop input").addEventListener("drop", (e) => 
+		{
+			p8_create_audio_context()
+			p8_run_cart() 
+		})
+		document.querySelector("#denote-play").addEventListener("click",(e)=>
+		{
+			if (stoppedFlag)
+			{
+				pico8_gpio[0]=4  //Play music
+			}
+			else
+			{
+				pico8_gpio[0]=6  //Stop music
+			}
+		})
+		document.querySelector("#denote-copy").addEventListener("click",(e)=>
+		{
+			var sfx=document.getElementById("denote-sfx")
+			sfx.classList.remove("d-none")
+			var range = document.createRange()
+			range.selectNode(sfx)
+			window.getSelection().removeAllRanges()
+			window.getSelection().addRange(range)
+			document.execCommand('copy')
+			window.getSelection().removeAllRanges()
+			sfx.classList.add("d-none")
+			var copied= document.getElementById("copied")
+			copied.classList.remove("d-none")
+			setTimeout(()=>copied.classList.add("d-none"), 1000)
+		})
+	}
+
+
+	var currentMidi = null
+	var granularityLabel=document.getElementById("granularityLabel")
+	var granularity=document.getElementById("granularity")
+	function parseFile(file)
+	{
+		//read the file
+		const reader = new FileReader()
+		reader.onload = function (e)
+		{
+			const midi = new Midi(e.target.result)
+			currentMidi = analyze(midi)//,{granularity:2**parseInt(granularity.value)})
+			render(currentMidi)
+			update()
+		}
+		reader.readAsArrayBuffer(file)
+	}
+
+	function render(midi)
+	{
+		const {sections,sfx}=midi.result
+		document.querySelector(".denote-container").innerHTML=
+		`${sections.reduce((s, section,index) => s+
+`<div class="denote-section card">
+	<div class="card-header text-info">
+		<div class="row justify-contents-full">
+			<div class="col-md-auto">
+				<input type="checkbox" id="include-section${index+1}" name="include section ${index+1}"
+				checked class="denote-section-include"> <strong>Section ${index+1}</strong> BPM:${Math.floor(section.bpm+.5)}
+			</div>
+			<div class="col-md-auto">
+				<label for="granularity" id="granularityLabel" class="text-info  denote-resolution">Resolution: 16th Note</label>
+			</div>	
+			<div class="col-md-auto">
+				<input type="range"  class="denote-resolution" id="granularity" min="2" max="8" value=4>
+			</div>
+		</div>
+	</div>
+	<div card-body">
+		<ul class="list-group list-group-flush">
+  ${section.channels.reduce((t, track,trackIndex) => t+
+	`
+			<li class="denote-track list-group-item">
+				<div class="row">
+					<div class="col-md-auto">
+						<input type="checkbox" id="include-track${trackIndex+1}" name="include track ${trackIndex+1}"
+         checked class="denote-track-include"><span class="text-info"> <strong>Track ${trackIndex+1}</strong> (${track.instrument})</span>
+					</div>
+					<div class="col-md-auto">
+						<div class="input-group input-group-sm mb-3">
+  							<div class="input-group-prepend">
+    							<label class="input-group-text" for="instrument">Instrument</label>
+  							</div>
+							<select name="Instrument" class="denote-instrument form-select custom-select" id="instrument">
+								<option value="0">Triangle</option>
+								<option value="64">Tilted Saw</option>
+								<option value="128">Saw</option>
+								<option value="192">Square</option>
+								<option value="256">Pulse</option>
+								<option value="320">Organ</option>
+								<option value="384">Noise</option>
+								<option value="448">Phaser</option>
+								<option value="32768">Custom 0</option>
+								<option value="32832">Custom 1</option>
+								<option value="32896">Custom 2</option>
+								<option value="32960">Custom 3</option>
+								<option value="33024">Custom 4</option>
+								<option value="33088">Custom 5</option>
+								<option value="33152">Custom 6</option>
+								<option value="33216">Custom 7</option>
+							</select>
+						</div>	
+					</div>
+				</div>	
+				
+				<div class="row">
+					
+					<div class="col-md-auto">
+						<div class="input-group input-group-sm mb-3">
+  							<div class="input-group-prepend">
+    							<label class="input-group-text" for="attack">Attack</label>
+  							</div>
+							<select name="attack" class="denote-attack form-select custom-select" id="attack">
+								<option value="0">Steady</option>
+								<option value="4096">Slide</option>
+								<option value="8192">Vibrato</option>
+								<option value="12388">Drop</option>
+								<option value="16384">Fade In</option>
+								<option value="20480">Fade Out</option>
+								<option value="24576">Fast Arpeggio</option>
+								<option value="28762">Slow Arpeggio</option>
+								<option value="-1">None</option>
+							</select> 
+						</div>	
+					</div>
+					<div class="col-md-auto">
+						<div class="input-group input-group-sm mb-3">
+  							<div class="input-group-prepend">
+    							<label class="input-group-text input-group-text-sm" for="sustain">Sustain</label>
+  							</div>
+							<select name="sustain" class="denote-sustain form-select custom-select" id="sustain">
+								<option value="0">Steady</option>
+								<option value="4096">Slide</option>
+								<option value="8192">Vibrato</option>
+								<option value="12388">Drop</option>
+								<option value="16384">Fade In</option>
+								<option value="20480">Fade Out</option>
+								<option value="24576">Fast Arpeggio</option>
+								<option value="28762">Slow Arpeggio</option>
+								<option value="-1">None</option>
+							</select>
+						</div>	
+					</div>
+					<div class="col-md-auto">
+						<div class="input-group input-group-sm mb-3">
+  							<div class="input-group-prepend">
+    							<label class="input-group-text input-group-text-sm" for="release">Release</label>
+  							</div>
+							<select name="release" class="denote-release form-select custom-select" id="release">
+								<option value="0">Steady</option>
+								<option value="4096">Slide</option>
+								<option value="8192">Vibrato</option>
+								<option value="12388">Drop</option>
+								<option value="16384">Fade In</option>
+								<option value="20480">Fade Out</option>
+								<option value="24576">Fast Arpeggio</option>
+								<option value="28762">Slow Arpeggio</option>
+								<option value="-1">None</option>
+							</select>
+						</div>	
+					</div>
+				</div>
+				<div class="denote-filter row justify-content-center">
+					<div class="col-md-auto">
+						<div class="btn-group btn-group-toggle " data-toggle="buttons">
+							<label class="btn btn-sm btn-outline-info active">
+								<input type="radio" name="noise${index+1}-${trackIndex+1}" checked value="0">X
+							</label>
+							<label class="btn btn-sm btn-outline-info">
+								<input type="radio" name="noise${index+1}-${trackIndex+1}" value="2">Noise
+							</label>
+						</div>
+						<div class="btn-group btn-group-toggle " data-toggle="buttons">
+							<label class="btn btn-sm btn-outline-info active">
+								<input type="radio" name="buzz${index+1}-${trackIndex+1}" checked value="0">X
+							</label>
+							<label class="btn btn-sm btn-outline-info">
+								<input type="radio" name="buzz${index+1}-${trackIndex+1}" value="4">Buzz
+							</label>
+						</div>
+						<div class="btn-group btn-group-toggle " data-toggle="buttons">
+							<label class="btn btn-sm btn-outline-info active">
+								<input type="radio" name="detune${index+1}-${trackIndex+1}" checked value="0">X
+							</label>
+							<label class="btn btn-sm btn-outline-info">
+								<input type="radio" name="detune${index+1}-${trackIndex+1}" value="8">Detune
+							</label>
+							<label class="btn btn-sm btn-outline-info">
+								<input type="radio" name="detune${index+1}-${trackIndex+1}" value="16">More
+							</label>
+						</div>
+						<div class="btn-group btn-group-toggle " data-toggle="buttons">
+							<label class="btn btn-sm btn-outline-info active">
+								<input type="radio" name="reverb${index+1}-${trackIndex+1}" checked value="0">X
+							</label>
+							<label class="btn btn-sm btn-outline-info">
+								<input type="radio" name="reverb${index+1}-${trackIndex+1}" value="24">Reverb
+							</label>
+							<label class="btn btn-sm btn-outline-info">
+								<input type="radio" name="reverb${index+1}-${trackIndex+1}" value="48">More
+							</label>
+						</div>
+						<div class="btn-group btn-group-toggle" data-toggle="buttons">
+							<label class="btn btn-sm btn-outline-info active">
+								<input type="radio" name="dampen${index+1}-${trackIndex+1}" checked value="0">X
+							</label>
+							<label class="btn btn-sm btn-outline-info">
+								<input type="radio" name="dampen${index+1}-${trackIndex+1}" value="72">Dampen
+							</label>
+							<label class="btn btn-sm btn-outline-info">
+								<input type="radio" name="dampen${index+1}-${trackIndex+1}" value="144">More
+							</label>
+						</div>
+					</div>	
+				</div>	
+			</li>
+		</ul>`,"")}  
+	</div>
+</div>`,"")}` //card
+			
+	}
+	document.addEventListener('change', (e)=>onchange(e))
+	onchange=function(e)
+	{
+		if (e.target.matches(".denote-section-include,.denote-track-include,.denote-instrument,input.denote-resolution,.denote-attack,.denote-sustain,.denote-release,input[type='radio']"))
+		{
+			update()
+		}
+		
+	}
+	update=function()
+	{
+		document.querySelectorAll(".denote-section").forEach((element,sectionIndex)=>
+		{
+			currentMidi.result.sections[sectionIndex].include=element.querySelector(".denote-section-include").checked
+			var granularity=element.querySelector(" input.denote-resolution").value
+			currentMidi.result.sections[sectionIndex].granularity=parseInt(2**parseInt(granularity))
+			switch(granularity) 
+			{
+				case "2":
+					element.querySelector(" label.denote-resolution").innerHTML="Quarter Note Resolution"
+					break
+				case "3":
+					element.querySelector(" label.denote-resolution").innerHTML="Eighth Note Resolution"
+					break
+				case "4":
+					element.querySelector(" label.denote-resolution").innerHTML="16th Note Resolution"
+					break
+				case "5":
+					element.querySelector(" label.denote-resolution").innerHTML="32nd Note Resolution"
+					break
+				case "6":
+					element.querySelector(" label.denote-resolution").innerHTML="64th Note Resolution"
+					break
+				case "7":
+					element.querySelector(" label.denote-resolution").innerHTML="128th Note Resolution"
+					break
+				case "8":
+					element.querySelector(" label.denote-resolution").innerHTML="256th Note Resolution"
+					break						
+			}
+			element.querySelectorAll(" .denote-track-include").forEach((track,trackIndex)=>
+			{
+				currentMidi.result.sections[sectionIndex].channels[trackIndex].include=track.checked
+			})
+			element.querySelectorAll(" .denote-instrument").forEach((instrument,trackIndex)=>
+			{
+				currentMidi.result.sections[sectionIndex].channels[trackIndex].instrument=parseInt(instrument.value)
+			})
+			element.querySelectorAll(" .denote-attack").forEach((attack,trackIndex)=>
+			{
+				currentMidi.result.sections[sectionIndex].channels[trackIndex].attack=parseInt(attack.value)
+			})
+			element.querySelectorAll(" .denote-sustain").forEach((sustain,trackIndex)=>
+			{
+				currentMidi.result.sections[sectionIndex].channels[trackIndex].sustain=parseInt(sustain.value)
+			})
+			element.querySelectorAll(" .denote-release").forEach((release,trackIndex)=>
+			{
+				currentMidi.result.sections[sectionIndex].channels[trackIndex].release=parseInt(release.value)
+			})
+			element.querySelectorAll(" .denote-filter").forEach((filter,trackIndex)=>
+			{
+				result=0
+				filter.querySelectorAll(" input").forEach(input=>result+=input.checked?parseInt(input.value):0)
+				currentMidi.result.sections[sectionIndex].channels[trackIndex].sfxFilter=result
+			})
+		})
+		
+		currentMidi=convert(currentMidi)//convert(currentMidi,{granularity:2**parseInt(granularity.value)})
+		document.querySelector("#denote-sfx").innerHTML=currentMidi.result.sfx
+		pico8_gpio[0]=8 //Reset PICO 8 counters etc
+	}
+	</script>
+	<!--script src="pico8shell.js"></script-->
+</body>
+</html>	
