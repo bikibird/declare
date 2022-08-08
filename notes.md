@@ -32,14 +32,14 @@ You can still see some things that look like formants. But the acoustic properti
 
 odd at hut ought cow hide be cheese dee thee Ed hurt ate fee green he it eat gee key lee me knee ping oat toy pee read sea she tea theta hood two vee we yield zee seizure
 
-# Declare
-
-A unit of declare sound is composed of four waves, f0, f1, f2, and noise, lasting for a duration
 
 ## F0
 F0 simulates the glottal pulse train: http://msp.ucsd.edu/syllabi/170.13f/course-notes/node5.html#:~:text=When%20they%20open%2C%20a%20short,train%20with%20an%20audible%20pitch.
 
 It is between 60 and 600 htz.  
+
+men's modal F0 typically ranges between 80 and 175 Hz and women's between 160 and 270 Hz
+5 year old child 220-320
 
 ## Production
 
@@ -348,6 +348,15 @@ To get the source waveform in praat see https://www.fon.hum.uva.nl/praat/manual/
 
 space pause 50 ticks, comma pause, 100 ticks.  period, !, ?, 200 ticks
 
+
+additional resonator RNP
+and anti-resonator RNZ into the cascade vocal tract
+modelø The nasal pole frequency FNP can be set to a
+fixed value of about 270 Hz for all time. The nasal zero
+frequency FNZ should also be set to a value of about
+270 Hz during non-nasalized sounds, but the frequency
+of the nasal zero must be increased during the production of nasals and nasalization. T
+
 The RNP-RNZ pair is
 effectively removed from the cascade circuit during
 the synthesis of non-nasalized speech sounds if FNP
@@ -388,4 +397,29 @@ separately we may see that the difference is almost entirely
 caused by the markedly longer primary stressed vowels in the
 female group (85 ms vs. 78 ms) which explains the significant
 interaction between Stress and Sex.
+
+https://archive.org/details/frontiersofspeec0000unse/page/292
+
+F0 contour
+a) gradual fall for a statement c) add locla pertubations for lexical stress and segmental factors. d)
+
+Syntactic structure symbols are important determiners of sentence stress, rhythme, and intonation.  syntactic structure symbols appear just before the word boundary symbol.  Only one syntactic boundary symbol is always used.
+
+Segmental duration:
+
+The durational definitions adopted corrspond to the closure for a stop (any burst and aspiration at relase are assumed to be a part of the following segment)
+
+Dur=((inherent_duration-minimum_duration)*prcnt)/100)+minimum_duration
+
+mininum_duration if stressed. prcnt is set to 100 and rules update according to prcnt=prcnt*prcnt1
+
+Set prcnt to 1
+
+Split on commas and periods and insert 200ms pause before each clause. (Rule 1)
+
+For each clause lengthen last vowel or syllabic consonsant prcnt*=1.4
+(Rule 2)
+
+
+
 
