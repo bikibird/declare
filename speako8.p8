@@ -88,7 +88,7 @@ end
 						add(bw_glide,shift*(c2m[2]-cm[2])/d)
 					end
 					if  h_phone then  -- get hh cascade
-						add(sounds,{200,2,0,1,0,1,pitch,c,f_glide,bw_glide,c2,v_stress,p_stress})
+						add(sounds,{440,2,0,1,0,1,pitch,c,f_glide,bw_glide,c2,v_stress,p_stress})
 						h_phone=false --,onset=true
 					end
 					add(sounds,{d2,source,frication,v1,velocity*(v2-v1)/d,v2,pitch,c,f_glide,bw_glide,c2,v_stress,p_stress})
@@ -202,60 +202,10 @@ function _update()
 	if (btnp(fire2)) then
 		
 		sounds={}
---	print(phone_list[phone_index+1])	
---say(phone_list[phone_index+1])
---say"L OY1 AH0 L . R UH1 ER0 AH0 L . L AO1 Y ER0 . L EH1 ER0 IY0 . ."
---say"M AO ER N IH NG _ N AO ER M AH L _ N AO ER M IH N ."
 
---say"R AH1 B ER0 . B EY1 B IY0 . B AH1 G IY0 . B AH1 M P ER0 Z ."
---say"SH IY _ S EH L Z _ S IY _ SH EH L Z _ AA N _ DH AH _ S IY _ SH AO ER ."
---say"DH AH0 _ B EY1 ZH _ HH Y UW1 _ AA1 N _ DH AH0 _ W AO1 T ER0 Z _ AH1 V _ DH AH0 _ L AA1 K _ IH2 M P R EH1 S T _ AO1 L , IH2 N K L UW1 D IH0 NG _ DH AH0 _ F R EH1 N CH _ K W IY1 N , B IY0 F AO1 R _ SH IY1 _ HH ER1 D _ DH AE1 T _ S IH1 M F AH0 N IY0 _ AH0 G EH1 N , JH AH1 S T _ AE1 Z _ Y AH1 NG _ AA1 R TH ER0 _ W AO1 N T IH0 D ." 
+--say'-/-1.28/ay/-1.15/k/-1.49/ah/-1.15/m/-1.15/t/-1.49/uw/-1.15/b/-1.49/eh/r/-1.40/iy/-1.15/s/-1.49/iy/z/1.40/er/-1.15/n/-1.49/aa/-1.38/t/-1.15/t/-1.49/uw/-1.15/p/-1.15/r/-1.49/ey/-1.46/z/-1.15/hh/-1.49/ih/-1.15/m/-1.49/ih/-1.15/m'
 
---say"SH AH0 K AA1 G OW2 . CH ER1 CH . B R AH1 N CH ."
---say"CH ER CH . B R AH N CH ."
---say"JH AH M P IH NG . JH AH JH . JH EY M IY ."
---say"F AY1 N . F AY1 F . B AH1 F AH0 T ."
---say"S IH1 M P AH0 L . S AY1 M AH0 N . B AE1 S ."
---say"SH EH1 L IY0 . P UH1 SH AH0 Z . K AE1 SH ."
---say"K AY1 AE0 K . K IH1 K ER0 . N UH1 K L ."
---say"K AE1 M P . P IH1 NG K . P AA1 P IY0 . P R IH1 N S ."
---say"T EY1 K . T OW1 T AH0 M . K EY1 T ."
---say"B AA1 B . B EY1 B IY0 . R AA1 B AH0 N ."
---say"G OW1 . G IH1 G AH0 L . G EY1 G ."
---say"D AE1 P ER0 . D UW1 D . P AE1 D IH0 NG ."
---say"TH IH1 N . TH IH1 NG . B EH1 TH AH0 N IY0 . B EH1 TH"
---say"Z IY1 B R AH0 . P IY1 T S AH0 . JH AE1 Z Z ."
---say"R IH1 V ER0 . V AE1 L IY0 . R EY1 V ."
---say"N AE1 N IY0 . N AH1 N . N IH1 K AH0 L . N UW1 N ."
---say"M AY1 T IY0 _ P AE1 M _ L EH1 M AH0 N ."
 
---say"DH/AH/_/B/EY/ZH/_/HH/Y/3.03/UW/_/2.2/AA/N/_/DH/AH/_/W/2.2/AO/T/ER/Z/_/2.2/AH/V/_/DH/AH/_/L/2.2/3.03/AA/K/_/IH/M/P/R/1.2/EH/S/D/_/2.2/AO/L/,/IH/N/K/L/1.2/UW/D/IY/NG/_/DH/AH/_/F/R/2.2/EH/N/CH/_/K/W/2.2/1.2/3.03/IY/N/,/B/IH/F/2.2/AO/R/_/SH/2.2/IY/_/HH/ER/D/_/DH/2.2/AE/T/_/S/1.2/3.03/IH/M/F/AH/N/IY/_/AH/G/EH/N/,/JH/1.2/AH/S/T/_/2.2/AE/Z/_/Y/1.2AH/NG/_/2.2/3.03/AA/R/TH/ER/_/W/2.2/AO/N/T/-2.2/-3.03/IH/D/." 
-
---say"DH AH0 _ B EY ZH _ HH Y UW _ AA N _ DH AH0 _ W AO T ER0 Z _ AH V _ DH AH0 _ L AA K _ IH M P R EH S T _ AO L , IH N K L UW D IH0 N G _ DH AH0 _ F R EH N CH _ K W IY N , B IY0 F AO R _ SH IY _ HH ER D _ DH AE T _ S IH M F AH0 N IY0 _ AH G EH N , JH AH S T _ AE Z _ Y AH N G _ AA R TH ER0 _ W AO N T IH D ."
-
---say"B AE NG K ER0 . G OW IH NG . G OW IH NG ."
---say"G UH D . M AO R N IH NG . D AO N ."
---say"S/AH/M/2.2/AE/NG/G/R/IY/B/2.2/3.02/AE/NG/K/ER/Z/_/G/OW/IH/NG/B/2.2/AA/NG/K/ER/Z/S/OW/2.2/V/ER/B/IH/T/K/-2.2/-3.02/OY/N"
---1 duration, 2 volume, 3 pitch
---say"K/2.2/3.04/EY/T/_/T/UH/K/_/DH/-2.2/AH/_/P/2.2/AA/P/S/IH/K/-2.1/AH/L/."
---say"D/2.2/3.04/EY/V/IH/D/_/B/AA/T/_/G/R/-2.2/-3.02/EY/P/S/."
---say"D/EY/V/1/IH/D/./D/EY/V/IH/D/."
---say"0/AE/M/B/AE/S/0/AH/D/0/ER/SH/1/IH/P"
---say"0/AE/M/B/AE/S/0/AH/D/0/ER/SH/1/IH/P"
---say"AH"
---say"0/AH/G/EH/N/././1/AH/G/EH/N/././3/AH/G/EH/N/././4/AH/G/EH/N/."
---say"-3.05/AH/_/AH/_/3.05/AH/_/3.10/AH"
---say"K/3.05/EY/T/_/T/UH/K/_/DH/AH/_/P/AA/P/S/IH/K/AH/L/."
---say"HH/UH"
---say"s/ah/m/2.2/ae/ng/r/iy/b/2.2/3.02/ae/ng/k/er--/z"--/_/G/OW/IH/NG/B/2.2/AA/NG/K/ER/Z/S/OW/2.2/V/ER/B/IH/T/K/-2.2/-3.02/OY/N"
---say"s/ah/m/-/ae/ng/r/iy/-/b/ae/ng/k/er"
---say"r/iy"
---say"hh/ah/l/ow/w/er/l/d/"
---say"n/-1.6538/ao/-1.6538/er/m/-1.048/ih/1.4/n/_"
-
---ih*=1.4*.8*.85 = .952=-1.048
---ao er *=.6*.85*.8*.7 =-1.6538
-say'-/r/-1.58/ah/-1.60/_/b/-1.62/er/-1.60/_/b/-1.59/ey/-1.60/_/b/-1.52/iy/-1.60/_/b/-1.58/ah/-1.67/_/g/-1.52/iy/-1.60/_/b/-1.58/ah/m/-1.57/_/p/1.12/er/1.40/z'
 	end	
 end
 function _draw()
