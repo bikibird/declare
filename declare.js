@@ -1,21 +1,91 @@
-pronouncing.syllabify=function(p)
+var phoneticize = function(passage)
 {
+	passage=passage.toLowerCase().replace(/\s+/g, ' ').trim().replace(" -","-").replace("- ","-").replace(" ,",",").replace(", ",",").replace(" .",".").replace(". ",".").replace(" ?","?").replace("? ","?")
+	if (!passage[passage.length-1].match(/[?.]/g))passage+="."
+	var words=[]
+	var word={spelling:"",syntax:" ",pronounciations:[]} 
+	function update(char)
+	{
+		word.syntax=char
+		words.push(word)
+		return {spelling:"",syntax:" ",pronounciations:[]} 
+	}
+	for (let i = 0; i < passage.length; i++)
+	{
+	
+		switch (passage[i]) 
+		{
+			case ".":
+				word=update(".")
+				break
+				
+			case "?":
+				word=update("?")
+				break  
+				
+			case ",":
+				word=update(",")
+				break
+			case "-":
+				word=update("-")
+				break
+			case " ":
+				word=update(" ")
+				break	
+			case "*":
+				if (word.spelling.length>0)
+				{
+					update(".")
+				}
+				break
+			default:
+				word.spelling+=passage[i]
+		}
+	}
+	words.forEach(word=>word.pronounciations=word.pronounciations.concat(pronouncing.phonesForWord(word.spelling)))
+	var result=""
+	words.forEach(word=>
+	{
+		word.pronounciations.forEach((p,index)=>result+=(index>0?"[":"")+p.replaceAll(" ","/")+(index>0?"]":""))
+		result+="/"+word.syntax+"/"
+	})
+	
+	return result.slice(0,-1).toLowerCase()
+	
+}
+
+var syllabify=function(phoneticizedPassage)  //array of phones and prosody markers [HH,EH1,l,ow,.]
+{
+
 	//https://en.wikipedia.org/wiki/English_phonology#Syllable_structure
-	var onsets="HH,L,R,M,N,NG,CH,JH,DH,F,S,SH,ZH,K,P,T,G,B,D,TH,V,Z,W,Y,PL,BL,KL,GL,PR,BR,TR,DR,KR,GR,TW,DW,GW,KW,PW,FL,SL,THL,SHL,VL,FR,THR,SHR,HW,SW,THW,VW,PY,BY,TY,DY,KY,GY,MY,NY,FY,VY,THY,SY,ZY,HY,LY,SP,ST,SK,SM,SN,SF,STH,SPL,SKL,SPR,STR,SKR,SKW,SPY,STY,SKY,SNY,SFR"
-	var nuclei="AA,AE,AH,AO,AW,AY,EH,ER,EY,IH,IY,OW,OY,UH,UW"
+	var onsets="hh,l,r,m,n,ng,ch,jh,dh,f,s,sh,zh,k,p,t,g,b,d,th,v,z,w,y,pl,bl,kl,gl,pr,br,tr,dr,kr,gr,tw,dw,gw,kw,pw,fl,sl,thl,shl,vl,fr,thr,shr,hw,sw,thw,vw,py,by,ty,dy,ky,gy,my,ny,fy,vy,thy,sy,zy,hy,ly,sp,st,sk,sm,sn,sf,sth,spl,skl,spr,str,skr,skw,spy,sty,sky,sny,sfr"
+	var nuclei="aa,ae,ah,ao,aw,ay,eh,er,ey,ih,iy,ow,oy,uh,uw"
+	var consonants="hh,l,r,m,n,ng,ch,jh,dh,f,s,sh,zh,k,p,t,g,b,d,th,v,z,w,y"
+	var stops="ch,b,d,g,jh,k,p,t"
+	var liquids="l,r"
+	var nasals="m,n,ng"
+	var voicedFricatives="v,z,dh,sh"
+	var voicedPlosives="b,d,g"
+	var voicelessPlosives="k,p,t"
 	var syllable=[]
 	var onsetCluster=""
 	var onset=[]
-	var pronounciation=[]
+	var coda=false
+	var syllables=[]
+	word=[]
 	var stress=""
-	p.split(" ").forEach(phoneme=>
+	var segments=phoneticizedPassage.replace(/\[(.*?)\]/g,"").split("/")  //remove bracketed phonemes
+	var prosody=1
+	var startWord=true,startPhrase=true,startClause=true,endWord=false,endPhrase=false,endClause=false
+	// prosody 0==default, 1=initial syllable of word, 2= last syllable of word, 3== start syllable of phrase, 4 ==last syllable of phrase, 5 == initial syllable of clause, 6==last syllable of clause
+	segments.forEach((segment,segmentIndex)=>
 	{
-		stress=phoneme.replace(/[A-Z]+/g,"")
-		phoneme=phoneme.replace(/\d+/g, '')
+		stress=segment.replace(/[A-Z]+/g,"")
+		phoneme=segment.replace(/\d+/g, '')
 		if (onsets.includes(onsetCluster+phoneme))
 		{
 			onsetCluster+=phoneme
-			onset.push(phoneme)
+			onset.push({duration:1,phoneme:phoneme,stress:stress,prosody,onset:true,nucleus:false,coda:false,rime:false,stop_consonant:stops.includes(phoneme),startWord:startWord,startPhrase:startPhrase,startClause:startClause,endWord:endWord,endPhrase:endPhrase,endClause:endClause})
 		}
 		else
 		{
@@ -24,39 +94,237 @@ pronouncing.syllabify=function(p)
 				syllable=syllable.concat(onset)
 				onset=[]
 				onsetCluster=""
-				syllable.push(phoneme+stress)
-				pronounciation.push(syllable) //inconplete if coda found later...
-				syllable=[] 
-			}
-			else //coda found
-			{
-				pronounciation[pronounciation.length-1]=pronounciation[pronounciation.length-1].concat(onset) //coda
-				onsetCluster=phoneme
-				onset=[phoneme]
+				syllable.push({duration:1,phoneme:phoneme,stress:stress,prosody,onset:false,nucleus:true,coda:false,rime:true,stop_consonant:stops.includes(phoneme),startWord:startWord,startPhrase:startPhrase,startClause:startClause,endWord:endWord,endPhrase:endPhrase,endClause:endClause}) //incorrect if coda found later...
+				syllables.push(syllable)
+				startWord=false
+				startPhrase=false
+				startClause=false
 				syllable=[]
+			}
+			else //coda or prosody marker found
+			{
+				if (phoneme.match(/[ -,?.]/g)) //word, phrase or clause boundary
+				{
+					if (onset.length>0)
+					{
+						onset.forEach(phone=>{phone.onset=false;coda=true;rime=true})
+						syllables[syllables.length-1]=syllables[syllables.length-1].concat(onset) //add missing coda to previous syllable
+					}	
+					switch (phoneme) 
+					{
+						case " ":
+							syllables[syllables.length-1].forEach(phone=>
+								{
+									phone.prosody=1
+									phone.endWord=true
+										
+
+								})
+								startWord=true
+								endWord=false
+							break
+						case "-":
+							syllables[syllables.length-1].forEach(phone=>{
+								phone.prosody=2
+								phone.endPhrase=true
+								phone.endWord=true
+								if (syllables.length>1)
+								{
+									phone.startWord=false
+									phone.phraseWord=false
+									phone.startClause=false
+								}
+							})
+							startPhrase=true
+							startWord=true
+							endPhrase=false
+							endWord=false
+							break
+						case ".":
+						case",":
+						case "?":
+						syllables[syllables.length-1].forEach(phone=>{
+							phone.prosody=3
+							phone.endClause=true
+							phone.endPhrase=true
+							phone.endWord=true
+							if (syllables.length>1)
+							{
+								phone.startWord=false
+								phone.startPhrase=false
+								phone.startClause=false
+							}
+						})
+						startClause=true
+						startPhrase=true
+						startWord=true
+						endClause=false
+						endPhrase=false
+						endWord=false
+							break
+						default:
+							break
+					}
+					
+					syllable=[]
+					onset=[]
+					onsetCluster=""
+					
+				}	
+				else  //onset cluster + phoneme not valid onset so coda + start onset
+				{
+
+					syllables[syllables.length-1]=syllables[syllables.length-1].concat(onset) //add missing coda to previous syllable
+					startWord=false
+					startPhrase=false
+					startClause=false
+					onset=[]
+					onsetCluster=""
+					syllable=[]
+					onset=[{duration:1,phoneme:phoneme,stress:stress,prosody,onset:true,nucleus:false,coda:false,rime:false,stop_consonant:stops.includes(phoneme),startWord:startWord,startPhrase:startPhrase,startClause:startClause,endWord:endWord,endPhrase:endPhrase,endClause:endClause}]
+					onsetCluster=phoneme
+				}
 			}
 		}	
 	})
-	//add last coda
-	if (onsetCluster !== "")pronounciation[pronounciation.length-1]=pronounciation[pronounciation.length-1].concat(onset) 
-	return pronounciation
+	return syllables
 }
 
-declare=function(passage)
+var intone=function(syllables)
 {
-
-	var innateDuration={aa:1320,ae:1270,ah:660,ao:1320,aw:720,ay:690,eh:830,er:740,ey:1040,ih:720,iy:880,ow:1210,oy:1540,uh:880,uw:1170,hh:440,l:440,r:440,hh:440,m:390,n:360,ng:440,ch:385,jh:385,dh:275,f:660,s:690,sh:690,zh:385,k:360,p:470,t:360,g:360,b:440,d:360,th:606,v:330,z:410,w:440,y:440}
-
-	var minimumDuration={aa:440,ae:330,ah:275,ao:440,aw:550,ay:495,eh:330,er:550,ey:385,ih:220,iy:275,ow:385,oy:606,uh:275,uw:330,hh:110,l:220,r:165,m:330,n:193,ng:275,ch:275,jh:275,dh:165,f:330,s:275,sh:275,zh:220,k:275,p:275,t:220,g:275,b:275,d:220,th:220,v:220,z:220,w:330,y:220}	
 	var consonants="hh,l,r,m,n,ng,ch,jh,dh,f,s,sh,zh,k,p,t,g,b,d,th,v,z,w,y"
 	var stops="ch,b,d,g,jh,k,p,t"
 	var liquids="l,r"
 	var nasals="m,n,ng"
+	var voicedFricatives="v,z,dh,sh"
+	var voicedPlosives="b,d,g"
+	var voicelessPlosives="k,p,t"
+	var innateDuration={aa:1320,ae:1270,ah:660,ao:1320,aw:720,ay:690,eh:830,er:1480,ey:1040,ih:720,iy:880,ow:1210,oy:1540,uh:880,uw:1170,hh:440,l:440,r:440,hh:440,m:390,n:360,ng:440,ch:385,jh:385,dh:275,f:660,s:690,sh:690,zh:385,k:360,p:470,t:360,g:360,b:440,d:360,th:606,v:330,z:410,w:440,y:440}
+
+	var minimumDuration={aa:440,ae:330,ah:275,ao:440,aw:550,ay:495,eh:330,er:550,ey:385,ih:220,iy:275,ow:385,oy:606,uh:275,uw:330,hh:110,l:220,r:165,m:330,n:193,ng:275,ch:275,jh:275,dh:165,f:330,s:275,sh:275,zh:220,k:275,p:275,t:220,g:275,b:275,d:220,th:220,v:220,z:220,w:330,y:220}	
+	var saying=""
+	syllables.forEach((syllable,syllableIndex)=>
+	{
+		syllable.forEach((phone,phoneIndex)=>
+		{
+			//Rule 1 insert 200 ms pause ahead of start of clause
+			if (phone.startClause && phoneIndex==0) saying+="-/"
+
+			//Rule 2 lengthen rime of clause-final syllable by 140%
+			if(phone.endClause && phone.rime) phone.duration*=1.4
+			else
+			{
+				//Rule 3 shorten non-phrase final syllable nucleus by 60%. 
+				if(!phone.endPhrase && phone.nucleus) phone.duration*=.6
+				//Rule 3 lengthen phrase fina nasals and liquids by 1.4
+				if (phone.endPhrase && phone.coda && (liquids.includes(phone.phoneme)||nasals.includes(phone.phoneme))) phone.duration*=1.4
+			}
+			//Rule 4 if nucleus is not in last syllable of word shorten by 85%
+			if(!phone.endWord && phone.nucleus)phone.duration*=.85
+
+			//Rule 5 shorten nuclei of polysllabic words by 80%
+			if (syllable.length>1 && phone.nucleus)phone.duration*=.8
+			
+			//Rule 6 shorten non-initial consonants by 85%
+
+			if(!(phone.wordStart && phoneIndex===0) && consonants.includes(phone.phoneme))phone.duration*=.85
+
+			//Rule 7 Unstress Syllables: first or last syllable shortened 70%, middle syllables shortened 50%
+			if((phone.stress==="0"|| phone.stress==="2" ))
+			{
+				if (phone.nucleus) 
+				{
+					if (!phone.wordStart || !phone.wordEnd){phone.duration*=.5}
+					else {phone.duration*=.7}
+				}
+				else  //onset liquids shortened to 10% in unstressed syllables
+				{
+					if(phone.onset && liquids.includes(phone.phoneme) )phone.duration*=.1
+				}	
+			}
+
+			//Rule 9 adjust vowels based on consonant following them
+			//open stressed syllable lengthen 120%
+			if(phone.nucleus && phoneIndex === syllable.length-1 && phone.wordEnd && phone.stress==="1")
+			{
+				if (phone.endphrase || phone.endClause){phone.duration*=1.2}
+				else{phoneDuration*=1.06}
+			}
+			var nextPhone
+			if (phoneIndex < syllable.length-1){nextPhone=syllable[phoneIndex+1]}
+			else
+			{
+				if (syllableIndex<syllables.length-1){nextPhone==syllables[syllableIndex+1][0]}
+			}
+			
+			if (!(phone.endPhrase && nextPhone.startPhrase) && !(phone.endClause && nextPhone.startClause))
+			{
+				
+				//before voiced fricative lengthen 160%
+				if (voicedFricatives.includes(nextPhone.phoneme))phone.duration*=phone.endPhrase || phone.endClause?1.6:1.18
+				//before voiced plosive lengthen 120%
+				if (voicedPlosives.includes(nextPhone.phoneme))phone.duration*=phone.endPhrase || phone.endClause?1.2:1.06
+				//before unstressed nasal shorten to 85%
+				if (nextPhone.stress="0" && nasals.includes(nextPhone.phoneme))phone.duration*=.85
+				//before voiceless plosive shorten to 70%
+				if (voicelessPlosives.includes(nextPhone.phoneme))phone.duration*=.7
+
+			}
+			
+			
+
+
+
+
+
+
+
+			var {phoneme,duration,stop_consonant,stress}=phone
+			var minimum=stress==="0"?minimumDuration[phoneme]/2:minimumDuration[phoneme]
+			var d=(innateDuration[phoneme]-minimum)*duration+minimum
+			if (stop_consonant)
+			{
+				var duration=d/1100
+			}
+			else
+			{
+				var duration=d/innateDuration[phoneme]
+			}
+			durationText=Math.abs(Math.floor((1-duration)*100)).toString()//get digits after decimal
+			if (durationText[duration.length-1]==0)durationText=durationText.slice(0,-1) //removing trailing zero
+			if (durationText!=="0")
+			{
+				if (duration<1){saying+="-1."+durationText+"/"}
+				if (duration>1){saying+="1."+durationText+"/"}
+			}	
+			if (phone.stop_consonant) saying+="_/"
+			saying+=phone.phoneme+"/"	
+
+		})
+	})	
+	return saying.slice(0,-1)
+
+}
+/*
+declare=function(passage)
+{
+	var consonants="hh,l,r,m,n,ng,ch,jh,dh,f,s,sh,zh,k,p,t,g,b,d,th,v,z,w,y"
+	var stops="ch,b,d,g,jh,k,p,t"
+	var liquids="l,r"
+	var nasals="m,n,ng"
+	var voicedFricatives="v,z,dh,sh"
+	var voicedPlosives="b,d,g"
+	var voicelessPlosives="k,p,t"
+	var innateDuration={aa:1320,ae:1270,ah:660,ao:1320,aw:720,ay:690,eh:830,er:1480,ey:1040,ih:720,iy:880,ow:1210,oy:1540,uh:880,uw:1170,hh:440,l:440,r:440,hh:440,m:390,n:360,ng:440,ch:385,jh:385,dh:275,f:660,s:690,sh:690,zh:385,k:360,p:470,t:360,g:360,b:440,d:360,th:606,v:330,z:410,w:440,y:440}
+
+	var minimumDuration={aa:440,ae:330,ah:275,ao:440,aw:550,ay:495,eh:330,er:550,ey:385,ih:220,iy:275,ow:385,oy:606,uh:275,uw:330,hh:110,l:220,r:165,m:330,n:193,ng:275,ch:275,jh:275,dh:165,f:330,s:275,sh:275,zh:220,k:275,p:275,t:220,g:275,b:275,d:220,th:220,v:220,z:220,w:330,y:220}	
+	
 	var clauses=[]
 	var words=[]
 	var word={spelling:"",syntax:" ",pronounciations:[]} 
 	
 	passage=passage.toLowerCase().replace(/\s+/g, ' ').trim().replace(" -","-").replace("- ","-").replace(" ,",",").replace(", ",",").replace(" .",".").replace(". ",".").replace(" ?","?").replace("? ","?")+"*"
+	
 	function update(char)
 	{
 		word.prosody=char
@@ -96,19 +364,22 @@ declare=function(passage)
 		}
 	}
 	var clause=[]
-	words.forEach(word=>
+	words.forEach(word,wordIndex=>
 	{
 		word.pronounciations=word.pronounciations.concat(pronouncing.phonesForWord(word.spelling))
 		var onset=true,nucleus=false,rime=false,coda=false
+
 		word.pronounciations=word.pronounciations.map(p=>pronouncing.syllabify(p).map((syllable,index)=>
 		{
 			onset=true,nucleus=false,rime=false,coda=false
 			var lastSyllable=syllable.length-1
+			var _stress
 			syllable=syllable.map(phone=>
 			{
 				var stress=phone.replace(/[A-Z]+/g,"")
 				var phoneme=phone.replace(/\d+/g, '').toLowerCase()
 				var prosody=0  
+				
 				if (index===lastSyllable && (word.prosody==="," || word.prosody==="." || word.prosody==="?")){prosody=3}
 				else
 				{
@@ -125,13 +396,15 @@ declare=function(passage)
 					nucleus=true
 					rime=true
 					coda=false
+					_stress=stress
 				}
 				else
 				{
 					if (nucleus) coda=true
 				}
-				return {duration:1,phoneme:phoneme,stress:stress,prosody:prosody,onset:onset,nucleus:nucleus,coda:coda,rime:rime}
+				return {duration:1,phoneme:phoneme,stress:stress,prosody:prosody,onset:onset,nucleus:nucleus,coda:coda,rime:rime,stop_consonant:stops.includes(phoneme)}
 			})
+			syllable.forEach(phone=>phone.stress=_stress)
 			return syllable
 		}))
 		clause.push(word)
@@ -141,6 +414,10 @@ declare=function(passage)
 			clause=[]
 		}
 	})
+
+
+
+	
 	var saying=""
 	clauses.forEach(clause=>
 	{
@@ -174,10 +451,60 @@ declare=function(passage)
 						if ((syllableIndex !== 0 || phoneIndex !== 0) && consonants.includes(phone.phoneme)) phone.duration*=.85
 						
 						//Rule 7 Unstress Syllables: first or last syllable shortened 70%, middle syllables shortened 50%
+						if (phone.stress !=="1") //if stress is 0 or 2
+						{
+							if (syllableIndex===0 || syllableIndex==p.length-1)
+							{
+								phone.duration*=.7	
+							}
+							else
+							{
+								if(phone.onset && liquids.includes(phone.phoneme))
+								{
+									phone.duration*=.1
+								}
+								else{phone.duration*=.5}
+							}
+						}
+						var nextPhone
+						//if last phone of syllable by not last syllable get first sound of next syllable
+						if (phoneIndex===syllable.length-1 && p.length-1>syllableIndex ){nextPhone=p[syllableIndex+1][0]}
+						else{nextPhone=syllable[phoneIndex+1]}
+						var prevPhone
+						if (phoneIndex===0 && syllableIndex>0 ){prevPhone=p[syllableIndex-1][p[syllableIndex-1].length-1]}
+						else{prevPhone=syllable[phoneIndex-1]}
+
+						//Rule 9 adjust vowel based on next consonant
+						if (phone.nucleus)
+						{
+							var percentage=1
+							//Lengthen by 20% if word ends in vowel.
+						 	if(syllableIndex==p.length-1 && phoneIndex===syllable.length-1) percentage=1.2
+							else
+							{
+								
+								var nextPhoneme=nextPhone.phoneme
+								var nextStress=nextPhone.stress
+
+								//Lengthen by 60% if vowel before voiced fricative
+								if(voicedFricatives.includes(nextPhoneme))percentage=1.6
+								//lengthen by 20% if vowel before voiced plosive
+								if(voicedPlosives.includes(nextPhoneme)) percentage=1.2
+								//shorten by 15% if vowel before unstressed nasal
+								if(nextStress===0 && voicedPlosives.includes(nextPhoneme)) percentage=85
+								//shorten by 30% if vowel before a voiceless plosive
+								if(nextStress===0 && voicelessPlosives.includes(nextPhoneme)) percentage=.7
+								
+							}	 
+							if (phone.prosidy<2){percentage=.7+.3*percentage}
+							phone.duration*=percentage
+						}
+						//Rule 10 adjust clusters of vowels or consonants disregard word boundaries, but not phrase or clause bondaries
+
+
+
 					})
-					
 				})
-				
 			})
 		})
 	})	
@@ -192,8 +519,8 @@ declare=function(passage)
 				p.forEach(syllable=>syllable.forEach(phone=>
 				{
 					var {phoneme,duration,stop_consonant,stress}=phone
-					var d=innateDuration[phoneme]*duration
-					d=d>minimumDuration[phoneme]?d:(stress=="0"?minimumDuration[phoneme]/2:minimumDuration[phoneme])
+					var minimum=stress==="0"?minimumDuration[phoneme]/2:minimumDuration[phoneme]
+					var d=(innateDuration[phoneme]-minimum)*duration+minimum
 					if (stop_consonant)
 					{
 						var duration=d/1100
@@ -202,14 +529,13 @@ declare=function(passage)
 					{
 						var duration=d/innateDuration[phoneme]
 					}
-					
-					if (duration!==0)
-					{ 
-						durationText=Math.abs(Math.floor((1-duration)*100)).toString()//get digits after decimal
-						if (durationText[duration.length-1]==0)durationText=durationText.slice(0,-1) //removing trailing zero
+					durationText=Math.abs(Math.floor((1-duration)*100)).toString()//get digits after decimal
+					if (durationText[duration.length-1]==0)durationText=durationText.slice(0,-1) //removing trailing zero
+					if (durationText!=="0")
+					{
 						if (duration<1){saying+="-1."+durationText+"/"}
 						if (duration>1){saying+="1."+durationText+"/"}
-					}
+					}	
 					if (phone.stop_consonant) saying+="_/"
 					saying+=phone.phoneme+"/"
 				}))
@@ -218,4 +544,4 @@ declare=function(passage)
 		})
 	})
 	return saying=saying.slice(0,-1).toLowerCase()
-}
+}*/
