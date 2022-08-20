@@ -3,7 +3,7 @@ var phoneticize = function(passage)
 	//http://www.viviancook.uk/Words/StructureWordsList.htm
 	var functors="a,about,above,after,after,again,against,ago,ahead,all,almost,almost,along,already,also,although,always,am,among,an,and,any,are,aren't,around,as,at,away,backward,backwards,be,because,before,behind,below,beneath,beside,between,both,but,by,can,cannot,can't,cause,'cos,'cuz,could,couldn't,'d,despite,did,didn't,do,does,doesn't,don't,down,during,each,either,even,ever,every,except,for,forward,from,had,hadn't,has,hasn't,have,haven't,he,her,here,hers,herself,him,himself,his,how,however,i,if,in,inside,inspite,instead,into,is,isn't,it,its,itself,just,'ll,least,less,like,'m,many,may,mayn't,me,might,mightn't,mine,more,most,much,must,mustn't,my,myself,near,need,needn't,needs,neither,never,no,none,nor,not,now,of,off,often,on,once,only,onto,or,ought,oughtn't,our,ours,ourselves,out,outside,over,past,perhaps,quite,'re,rather,'s,seldom,several,shall,shan't,she,should,shouldn't,since,so,some,sometimes,soon,than,that,the,their,theirs,them,themselves,then,there,therefore,these,they,this,those,though,through,thus,till,to,together,too,towards,under,unless,until,up,upon,us,used,usedn't,usen't,usually,'ve,very,was,wasn't,we,well,were,weren't,what,when,where,whether,which,while,who,whom,whose,why,will,with,without,won't,would,wouldn't,yet,you,your,yours,yourself,yourselves".split(",")
 
-	passage=passage.toLowerCase().replaceAll(/\s+/g, ' ').trim().replaceAll(" -","-").replaceAll("- ","-").replaceAll(" ,",",").replaceAll(", ",",").replaceAll(" .",".").replaceAll(". ",".").replaceAll(" ?","?").replaceAll("? ","?")
+	passage=passage.toLowerCase().replaceAll(/\s+/g, ' ').trim().replaceAll(" -","-").replaceAll("- ","-").replaceAll(" ,",",").replaceAll(", ",",").replaceAll(" .",".").replaceAll(". ",".").replaceAll(" ?","?").replaceAll("? ","?").replaceAll("’","'")
 	if (!passage[passage.length-1].match(/[\?\.]/g))passage+="."
 	var words=[]
 	var word={spelling:"",syntax:" ",pronounciations:[],functor:false} 
@@ -163,7 +163,10 @@ var syllabify=function(phoneticizedPassage)  //array of phones and prosody marke
 									phone.startPhrase=false
 									phone.startClause=false
 								}
+								if (phone.rime && phoneme === "?")phone.question=true
 							})
+							
+
 							startClause=true
 							startPhrase=true
 							startWord=true
@@ -212,9 +215,9 @@ var intone=function(syllables)
 	var voicedPlosives="b,d,g"
 	var voicelessPlosives="k,p,t"
 
-	var innateDuration={aa:1320,ae:1270,ah:660,ao:1320,aw:720,ay:690,eh:830,er:1480,ey:1040,ih:720,iy:880,ow:1210,oy:1540,uh:880,uw:1170,hh:440,l:440,r:440,hh:440,m:390,n:360,ng:440,ch:385,jh:385,dh:275,f:660,s:690,sh:690,zh:385,k:360,p:470,t:360,g:360,b:440,d:360,th:606,v:330,z:410,w:440,y:440}
+	var innateDuration={aa:1320,ae:1270,ah:660,ao:1320,aw:720,ay:690,eh:830,er:990,ey:1040,ih:720,iy:880,ow:1210,oy:1540,uh:880,uw:1170,hh:440,l:440,r:440,hh:440,m:390,n:360,ng:440,ch:385,jh:385,dh:275,f:660,s:690,sh:690,zh:385,k:360,p:470,t:360,g:360,b:440,d:360,th:606,v:330,z:410,w:440,y:440}
 
-	var minimumDuration={aa:440,ae:330,ah:275,ao:440,aw:550,ay:495,eh:330,er:550,ey:385,ih:220,iy:275,ow:385,oy:606,uh:275,uw:330,hh:110,l:220,r:165,m:330,n:193,ng:275,ch:275,jh:275,dh:165,f:330,s:275,sh:275,zh:220,k:275,p:275,t:220,g:275,b:275,d:220,th:220,v:220,z:220,w:330,y:220}	
+	var minimumDuration={aa:440,ae:330,ah:275,ao:440,aw:550,ay:495,eh:330,er:330,ey:385,ih:220,iy:275,ow:385,oy:606,uh:275,uw:330,hh:110,l:220,r:165,m:330,n:193,ng:275,ch:275,jh:275,dh:165,f:330,s:275,sh:275,zh:220,k:275,p:275,t:220,g:275,b:275,d:220,th:220,v:220,z:220,w:330,y:220}	
 	var saying=""
 	
 	syllables.forEach((syllable,syllableIndex)=>
@@ -334,7 +337,7 @@ var intone=function(syllables)
 			{
 				var duration=d/innateDuration[phoneme]
 			}
-			durationText=Math.abs(Math.floor((1-duration)*100)).toString()//get digits after decimal
+			durationText=Math.abs(Math.floor((1-duration)*100)).toString().padStart(2,"0")//get digits after decimal
 			if (durationText[duration.length-1]==0)durationText=durationText.slice(0,-1) //removing trailing zero
 			if (durationText!=="0")
 			{
@@ -342,8 +345,18 @@ var intone=function(syllables)
 				if (duration>1){saying+="1."+durationText+"/"}
 			}	
 			//Pitch Prosody https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4617729/
-			if (phone.contentWord && phone.nucleus && phone.stress==="1")saying+="3.2/"
+			//https://pdf.sciencedirectassets.com/272464/1-s2.0-S0095447019X47002/1-s2.0-S0095447019309891/main.pdf
 			
+			if(phone.endClause)
+			{
+				if (phone.question){saying+="3/"}
+				else {saying+="-3/"}
+			}	 
+			else
+			{
+				if (phone.contentWord && phone.nucleus && phone.stress==="1") saying+="3/"
+			}
+
 			if (phoneme.match(/[\?\-\,\.]/g)) saying+="_/"	
 			else
 			{
