@@ -13,23 +13,7 @@
 {
 	background-color: #fff1e8;
 }
-canvas:before {
-    content: " ";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(18, 16, 16, 0) 50%,
-        rgba(0, 0, 0, 0.25) 50%
-    );
-    background-size: 100% 8px;
-    z-index: 2;
-    pointer-events: none;
-}
+
 canvas
 {
 	margin-left:10px;
