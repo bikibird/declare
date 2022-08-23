@@ -15,7 +15,7 @@
 
 	// p8_autoplay true to boot the cartridge automatically after page load when possible
 	// if the browser can not create an audio context outside of a user gesture (e.g. on iOS), p8_autoplay has no effect
-	var p8_autoplay = true;
+	var p8_autoplay = false;
 
 	// When pico8_state is defined, PICO-8 will set .is_paused, .sound_volume and .frame_number each frame 
 	// (used for determining button icons)
@@ -616,7 +616,7 @@
 
 		}
 		e.type = "application/javascript";
-		e.src = "speako8.js";
+		e.src = "declare_cart.js";
 		e.id = "e_script";
 		
 		document.body.appendChild(e); // load and run
@@ -639,7 +639,7 @@
 
 		// install drag&drop listeners
 		{
-			let canvas = p8_document().getElementById("canvas");
+			let canvas = document.getElementById("canvas");
 			if (canvas)
 			{
 				canvas.addEventListener('dragenter', dragover, false);
@@ -1168,16 +1168,87 @@ content: " ";
 
 </div> <!-- body_0 -->
 <script>
+	var quote=""
+	var passage=document.getElementById('passage')
 	var phonetics=document.getElementById('phonetics')
 	var speech=document.getElementById('speech')
+	passage.addEventListener('input', (e) =>
+	{
+			
+		phonetics.value=phoneticize(e.target.value)
+		speech.value=intone(syllabify(phonetics.value))
+	})
+	phonetics.addEventListener('input', (e) =>
+	{
+		speech.value=intone(syllabify(e.target.value))
+	})
+	document.getElementById('listen').addEventListener('click', (e) =>
+	{
+		if (p8_is_running != true)
+		{
+			p8_create_audio_context()
+			p8_run_cart()
+		}
+		quote=speech.value
+		if(pico8_gpio[0]==1)
+		{
+			pico8_gpio[0]=0
+		}
+		else
+		{
+			setTimeout(() => 
+			{
+				pico8_gpio[0]=0	
+			}, 5000)
+		}
+	})
 
-document.getElementById('passage').addEventListener('input', (e) =>
-{
+	var pico8_gpio = new Proxy(new Array(128),{
+		set: function(gpio, property, value)
+		{
+			var index=parseInt(property)
+			gpio[index] = value
+    		if (index===0)
+			{
+				switch (value)
+				{
+					case 1:  //PICO-8 Waiting for quote
+						
+						if (quote)
+						{
+							gpio[0]=2  //request permission to send data
+						}
+						
+						break
+					case 3:  //PICO 8 ready to receive data
+						if (quote.length<127)
+						{
+							for (let i = 0; i < quote.length; i++)
+							{
+								gpio[i+2]=quote.charCodeAt(i)
+							}
+							gpio[1]=quote.length
+							quote=""
+							gpio[0]=5  //last data chunk
+						}
+						else
+						{ 
+							for (let i = 0; i < 126; i++)
+							{
+								gpio[i+2]=quote.charCodeAt(i)
+							}
+							gpio[1]=126
+							quote=quote.slice(126)
+							gpio[0]=4  //Expect more data after this chunk
 
-	phonetics.value=phoneticize(e.target.value)
-	speech.value=intone(syllabify(phonetics.value))
+						}
+						break
+				}
+			}
+    		return true
+		}})
+	
 
-})
 </script>
 
 
