@@ -96,8 +96,8 @@ function speako8()
 		w0=((5512.5/(spk8_pitch+delta_f0))+(w0 and w0*49 or 0))/(w0 and 50 or 1)
 	end
 	if #sounds >0 then
-		while stat(108)<1500 do
-			for i=0,200 do
+		while stat(108)<1920 do
+			for i=0,127 do
 				current_sound=sounds[1]
 				if current_sound then
 					if duration < 1 then

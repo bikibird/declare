@@ -324,7 +324,7 @@
 		var p8_playarea = document.getElementById("p8_playarea");
 		var p8_container = document.getElementById("p8_container");
 		var p8_frame = document.getElementById("p8_frame");
-		var csize = 512;
+		var csize = 384;
 		var margin_top = 0;
 		var margin_left = 0;
 
@@ -357,7 +357,7 @@
 		}
 
 		// as big as will fit in a frame..
-		csize =  Math.min(frame_width,frame_height);
+		csize =  Math.min(384,frame_width,frame_height);
 
 		// .. but never more than 2/3 of longest side for touch (e.g. leave space for controls on iPad)
 		if (p8_touch_detected && p8_is_running)
@@ -938,7 +938,7 @@
 	display:table;
 	width:24px;
 	height:24px;
-	float:right;
+	/*float:right;*/
 	background-color: #17a2b8;
 }
 
@@ -965,19 +965,26 @@ canvas{
 	cursor: none;
 }
 
-.crt::before {
-content: " ";
+.crt::after {
+  content: " ";
   display: block;
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+
+  background-image: 
+  repeating-linear-gradient(to right, rgba(255, 0, 0, 0.15), rgba(0, 255, 0, 0.15), rgba(0, 0, 255, 0.15) 3px),
+  repeating-linear-gradient(to bottom, rgba(18, 16, 16, 0) , rgba(0, 0, 0, 0.25) 2px),
+  linear-gradient(to left, rgba(0, 0, 0, .1), rgba(255, 255, 255, .1),rgba(0, 0, 0, .1) );
+  
   z-index: 2;
-  background-size: 100% 4px, 4px 100%;
+
+ filter:brightness(130%) ;
   pointer-events: none;
 }
+
 .p8_start_button{
 	image-rendering: pixelated;
 	image-rendering: crisp-edges;
@@ -1033,6 +1040,11 @@ content: " ";
 	<h1 class="text-center display-4">Declare: Speech String Generator for Speako8</h1>
 	<div class="container">
 		<div class="row">
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">Warning: This application may generate loud and harsh sounds. Protect your hearing! Do not test with headphones on and turn down the volume. <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button></div>
+		</div>
+		<div class="row">
 			<div class="col-lg">
 				<form>
   					<div class="form-group">
@@ -1061,8 +1073,8 @@ content: " ";
 <!-- Add any content above the cart here -->
 
 <div class="col-lg">
-<div id="p8_frame_0" style="max-width:800px; max-height:800px; margin:auto;"> <!-- double function: limit size, and display only this div for touch devices -->
-<div id="p8_frame" style="display:flex; width:100%; max-width:95vw; height:100%; max-height:95vh; margin:auto;">
+<div id="p8_frame_0" style="max-width:800px; max-height:800px; margin:auto; background-color:silver;"> <!-- double function: limit size, and display only this div for touch devices -->
+<div id="p8_frame" style="display:flex; width:100%; max-width:95vw; height:100%; max-height:95vh; margin:auto; ">
 	<div id="p8_container"
 		style="margin:auto; display:table;"
 		onclick="p8_create_audio_context(); p8_run_cart();">
@@ -1074,7 +1086,7 @@ content: " ";
 
 		<div id="p8_playarea" style="display:none; margin:auto;
 				-webkit-user-select:none; -moz-user-select: none; user-select: none; -webkit-touch-callout:none;
-		">
+		" >
 		
 			<div  id="touch_controls_background"
 				  style=" pointer-events:none; display:none; background-color:#000;
@@ -1084,24 +1096,26 @@ content: " ";
 
 			<div style="display:flex; position:relative; ">
 				<!-- pointer-events turned off for mobile in p8_update_layout because need for desktop mouse -->
-				<div>
-					<div class="crt"></div>
+				
+				<div class="crt">	
+					
 					<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault();" >
 					</canvas>
 				</div>
-				
-				<div class=p8_menu_buttons id="p8_menu_buttons" style="margin-left:0px; margin-bottom: 0px;"> 
-					<div class="p8_menu_button" style="position:absolute; bottom:105px; margin-bottom: 0px;" id="p8b_controls" onClick="p8_give_focus(); Module.pico8ToggleControlMenu();"></div>					
-					<div class="p8_menu_button" style="position:absolute; bottom:70px; margin-bottom: 0px" id="p8b_pause" onClick="p8_give_focus(); Module.pico8TogglePaused(); p8_update_layout_hash = -22;"></div>
-					<div class="p8_menu_button" style="position:absolute; bottom:35px; margin-bottom: 0px" id="p8b_sound" onClick="p8_give_focus(); p8_create_audio_context(); Module.pico8ToggleSound();"></div>
-					<div class="p8_menu_button" style="position:absolute; bottom:0px; margin-bottom: 0px" id="p8b_full" onClick="p8_give_focus(); p8_request_fullscreen();"></div>
+				<div class=p8_menu_buttons id="p8_menu_buttons" style="margin-left:0px; margin-bottom: 0px; display:none"> 
+					<div class="p8_menu_button"  id="p8b_controls" onClick="p8_give_focus(); Module.pico8ToggleControlMenu();"></div>
+					<div class="p8_menu_button" id="p8b_pause" onClick="p8_give_focus(); Module.pico8TogglePaused();"></div>					
+					<div class="p8_menu_button" id="p8b_sound" onClick="p8_give_focus(); p8_create_audio_context(); Module.pico8ToggleSound();"></div>
+					<div class="p8_menu_button" id="p8b_full" onClick="p8_give_focus(); p8_request_fullscreen();"></div>
 				</div>
 			</div>
-			<div id="p8_menu_buttons_touch" style="position:absolute; width:100%; z-index:10; left:0px;">
-		<div class="p8_menu_button" id="p8b_full"  style="float:left;margin-left:10px" onClick="p8_give_focus(); p8_request_fullscreen();"></div>
-		<div class="p8_menu_button" id="p8b_sound" style="float:left;margin-left:10px" onClick="p8_give_focus(); p8_create_audio_context(); Module.pico8ToggleSound();"></div>
-		<div class="p8_menu_button" id="p8b_close" style="float:right; margin-right:10px" onClick="p8_close_cart();"></div>
-	</div>
+			<div>
+				
+				<div id="p8_menu_buttons_touch" style="position:absolute; width:100%; z-index:10; left:0px;">
+				<div class="p8_menu_button" id="p8b_full"  style="float:left;margin-left:10px" onClick="p8_give_focus(); p8_request_fullscreen();"></div>
+				<div class="p8_menu_button" id="p8b_sound" style="float:left;margin-left:10px" onClick="p8_give_focus(); p8_create_audio_context(); Module.pico8ToggleSound();"></div>
+				<div class="p8_menu_button" id="p8b_close" style="float:right; margin-right:10px" onClick="p8_close_cart();"></div>
+			</div>
 
 			<!-- display after first layout update -->
 			<div  id="touch_controls_gfx"
@@ -1118,7 +1132,12 @@ content: " ";
 			<!-- (needs to be inside p8_playarea so that it still works under Chrome when fullscreened) -->
 			<textarea id="codo_textarea" class="emscripten" style="position:absolute; left:-9999px; height:0px; overflow:hidden"></textarea>
 
+			
+
 		</div> <!--p8_playarea -->
+		
+
+
 
 	</div> <!-- p8_container -->
 
