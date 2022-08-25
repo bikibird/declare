@@ -57,11 +57,9 @@ end
 			else
 				for frame in all(phone[phoneme]) do
 					d,source,volume,velocity,shift,frication,pitch,cascade=unpack(frame)
-					printh(pitch,"log")
 					if (volume==0)glottal_stop=true
 					c,f_glide,bw_glide,d2,c1,v1,c2,v2={},{},{},d*d_stress,c2,v2,cascade,volume
 					local delta_f0=p_stress*spk8_intonation+pitch*spk8_if0
-					printh(delta_f0,"log")
 					if (velocity == 0) v1=volume
 					if (shift == 0) c1=cascade
 					if (#c1 != #c2) c1=cascade
