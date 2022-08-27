@@ -6,113 +6,121 @@ __lua__
 --loosely based on the klatt synthesizer
 #include speako8.p8
 left,right,up,down,fire1,fire2=0,1,2,3,4,5
-printc=function(text,y,c)
-	local length=print(text,0,-16)
-	print(text,63-length\2,y,c)
-	
+
+printc=function(p)
+	local texts =split(p,"/") 
+	for i,text in pairs(texts) do
+		local x,y=63-print(text,0,-16)\2,i*10
+		print(text,x,y,0)
+		print(text,x+1,y,0)
+		print(text,x+2,y,0)
+		print(text,x,y+2,0)
+		print(text,x+1,y+2,0)
+		print(text,x+2,y+2,0)
+		print(text,x+1,y+1,11)
+	end
 end
 
-gs_update=
-{
-	function() --say things
-		speako8()
-		if (not speaking()) _update=gs_update[2]
-	end,
-	function() --menu
-		speako8()
-		if (btnp(fire1) or btnp(fire2))then
-		say"_/-1.57/-3/_/p/1.56/-3/aa"
-
-		_update=gs_update[1]
-		elseif (btnp(left)) then
-			mute()
-			if (speech[selection]>minimum[selection]) speech[selection]-=delta[selection]
-			speech[selection]=flr((speech[selection]+.005)*100)/100
-			quote,spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_whisper=unpack(speech)
-			say'_/l/-1.40/3/ow/-1.37/-3/er'
-		elseif (btnp(right)) then
-			mute()
-			if (speech[selection]<maximum[selection]) speech[selection]+=delta[selection]
-			speech[selection]=flr((speech[selection]+.005)*100)/100
-			quote,spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_whisper=unpack(speech)
-			say'_/hh/-1.16/3/ay/-1.37/3/er'
-		elseif (btnp(up)) then 
-			mute()
-			selection-=1
-			if (selection<1)selection=9
-			say'_/-1.01/3/ah/-1.34/3/_/p'
-		elseif (btnp(down))then
-			mute()
-			selection+=1
-			if (selection>9)selection=1
-			say'-1.69/-3/_/d/1.10/-3/aw/1.09/-3/n'
-		end
-	
-	end,
-
-}
-gs_draw=
-{
-	function() -- say things
-	end,
-	function() -- menu
-		cls()
-		print("quote",0,0,8)
-	end
-
-}
+function _update() --menu
+	speako8()
+	if ((btnp(fire1) or btnp(fire2)) and selection >0)then
+		mute()
+		say(quote[selection])
+	elseif (btnp(left)) then
+		mute()
+		selection-=1
+		if (selection<1)selection=#passage
+		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_bandwidth,spk8_whisper=unpack(speaker[selection])
+		say(quote[selection])
+	elseif (btnp(right)) then
+		mute()
+		selection+=1
+		if (selection>#passage)selection=1
+		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_bandwidth,spk8_whisper=unpack(speaker[selection])
+		say(quote[selection])
+	end	
+end
 
 function _init()
 	
-	pal({[0]=7, 8, 9, 15, 137, 142, 143}, 1)
-	quotes=split"hello world,marc antony,buggy bumpers,sea shells,daisy"
-	menu=split"quote,pitch,rate,volume,quality,intonation,inherent f0,shift,whisper"
-	selection=1
-	speech={1,140,1,1,.5,10,10,1,1}
-	delta={1,5,.05,.1,.01,1,1,.01,1}
-	minimum={1,50,.01,.01,.01,0,0,.01,1}
-	maximum={1,400,10,5,5,200,200,3,2}
-	quote,spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_whisper=unpack(speech)
-	
-	voices={man={140,1,1,.5,10,10,1,1},woman={230,.65,1,.5,20,20,1.12,1},whisper={140,1,1,.5,10,10,1,2}}
+	for i=0,15 do
+		pal(i,i+128,2)
+	end
+	poke(0x5f5f,0x10)
+	memset(0x5f70,0b10101010,16)	
+	selection=0
 
-	--say'_/hh/-1.58/ah/-1.07/l/-1.36/3/ow/-3/_/-1.03/-3/w/1.08/-3/er/1.65/-3/l/-1.64/-3/_/d/_/-1.11/3/ay/-1.02/m/-1.30/s/-1.64/_/p/-1.15/3/iy/-1.68/_/k/-1.13/3/ow/-1.46/3/ey/-1.71/_/t/_/-1.54/ah/-1.18/s/-1.64/_/p/-1.11/3/iy/-1.66/_/ch/-1.18/s/-1.41/3/ih/-1.18/n/-1.25/th/-1.62/ah/-1.09/s/-1.49/ah/-1.09/s/-1.15/l/-1.16/3/ay/-1.66/_/b/-1.25/r/-1.63/eh/-1.09/r/-1.45/iy/f/-1.26/ao/-1.09/r/-1.62/_/p/-1.27/3/iy/-1.68/_/k/-1.55/ow/-1.19/-3/ey/-1.64/-3/_/t/_/1.11/ay/-1.67/_/k/-1.18/ae/-1.06/n/-1.18/s/-1.22/3/ey/m/-1.19/ow/-1.27/s/-1.72/_/t/-1.18/3/eh/-1.06/n/-1.67/iy/-1.09/th/-1.46/ih/-1.05/ng/-1.15/y/-1.26/uw/-1.07/-3/l/-1.00/-3/ay/-1.65/-3/_/k'
+	passage=
+	{
+		"friends, romans, countrymen,/lend me your ears.",
+		"i am speako8,/a speech synthesis library/for pico-8./i can say most anything.",
+		"i can change my voice.",
+		"i can even whisper,/but it's a little creepy.",
+		"who says it better?/me or you?",
+		"peter piper picked/a peck of pickled peppers.",
+		"rubber baby buggy bumpers",
+		"she sells seashells/by the seashore.",
+		"add me to your games/for about 1000 tokens!",
+		"good night, good night!/parting is such sweet sorrow,/that i shall say good night/till it be morrow."
+	}
 
-	--say'_/-1.18/s/-1.64/_/p/-1.11/3/iy/-1.66/_/ch/-1.18/s/-1.41/3/ih/-1.18/n/-1.25/th/-1.60/ah/-1.09/-3/s/1.21/-3/ah/1.12/-3/s'
-	quote="_/-1.57/-3/_/p/1.56/-3/aa"
+	quote=
+	{
+		"_/-1.15/f/-1.25/r/-1.35/3/eh/-1.11/n/-1.73/_/d/-1.24/z/_/-1.36/r/-1.48/3/ow/-1.02/m/-1.65/ah/-1.13/n/-1.24/z/_/-1.70/_/k/-1.19/3/ah/-1.21/n/-1.74/_/t/-1.25/r/-1.67/iy/-1.02/m/-1.67/ih/-1.14/n/_/-1.20/l/-1.31/3/eh/-1.11/n/-1.72/_/d/-1.04/m/-1.25/iy/y/-1.26/ao/-1.09/r/1.28/-3/ih/1.57/-3/r/1.09/-3/z",
 
+		"_/-1.10/ay/-1.42/ae/-1.02/m/-1.30/s/-1.64/_/p/-1.15/3/iy/-1.68/_/k/-1.13/3/ow/-1.46/3/ey/-1.71/_/t/_/-1.54/ah/-1.18/s/-1.64/_/p/-1.11/3/iy/-1.66/_/ch/-1.18/s/-1.41/3/ih/-1.18/n/-1.25/th/-1.65/ah/-1.09/s/-1.54/ah/-1.09/s/-1.15/l/-1.16/3/ay/-1.66/_/b/-1.25/r/-1.63/eh/-1.09/r/-1.45/iy/f/-1.26/ao/-1.09/r/-1.62/_/p/-1.15/3/iy/-1.68/_/k/-1.13/3/ow/-1.19/-3/ey/-1.64/-3/_/t/_/1.11/ay/-1.67/_/k/-1.18/ae/-1.06/n/-1.18/s/-1.22/3/ey/m/-1.27/ow/-1.27/s/-1.72/_/t/-1.18/3/eh/-1.06/n/-1.67/iy/-1.09/-3/th/-1.15/-3/ih/1.08/-3/ng",
 
-	_update=gs_update[2]
-	_draw=gs_draw[2]
+		
+		"_/-1.10/ay/-1.67/_/k/-1.18/ae/-1.06/n/-1.68/_/ch/-1.25/3/ey/-1.18/n/-1.69/_/jh/-1.04/m/-1.07/ay/-1.05/-3/v/1.25/-3/oy/1.12/-3/s",
+
+		"_/-1.10/ay/-1.67/_/k/-1.18/ae/-1.06/n/-1.35/iy/-1.05/v/-1.56/ih/-1.06/n/-1.07/w/-1.41/3/ih/-1.27/s/-1.64/_/p/-1.63/er/_/-1.66/_/b/-1.36/3/ah/-1.69/_/t/-1.12/3/ih/-1.72/_/t/-1.24/s/-1.47/ah/l/-1.43/3/ih/-1.69/_/t/-1.54/ah/-1.07/l/-1.71/_/k/-1.25/r/-1.43/3/iy/-1.59/-3/_/p/-1.18/-3/iy",
+
+		"_/hh/-1.26/uw/s/-1.17/3/eh/-1.06/z/-1.31/ih/-1.69/_/t/-1.64/_/b/-1.37/3/eh/-1.69/-3/_/t/-1.18/3/er/_/m/-1.25/iy/-1.38/ao/-1.09/r/-1.20/-3/y/1.49/3/uw",
+
+		"_/-1.57/_/p/-1.27/3/iy/-1.69/_/t/-1.55/er/-1.57/_/p/1.03/3/ay/-1.59/_/p/-1.55/er/-1.57/_/p/-1.12/3/ih/-1.70/_/k/-1.72/_/t/-1.47/ah/-1.57/_/p/-1.10/3/eh/-1.68/_/k/-1.00/ah/-1.05/v/-1.62/_/p/-1.24/3/ih/-1.68/_/k/-1.54/ah/-1.12/l/-1.72/_/d/-1.62/_/p/-1.21/3/eh/-1.59/-3/_/p/1.22/-3/er/1.09/-3/z",
+
+		"_/r/-1.36/3/ah/-1.62/_/b/-1.55/er/-1.60/_/b/-1.35/3/ey/-1.62/_/b/-1.56/iy/-1.60/_/b/-1.36/3/ah/-1.68/_/g/-1.56/iy/-1.60/_/b/-1.38/3/ah/-1.03/m/-1.64/-3/_/p/1.22/-3/er/1.09/-3/z",
+
+		"_/sh/-1.25/iy/s/-1.24/3/eh/-1.14/l/-1.18/z/-1.18/s/-1.40/3/iy/-1.09/sh/-1.40/eh/-1.14/l/-1.18/z/-1.64/_/b/-1.10/ay/dh/-1.47/ah/s/-1.40/3/iy/-1.09/-3/sh/-1.14/-3/ao/1.12/-3/r",
+
+		"_/-1.18/3/ae/-1.69/_/d/-1.04/m/-1.25/iy/-1.67/_/t/-1.14/uw/y/-1.26/ao/-1.09/r/-1.69/_/g/-1.25/3/ey/-1.04/m/-1.18/z/-1.15/f/-1.26/ao/-1.09/r/-1.57/ah/-1.62/_/b/-1.13/aw/-1.69/_/t/-1.07/w/-1.25/3/ah/-1.06/n/-1.19/th/-1.12/3/aw/-1.06/z/-1.54/ah/-1.11/n/-1.72/_/d/-1.71/_/t/-1.31/3/ow/-1.68/-3/_/k/-1.17/-3/ah/1.42/-3/n/1.09/-3/z",
+		
+		"_/-1.67/_/g/-1.17/3/uh/-1.69/_/d/-1.13/n/-1.17/3/ay/-1.71/_/t/_/-1.70/_/g/-1.27/3/uh/-1.69/_/d/-1.13/n/-1.17/3/ay/-1.72/_/t/!/_//-1.57/_/p/-1.28/3/aa/-1.28/r/-1.72/_/t/-1.56/ih/-1.05/ng/-1.20/ih/-1.06/z/-1.18/s/-1.25/3/ah/-1.66/_/ch/-1.30/s/-1.10/w/-1.31/3/iy/-1.69/_/t/-1.18/s/-1.39/3/aa/-1.09/r/-1.64/ow/_/-1.16/dh/-1.41/3/ae/-1.69/_/t/1.11/ay/sh/-1.29/ae/-1.07/l/-1.18/s/-1.22/3/ey/-1.67/_/g/-1.17/3/uh/-1.69/_/d/-1.13/n/-1.12/3/ay/-1.69/_/t/-1.71/_/t/-1.08/ih/-1.07/l/-1.31/ih/-1.69/_/t/-1.64/_/b/-1.25/iy/m/-1.39/3/aa/-1.09/-3/r/-1.18/-3/ow"
+
+	}
+	speaker=
+	{
+		{140,1,1,.5,10,10,1,1,1},
+		{140,1,1,.5,10,10,1,1,1},
+		{230,.75,1,1,20,20,1.2,5,1},
+		{140,1,1,.5,10,10,1,1,2},
+		{140,1,1,.5,10,10,1,1,1},
+		{140,1,1,.5,10,10,1,1,1},
+		{140,1,1,.5,10,10,1,1,1},
+		{140,1,1,.5,10,10,1,1,1},
+		{140,1,1,.5,10,10,1,1,1},
+		{140,1,1,.5,10,10,1,1,1},
+	}
+	spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_bandwidth,spk8_whisper=unpack(speaker[1])
+	spk8_volume=.1
+	say"_/-1.25/ah/hh/3/eh/m"
 end
 
 
---[[function _update()
-	speako8()
-	if (btnp(right)) spk8_quality+=.05
-	if (btnp(left)) spk8_quality-=.05	
-	if (phone_index<0)	phone_index=#phone_list-1
 
-	if (btnp(fire2)) then
-		
-		sounds={}
-
-
-say'_/hh/-1.56/ah/-1.07/l/-1.36/3/ow/-3/_/-1.03/-3/w/1.08/-3/er/1.65/-3/l/-1.64/-3/_/d/_/-1.11/3/ay/-1.02/m/-1.30/s/-1.64/_/p/-1.15/3/iy/-1.68/_/k/-1.13/3/ow/-1.46/3/ey/-1.71/_/t/_/-1.52/ah/-1.18/s/-1.64/_/p/-1.11/3/iy/-1.66/_/ch/-1.18/s/-1.41/3/ih/-1.18/n/-1.25/th/-1.60/ah/-1.09/s/-1.47/ah/-1.09/s/-1.15/l/-1.16/3/ay/-1.66/_/b/-1.25/r/-1.63/eh/-1.09/r/-1.45/iy/f/-1.26/ao/-1.09/r/-1.62/_/p/-1.27/3/iy/-1.68/_/k/-1.55/ow/-1.19/-3/ey/-1.64/-3/_/t/_/1.11/ay/-1.67/_/k/-1.18/ae/-1.06/n/-1.18/s/-1.22/3/ey/m/-1.19/ow/-1.27/s/-1.72/_/t/-1.18/3/eh/-1.06/n/-1.67/iy/-1.09/th/-1.46/ih/-1.05/ng/-1.15/y/-1.26/uw/-1.07/-3/l/-1.00/-3/ay/-1.65/-3/_/k'
-
-say'_/-1.15/f/-1.25/r/-1.35/3/eh/-1.11/n/-1.73/_/d/-1.24/z/_/-1.36/r/-1.48/3/ow/-1.02/m/-1.63/ah/-1.13/n/-1.24/z/_/-1.70/_/k/-1.13/3/ah/-1.21/n/-1.74/_/t/-1.25/r/-1.67/iy/-1.02/m/-1.67/ih/-1.14/n/_/-1.20/l/-1.31/3/eh/-1.11/n/-1.72/_/d/-1.04/m/-1.25/iy/y/-1.26/ao/-1.09/r/1.28/-3/ih/1.57/-3/r/1.09/-3/z/_/-1.10/ay/-1.67/_/k/-1.02/3/ah/-1.02/m/-1.71/_/t/-1.14/uw/-1.60/_/b/-1.35/3/eh/-1.09/r/-1.56/iy/s/-1.35/3/iy/-1.06/z/-1.63/er/_/-1.18/n/-1.37/3/aa/-1.69/_/t/-1.71/_/t/-1.14/uw/-1.62/_/p/-1.25/r/-1.18/3/ey/1.01/z/-1.30/-3/hh/1.28/-3/ih/1.03/-3/m'
-
-
-	end	
-end]]
 function _draw()
-cls()
-
-	line(0,64,127,64,7)
-	for i=1,127 do
-		line(i,127-peek(0x8000+i-1)/2,i,127-peek(0x8000+i)/2,8)
+	cls()
+	if (selection==0) then
+		printc("unaccustomed as i am/to public speaking..." ,1,120,11)
+		print("next ➡️",100,120,11)
+	else
+		for i=1,127 do
+			line(i,127-peek(0x8000+i-1)/2,i,127-peek(0x8000+i)/2,11)
+		end
+		printc(passage[selection])
+		print("⬅️ prior     ❎ say" ,1,120,11)
+		print("next ➡️",100,120,11)
 	end
---	print((phone_index+1).." "..phone_list[phone_index+1].."   "..words[phone_index+1],0,0,7)
 end
 __gfx__
 77777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777

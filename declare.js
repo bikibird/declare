@@ -226,11 +226,7 @@ var intone=function(syllables)
 	{
 		syllable.forEach((phone,phoneIndex)=>
 		{
-			if (phone.phoneme=="er")
-			{
-				
-				console.log("er")
-			}
+
 			//Rule 1 insert 200 ms pause ahead of start of clause
 			if (phone.startClause && phoneIndex==0) saying+="_/"
 

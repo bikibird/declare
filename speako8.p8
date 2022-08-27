@@ -1,3 +1,6 @@
+pico-8 cartridge // http://www.pico-8.com
+version 34
+__lua__
 do
 
 data=split("aa=1320,1,500,4,2,0,1,2600,160,1220,70,700,130,-250,100;ae=1270,1,1000,4,2,0,.79,2430,320,1660,150,620,170,-250,100;ah=770,1,1000,4,2,0,.79,2550,140,1220,50,620,80,-250,100;ao=1320,1,1000,4,2,0,.74,2570,80,990,100,600,90,-250,100;aw=720,1,1000,4,2,0,.79,2550,140,1230,70,640,80,-250,100/720,1,1000,4,3,0,0,2350,80,940,70,420,80,-250,100;ay=690,1,1000,4,2,0,.9,2550,200,1200,70,660,100,-250,100/690,1,1000,4,2,0,.223,2550,200,1880,100,400,70,-250,100;eh=830,1,1000,4,2,0,.44,2520,200,1720,100,480,70,-250,100;er=990,1,1000,4,2,0,.41,1540,110,1270,60,470,100,-250,100;ey=520,1,500,4,2,0,.44,2520,200,1720,100,480,70,-250,100/520,1,500,4,2,0,.05,2600,200,2020,100,330,50,-250,100;ih=720,1,1000,4,2,0,.23,2570,140,1800,100,400,50,-250,100;iy=880,1,1000,4,2,0,0,2960,400,2020,100,310,70,-250,100;ow=1210,1,1000,4,2,0,.59,2300,70,1100,70,540,80,-250,100;oy=513,1,1000,4,2,0,.62,2400,130,960,50,550,60,-250,100/513,1,1000,4,2,0,.13,2400,130,1820,50,360,80,-250,100/513,1,1000,4,2,0,.13,2400,130,1820,50,360,80,-250,100;uh=880,1,1000,4,2,0,.36,2350,80,1100,100,450,80,-250,100;uw=390,1,1000,4,2,0,.1,2200,140,1250,110,350,70,-250,100/390,1,1000,0,1,0,-.12,2200,140,900,110,320,70,-250,100/390,1,1000,0,0,0,-.12,2200,140,900,110,320,70,-250,100;l=440,1,1000,0,2,0,0,2880,280,1050,100,310,50,-250,100;r=440,1,1000,0,2,0,0,1380,120,1060,100,310,70,-250,100;m=390,1,1000,0,0,0,0,2150,200,1100,150,400,300,-450,100;n=360,1,1000,0,0,0,0,2600,170,1600,100,200,60,-450,100;ng=440,1,1000,0,0,0,0,2850,280,1990,150,200,60,-450,100;ch=230,0,200,0,0,1,0,2820,300,1800,90,350,200,-250,100/100,0,100,1,0,1,0,2820,300,1800,90,350,200,-250,100;jh=1,1,1000,0,0,1,0,2820,270,1800,80,260,60,-250,100/330,1,500,1,0,1,0,2820,270,1800,80,260,60,-250,100;dh=275,1,250,0,0,.5,0,2540,170,1290,80,270,60,-250,100;f=1,0,15,0,0,1,0,2080,150,1100,120,340,200,-250,100/660,0,25,1,0,1,0,2080,150,1100,120,340,200,-250,100;s=690,0,10,0,0,1,0,2530,200,1390,80,320,200,-250,100;sh=690,0,20,0,0,1,0,2750,300,1840,100,300,200,-250,100;zh=1,1,250,0,0,.5,0,2750,300,1840,100,300,200,-250,100/385,1,400,1,0,.5,0,2750,300,1840,100,300,200,-250,100;k=50,0,100,0,0,1,0,2850,330,1900,160,300,250,-250,100/250,0,5,1,0,1,0,2850,330,1900,160,300,250,-250,100;p=50,0,50,0,0,1,0,2150,220,1100,150,400,300,-250,100/225,0,2,1,0,1,0,2150,220,1100,150,400,300,-250,100;t=50,0,100,0,0,2,0,2600,250,1600,120,400,300,-250,100/270,0,5,0,0,1,0,2600,250,1600,120,400,300,-250,100;g=165,1,1000,0,0,1,0,2850,280,1990,150,200,60,-250,100;b=440,1,100,0,1,0,0,2150,220,1100,150,400,300,-250,100/70,1,1000,0,0,1,0,2150,220,1100,150,400,300,-250,100;d=70,1,1000,0,0,1,0,2600,170,1600,100,200,60,-250,100;th=606,0,10,0,0,1,0,2540,200,1290,90,320,200,-250,100;v=330,1,1000,0,0,.5,0,2080,120,1100,90,220,60,-250,100;z=410,1,1000,0,0,.5,0,2530,180,1390,60,240,70,-250,100;w=440,1,1000,0,0,0,.1,2150,60,610,80,290,50,-250,100;y=440,1,1000,0,0,0,0,3020,500,2070,250,260,40,-250,100;",";")
@@ -33,60 +36,61 @@ end
 	c_factor=split"1,0x.fd19,0x.fa3a,0x.f764,0x.f497,0x.f1d1,0x.ef13,0x.ec5e,0x.e9b0,0x.e70a,0x.e46c,0x.e1d5,0x.df46,0x.dcbe,0x.da3d,0x.d7c4,0x.d552,0x.d2e7,0x.d083,0x.ce26,0x.cbd0,0x.c981,0x.c738,0x.c4f6,0x.c2bb,0x.c086,0x.be57,0x.bc2f,0x.ba0d,0x.b7f1,0x.b5dc,0x.b3cc,0x.b1c2,0x.afbf,0x.adc1,0x.abc9,0x.a9d6,0x.a7e9,0x.a602,0x.a421,0x.a244,0x.a06e,0x.9e9c,0x.9cd0,0x.9b09,0x.9947,0x.978a,0x.95d3,0x.9420,0x.9272,0x.90c9,0x.8f25,0x.8d86,0x.8beb,0x.8a55,0x.88c4,0x.8737,0x.85af,0x.842b,0x.82ac,0x.8130,0x.7fba,0x.7e47,0x.7cd9,0x.7b6e,0x.7a08,0x.78a6,0x.7748,0x.75ee,0x.7498,0x.7346,0x.71f7,0x.70ad,0x.6f66,0x.6e22,0x.6ce3,0x.6ba7,0x.6a6f,0x.693a,0x.6809,0x.66db,0x.65b0,0x.6489,0x.6366,0x.6245,0x.6128,0x.600e,0x.5ef7,0x.5de4,0x.5cd3,0x.5bc6,0x.5abc,0x.59b5,0x.58b0,0x.57af,0x.56b1,0x.55b5,0x.54bc,0x.53c7,0x.52d4,0x.51e3,0x.50f6,0x.500b,0x.4f22,0x.4e3d,0x.4d5a,0x.4c79,0x.4b9c,0x.4ac0,0x.49e7,0x.4911,0x.483d,0x.476b,0x.469c,0x.45cf,0x.4505,0x.443c,0x.4376,0x.42b3,0x.41f1,0x.4132,0x.4075,0x.3fba,0x.3f01,0x.3e4a,0x.3d95,0x.3ce3,0x.3c32,0x.3b83,0x.3ad7,0x.3a2c,0x.3983,0x.38dc,0x.3837,0x.3794,0x.36f3,0x.3653,0x.35b6,0x.351a,0x.3480,0x.33e8,0x.3351,0x.32bc,0x.3229,0x.3197,0x.3107,0x.3079,0x.2fed,0x.2f62,0x.2ed8,0x.2e50,0x.2dca,0x.2d45,0x.2cc2,0x.2c40,0x.2bbf,0x.2b40,0x.2ac3,0x.2a47,0x.29cc,0x.2953,0x.28db,0x.2864,0x.27ef,0x.277b,0x.2709,0x.2698,0x.2628,0x.25b9,0x.254b,0x.24df,0x.2474,0x.240a,0x.23a2,0x.233b,0x.22d4,0x.226f,0x.220b,0x.21a9,0x.2147,0x.20e6,0x.2087,0x.2029,0x.1fcb,0x.1f6f,0x.1f14,0x.1eba,0x.1e60,0x.1e08,0x.1db1,0x.1d5b,0x.1d06,0x.1cb2,0x.1c5e,0x.1c0c,0x.1bbb,0x.1b6a,0x.1b1b,0x.1acc,0x.1a7e,0x.1a31,0x.19e5,0x.199a,0x.1950,0x.1907,0x.18be,0x.1876,0x.182f,0x.17e9,0x.17a4,0x.175f,0x.171b,0x.16d8,0x.1696,0x.df50,0x.1614,0x.15d3,0x.1594,0x.1556,0x.1518,0x.14da,0x.149e,0x.cbd9,0x.1427,0x.13ec,0x.13b3,0x.137a,0x.1341,0x.1309,0x.12d2,0x.ba15,0x.1265,0x.1230,0x.11fb,0x.11c7,0x.1193,0x.1160,0x.112e,0x.a9de,0x.10cb,0x.109a,0x.106a,0x.103a,0x.100b,0x.0fdd,0x.0faf,0x.9b10,0x.0f54,0x.0f28,0x.0efc,0x.0ed0,0x.0ea5,0x.0e7b,0x.0e51,0x.8d8c,0x.0dfe,0x.0dd6,0x.0dad,0x.0d86,0x.0d5e,0x.0d38,0x.0d11,0x.8136,0x.0cc6,0x.0ca1,0x.0c7c,0x.0c58,0x.0c34,0x.0c11,0x.0bee,0x.0bcb,0x.0ba9,0x.0b87,0x.0b66,0x.0b45,0x.0b24,0x.0b03"
 
 	
-	function say(speech)
-		local phonemes=split(speech,"/")
-		local onset,c,f_glide,bw_glide,d,source,volume,velocity,shift,frication,pitch,cascade,d2,rate
-		local c1,c2={},{}
-		local v_stress, d_stress, p_stress,v1,v2,h_phone=unpack(split("1,1,0,0,0,0")) 
-		for i,phoneme in pairs(phonemes) do
-			local stress=tonum(phoneme)
-			if stress then
-				local abs_stress=abs(stress)
-				local sign,stress_type,magnitude=sgn(stress),abs_stress\1,abs_stress & 0x.ffff
-				-- -.25 == 25% slower == 1-.25== .75 +.25 ==25% faster 1.25 
-				if (stress_type==1) d_stress=1+sign*magnitude
-				if (stress_type==2) v_stress=1+sign*magnitude
-				if stress_type==3 then
-					p_stress=sign--*magnitude
-					if (magnitude>0)p_stress*=magnitude
+function say(speech)
+	local phonemes=split(speech,"/")
+	local onset,c,f_glide,bw_glide,d,source,volume,velocity,slide,frication,pitch,cascade,d2,rate
+	local c1,c2={},{}
+	local v_stress, d_stress, p_stress,v1,v2,h_phone=unpack(split("1,1,0,0,0,0")) 
+	for i,phoneme in pairs(phonemes) do
+		local stress=tonum(phoneme)
+		if stress then
+			local abs_stress=abs(stress)
+			local sign,stress_type,magnitude=sgn(stress),abs_stress\1,abs_stress & 0x.ffff
+			-- -.25 == 25% slower == 1-.25== .75 +.25 ==25% faster 1.25 
+			if (stress_type==1) d_stress=1+sign*magnitude
+			if (stress_type==2) v_stress=1+sign*magnitude
+			if stress_type==3 then
+				p_stress=sign--*magnitude
+				if (magnitude>0)p_stress*=magnitude
+			end
+		elseif phoneme=="hh" then
+			h_phone=d_stress*440
+		elseif phoneme=="_"then
+			add(sounds,{1100*d_stress*spk8_rate})
+		else
+			for frame in all(phone[phoneme]) do
+				d,source,volume,velocity,slide,frication,pitch,cascade=unpack(frame)
+				if (volume==0)glottal_stop=true
+				c,f_glide,bw_glide,d2,c1,v1,c2,v2={},{},{},d*d_stress,c2,v2,cascade,volume
+				local delta_f0=p_stress*spk8_intonation+pitch*spk8_if0
+				if (velocity == 0) v1=volume
+				if (slide == 0) c1=cascade
+				if (#c1 != #c2) c1=cascade
+				for m=1,#c1 do
+					add(c,{unpack(c1[m])})
+					local cm,c2m=c[m],c2[m]
+					local f_goal,bw_goal=c2m[1],c2m[2]
+					cm.y0,cm.y1,cm.y2=0,0,0
+					if m<4  and source==1 then --Don't include nasal filter
+						cm[1] *= spk8_shift --formant
+						cm[2] *= spk8_bandwidth --bandwidth
+						f_goal *= spk8_shift
+						bw_goal *= spk8_bandwidth
+					end	
+					add(f_glide,slide*(f_goal-cm[1])/d) --shift: how quickly to shift pitch
+					add(bw_glide,slide*(bw_goal-cm[2])/d)
 				end
-			elseif phoneme=="hh" then
-				h_phone=d_stress*440
-			elseif phoneme=="_"then
-				add(sounds,{1100*d_stress*spk8_rate})
-			else
-				for frame in all(phone[phoneme]) do
-					d,source,volume,velocity,shift,frication,pitch,cascade=unpack(frame)
-					if (volume==0)glottal_stop=true
-					c,f_glide,bw_glide,d2,c1,v1,c2,v2={},{},{},d*d_stress,c2,v2,cascade,volume
-					local delta_f0=p_stress*spk8_intonation+pitch*spk8_if0
-					if (velocity == 0) v1=volume
-					if (shift == 0) c1=cascade
-					if (#c1 != #c2) c1=cascade
-					for m=1,#c1 do
-						add(c,{unpack(c1[m])})
-						local cm,c2m=c[m],c2[m]
-						local f_goal=c2m[1]
-
-						cm.y0,cm.y1,cm.y2=0,0,0
-						if m<4  and source==1 then --Don't include nasal filter
-							cm[1] *= spk8_shift --f2
-							f_goal *= spk8_shift --f2
-						end	
-						add(f_glide,shift*(f_goal-cm[1])/d) --shift: how quickly to shift pitch
-						add(bw_glide,shift*(c2m[2]-cm[2])/d)
-					end
-					if  h_phone >0 then  -- get hh cascade
-						add(sounds,{h_phone,2,0,1,0,1,pitch,c,f_glide,bw_glide,c2,v_stress,delta_f0})
-						h_phone=0
-					end
-					add(sounds,{d2,source,frication,v1,velocity*(v2-v1)/d,v2,pitch,c,f_glide,bw_glide,c2,v_stress,delta_f0})
+				if  h_phone >0 then  -- get hh cascade
+					add(sounds,{h_phone,2,0,1,0,1,pitch,c,f_glide,bw_glide,c2,v_stress,delta_f0})
+					h_phone=0
 				end
-					v_stress, d_stress, p_stress=1,1,0 
-			end	
+				add(sounds,{d2,source,frication,v1,velocity*(v2-v1)/d,v2,pitch,c,f_glide,bw_glide,c2,v_stress,delta_f0})
+			end
+				v_stress, d_stress, p_stress=1,1,0 
 		end	
-	
-	end
+	end	
+
+end
 function speaking() return #sounds>0 end
 function mute() sounds={} end
 function speako8()
@@ -104,15 +108,15 @@ function speako8()
 					end
 					if source then  --if not silence
 						set_voice()
-						open,sample,_source = spk8_quality*w0,v/10,source*spk8_whisper  -- 0-->0 1-->2 2-->4
+						open,sample,_source = spk8_quality*w0,v/8,source*spk8_whisper  -- 0-->0 1-->2 2-->4
 						if _source ==1 then --voiced
 							if t % flr(w0+.5) ==0 then  
-								x0,b,t =-v/8/(w0-1),-v/8/open/open,0
+								x0,b,t =-sample/(w0-1),-sample/open/open,0
 								a = -b * open / 3
 								set_voice()
 							end
 							if (t > open) then
-								x0 = -v/8/(w0-1)
+								x0 = -sample/(w0-1)
 							else
 								a+=b
 								x0-=a 
@@ -126,8 +130,10 @@ function speako8()
 							if (t>w0\2) sample/=2 -- now centered over -4,4
 						end
 						for k,resonator in pairs(cascade) do
-							local f,bw,a0,b0,c0=resonator[1],resonator[2]\10+1
+							local f,bw,a0,b0,c0=resonator[1],resonator[2]\10+1 
 							--f=f<2756 and f or 2756
+							bw =bw<=#b_factor and bw or #b_factor
+							bw =bw>=1 and bw or 1
 							b1=cos(f/5512.5)
 							if f >0 then -- formant
 								b0,c0=b_factor[bw]*b1,-c_factor[bw]

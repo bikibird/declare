@@ -990,7 +990,7 @@ canvas{
 	image-rendering: crisp-edges;
 	image-rendering: -moz-crisp-edges;
 	cursor:pointer;
-	background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAIAAABMXPacAAADbklEQVR4Ae2dzc7rIAwF2zwzC3aIHQse+i6QEALsQu+nxElnVCHHcX56jnG2LwAAAAA4meCdkixBe1gz01h5iv4g1O+T+joNdE1382dyXKV+TPnPjdy9Z0z5cg+uMUD557vetMW7av5hHzxqCklzf/qdWPwGjDW//g0AAAAAALiS4F35KXE9LEFd9XvWuF3bUxY4LLxETLkNxjV4F1OuZZ3Wyg23Tv2uAbst2davCGqq5Y3ugK3GbIs/irt78180oFNz1DSmLM1uZS5N6y3vBgAAAACAk3gbfKfgXQliyiuxfh+lADThxnUaTA8/5u1wmPWgdu6KuPdtc6MGrAyZNm+/029mwOIu0U3qxhcAAAAAABgjeFfXEnSZrqYUjLFyf73gKg6bZsSUty6JKddLpkLv3vCnDVgXvdscxrW2bsD/jAjJDAzYU7AdI21cNI0pS+K2I366A8YvCgAAAAAAnE7wrg3qWn5twZjvatrK6YNq/Ur+ZI6r1I8pT/98TFlKjqtk6so9S1469XADVnbGF/W7av7uDqibYL1bV1p4S00L7X+ZAeWfF72kWdR2qDTruxaWBO0+J3baHwAAAADgGt6nPSl4V4KYcoljyl2+Hio1Uixdq7/P9B0eS/2fJegOu7y0tsHKtV39yvucyXE7877Acl/fxoD/EfGS1jZnwOI2D96taz2Omum10+TimAIAAAAAeCDvE54RvCtBTLnEMeWSL5mab2ukuF5b8/qzxpqxXr/nE6j/rQTSKtWM+e7U+KDFeundTuMwYswY1zbcVUSqt9nXFxvQitLFXw8Eqf7k1jZkwOLWDt5JU+Vr7doLp8YsjikAAAAAgEfxtvZCwbvX6xVTDt61azmrxB9viNmr6rdxzYyBdIl+W2scBj2QtP4o6B3b3JYBMeVWRElQKW+50+9hQGn/Ud9uHCn+Sa7c0RsAAAAAgOcSvJPW8qtlY16KlWfpBedzmDUmplzX4F1MucQ1WeNpfip0W4AB2obQm7et6eKpGZYxYUAr4lS4ts2Vro8pT03CgD/4NrTdvTLWpeIbeQMAAAAAAAAAAA/jbfO1gnftYUxZKogpB+9qwZhvzxrkMKt+Ua2snR+SK3oeA7ZtKP27uEumeeVyDPjAx+kRU56erUmpAAM+S1+btx1H+nYZm32aBAAAsMI/AXrsE/oNgRgAAAAQdEVYdExvZGVQTkcAMjAxMTAyMjHjWbbBAAAAAElFTkSuQmCC");
+	background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAIAAABMXPacAAAB/klEQVR4Ae3dXY6bMBQGUHc0a8k2I7bJavqQyrIAUwK2MXCOqlFKiH/uB9evAQAAAAAAAAAAAAAAAAAAANjhHV6fv/FD/Jte3zhU+sPc4J346af63xZ3+1dHZrxzAF+VLPfbIoM8LoA2j+olXojWAdTb6hDGbtfWSwD1dlhq5PYZNAqgn0Ovt9VWD+BapW+/8ooBxA1cMYNmiy8fwDu8rvvUt99U00OYigHc8sFvsM0CAbSv+zu8hjCmV4YwNl5GqemOBvCEp77q3ncGcHzu2yR3sCntCeAzX6kKnpXEZ95JK2sfw59vO+/iNPH65EN6/5Y2PR9n/WL71r/R9lyzAaQHXdxqtxvuP4O0ngstaFJWtS7bWnP1/HelbE/nuzNg8mqkR9Ok83gn9jWiefNJi/wz+W4IY7yS/jh+jv+dtLn0V+mHlXvmPXE+yOTmxRHWL+aGXVxJbt71e+Y3xH+LrT8t8u/2k2T+orB+8C5eWT6E902TO9kf1V42FjrnP2/A9qhzahwekwEbTHG8DoUDKLuIG7SaMwN4ThI1NlgygLsmUXU7ew7h5yTRYP11A4h7GMKY28z6Jnefrp+TeUdx41LbPD3VA7jQO3HK2loHkL4TXdX9rPWcEEA/L0QPD8FvP8/gvl5/szYIAAAAAAAAAAAAAAAAAAAAAAAAQEf+AnKA76UZtc+iAAAAEHRFWHRMb2RlUE5HADIwMTEwMjIx41m2wQAAAABJRU5ErkJggg==");
 	-repeat center;
 	-webkit-background-size:cover; -moz-background-size:cover; -o-background-size:cover; background-size:cover;
 }
@@ -1018,21 +1018,99 @@ canvas{
 <body style="padding:0px; margin:0px;">
 	
 <div id="body_0"> <!-- hide this when playing in mobile (p8_touch_detected) so that elements don't affect layout -->
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal fade" id="helpPassage" tabindex="-1" role="dialog" aria-labelledby="helpPassageTitle" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <h5 class="modal-title" id="helpPassageTitle">Passage Help</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        Here is some help text
+		Type your passage here.
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="helpPhonetics" tabindex="-1" role="dialog" aria-labelledby="helpPhoneticsTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="helpPhoneticsTitle">Phonetics Help</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		<table class="table table-hover table-sm">
+        	<thead><tr><th>Phoneme</th><th>Example</th><th>Translation</th></tr></thead>
+       		<tbody>
+        	<tr><td>aa</td><td>odd</td><td>aa d</td></tr>
+        	<tr><td>ae</td><td>at</td><td>ae t</td></tr>
+			<tr><td>ah</td><td>hut</td><td>hh ah t</td></tr>
+			<tr><td>ao</td><td>ought</td><td>ao t</td></tr>
+			<tr><td>aw</td><td>cow</td><td>k aw</td></tr>
+			<tr><td>ay</td><td>hide</td><td>hh ay d</td></tr>
+			<tr><td>b</td><td>be</td><td>b iy</td></tr>
+			<tr><td>ch</td><td>cheese</td><td>ch iy z</td></tr>
+			<tr><td>d</td><td>dee</td><td>d iy</td></tr>
+			<tr><td>dh</td><td>thee</td><td>dh iy</td></tr>
+			<tr><td>eh</td><td>Ed</td><td>eh d</td></tr>
+			<tr><td>er</td><td>hurt</td><td>hh er t</td></tr>
+			<tr><td>ey</td><td>ate</td><td>ey t</td></tr>
+			<tr><td>f</td><td>fee</td><td>f iy</td></tr>
+			<tr><td>g</td><td>green</td><td>g r iy n</td></tr>
+			<tr><td>hh</td><td>he</td><td>hh iy</td></tr>
+			<tr><td>ih</td><td>it</td><td>ih t</td></tr>
+			<tr><td>iy</td><td>eat</td><td>iy t</td></tr>
+			<tr><td>jh</td><td>gee</td><td>jh iy</td></tr>
+			<tr><td>k</td><td>key</td><td>k iy</td></tr>
+			<tr><td>l</td><td>lee</td><td>l iy</td></tr>
+			<tr><td>m</td><td>me</td><td>m iy</td></tr>
+			<tr><td>n</td><td>knee</td><td>n iy</td></tr>
+			<tr><td>ng</td><td>ping</td><td>p ih ng</td></tr>
+			<tr><td>ow</td><td>oat</td><td>ow t</td></tr>
+			<tr><td>oy</td><td>toy</td><td>t oy</td></tr>
+			<tr><td>p</td><td>pee</td><td>p iy</td></tr>
+			<tr><td>r</td><td>read</td><td>r iy d</td></tr>
+			<tr><td>s</td><td>sea</td><td>s iy</td></tr>
+			<tr><td>sh</td><td>she</td><td>sh iy</td></tr>
+			<tr><td>t</td><td>tea</td><td>t iy</td></tr>
+			<tr><td>th</td><td>theta</td><td>th ey t ah</td></tr>
+			<tr><td>uh</td><td>hood</td><td>hh uh d</td></tr>
+			<tr><td>uw</td><td>two</td><td>t uw</td></tr>
+			<tr><td>v</td><td>vee</td><td>v iy</td></tr>
+			<tr><td>w</td><td>we</td><td>w iy</td></tr>
+			<tr><td>y</td><td>yield</td><td>y iy l d</td></tr>
+			<tr><td>z</td><td>zee</td><td>z iy</td></tr>
+			<tr><td>zh</td><td>seizure</td><td>s iy zh er</td></tr>
+		</tbody>
+	</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="helpIntonation" tabindex="-1" role="dialog" aria-labelledby="helpIntonationTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="helpIntonationTitle">Speech String Help</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		Intonation help.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -1049,18 +1127,18 @@ canvas{
 				<form>
   					<div class="form-group">
 						<div class"input-group>
-							<label for="passage">Passage <small><a href="#" data-toggle="modal" data-target="#exampleModalLong">help</a></label></small></label>
+							<label for="passage">Passage <small><a href="#" data-toggle="modal" data-target="#helpPassage">help</a></label></small></label>
 							<textarea id="passage" rows="5" class="form-control" aria-label="Passage"></textarea>
 						</div>
 					</div>	
 					<div class="form-group">
-						<label for="phonetics">Phonetic Mark Up <small><a href="#" data-toggle="modal" data-target="#exampleModalLong">help</a></label></small></label>	
+						<label for="phonetics">Phonetic Mark Up <small><a href="#" data-toggle="modal" data-target="#helpPhonetics">help</a></label></small></label>	
 						<div class="input-group">
 							<textarea id="phonetics" rows="5" class="form-control" aria-label="Phonetics"></textarea>
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="speech">Speech String <small><a href="#" data-toggle="modal" data-target="#exampleModalLong">help</a></label></small></label>
+						<label for="speech">Speech String <small><a href="#" data-toggle="modal" data-target="#helpIntonation">help</a></label></small></label>
 						<div class="input-group">
 							<textarea id="speech" rows="5" class="form-control" aria-label="Speech String"></textarea>
 							<div class="input-group-append">
@@ -1191,6 +1269,7 @@ canvas{
 	var passage=document.getElementById('passage')
 	var phonetics=document.getElementById('phonetics')
 	var speech=document.getElementById('speech')
+	var p8_playarea = document.getElementById("p8_playarea");
 	passage.addEventListener('input', (e) =>
 	{
 			
@@ -1209,17 +1288,8 @@ canvas{
 			p8_run_cart()
 		}
 		quote=speech.value
-		if(pico8_gpio[0]==1)
-		{
-			pico8_gpio[0]=0
-		}
-		else
-		{
-			setTimeout(() => 
-			{
-				pico8_gpio[0]=0	
-			}, 5000)
-		}
+		pico8_gpio[0]=0
+		p8_playarea.focus()
 	})
 
 	var pico8_gpio = new Proxy(new Array(128),{
