@@ -990,7 +990,7 @@ canvas{
 	image-rendering: crisp-edges;
 	image-rendering: -moz-crisp-edges;
 	cursor:pointer;
-	background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAIAAABMXPacAAAB/klEQVR4Ae3dXY6bMBQGUHc0a8k2I7bJavqQyrIAUwK2MXCOqlFKiH/uB9evAQAAAAAAAAAAAAAAAAAAANjhHV6fv/FD/Jte3zhU+sPc4J346af63xZ3+1dHZrxzAF+VLPfbIoM8LoA2j+olXojWAdTb6hDGbtfWSwD1dlhq5PYZNAqgn0Ovt9VWD+BapW+/8ooBxA1cMYNmiy8fwDu8rvvUt99U00OYigHc8sFvsM0CAbSv+zu8hjCmV4YwNl5GqemOBvCEp77q3ncGcHzu2yR3sCntCeAzX6kKnpXEZ95JK2sfw59vO+/iNPH65EN6/5Y2PR9n/WL71r/R9lyzAaQHXdxqtxvuP4O0ngstaFJWtS7bWnP1/HelbE/nuzNg8mqkR9Ok83gn9jWiefNJi/wz+W4IY7yS/jh+jv+dtLn0V+mHlXvmPXE+yOTmxRHWL+aGXVxJbt71e+Y3xH+LrT8t8u/2k2T+orB+8C5eWT6E902TO9kf1V42FjrnP2/A9qhzahwekwEbTHG8DoUDKLuIG7SaMwN4ThI1NlgygLsmUXU7ew7h5yTRYP11A4h7GMKY28z6Jnefrp+TeUdx41LbPD3VA7jQO3HK2loHkL4TXdX9rPWcEEA/L0QPD8FvP8/gvl5/szYIAAAAAAAAAAAAAAAAAAAAAAAAQEf+AnKA76UZtc+iAAAAEHRFWHRMb2RlUE5HADIwMTEwMjIx41m2wQAAAABJRU5ErkJggg==");
+	background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAIAAABMXPacAAAARUlEQVR4Ae3dgQAAAACAoP2pFymSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACABsCAAAGB4kPcAAAAEHRFWHRMb2RlUE5HADIwMTEwMjIx41m2wQAAAABJRU5ErkJggg==");
 	-repeat center;
 	-webkit-background-size:cover; -moz-background-size:cover; -o-background-size:cover; background-size:cover;
 }
@@ -1028,8 +1028,9 @@ canvas{
         </button>
       </div>
       <div class="modal-body">
-		Type your passage here.
-      </div>
+	<p>Type the text that you want translated into a <a href="https://www.lexaloffle.com/bbs/?pid=112754" >Speako8</a> speech string in the <b>Passage</b> text box. </p>
+	<p>Spelling matters. Translation relies on the CMU pronouncing dictionary.  All words must be in English.  Contrations are usually ok.  If a word is not found in the dictionary, it will be omitted from the speech string. If you need to translate a nonsense word or other word not in the dictionary, try breaking it apart into english words.  For example, <q>Speako8</q> should be entered as <q>Speak oh eight</q> You can also enter a word that rhymes and then adjust the phonetics in the next step.</p><p>Punctuation matters. Periods, commas, and question marks affect the prosidy mark up. End sentences with periods for fallling intonation and pause or a question mark for rising intonation and pause. Commas add a pause without changing the intonation.</p>
+	    </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
       </div>
@@ -1046,48 +1047,49 @@ canvas{
         </button>
       </div>
       <div class="modal-body">
+		<p>The <b>Phonetics</b> text box contains a phonetic translation of the passage without prosody markup. Depending on your preferences, you may want to edit this data.</p><p>Each sound (phone) is represented by a 2 character phoneme. Phonemes (and punctuation) are separated by slashes. Alternate pronunciations are shown in square brackets and are not included in the final speech string. Move the brackets to change how a word will be pronounced.</p><p>Phonemes for vowels include a stress digit. A value of 1 indicates primary stress, 2 indicates secondary stress and 0 indicates an unstressed syllable.</p>
 		<table class="table table-hover table-sm">
         	<thead><tr><th>Phoneme</th><th>Example</th><th>Translation</th></tr></thead>
        		<tbody>
-        	<tr><td>aa</td><td>odd</td><td>aa d</td></tr>
-        	<tr><td>ae</td><td>at</td><td>ae t</td></tr>
-			<tr><td>ah</td><td>hut</td><td>hh ah t</td></tr>
-			<tr><td>ao</td><td>ought</td><td>ao t</td></tr>
-			<tr><td>aw</td><td>cow</td><td>k aw</td></tr>
-			<tr><td>ay</td><td>hide</td><td>hh ay d</td></tr>
-			<tr><td>b</td><td>be</td><td>b iy</td></tr>
-			<tr><td>ch</td><td>cheese</td><td>ch iy z</td></tr>
-			<tr><td>d</td><td>dee</td><td>d iy</td></tr>
-			<tr><td>dh</td><td>thee</td><td>dh iy</td></tr>
-			<tr><td>eh</td><td>Ed</td><td>eh d</td></tr>
-			<tr><td>er</td><td>hurt</td><td>hh er t</td></tr>
-			<tr><td>ey</td><td>ate</td><td>ey t</td></tr>
-			<tr><td>f</td><td>fee</td><td>f iy</td></tr>
-			<tr><td>g</td><td>green</td><td>g r iy n</td></tr>
-			<tr><td>hh</td><td>he</td><td>hh iy</td></tr>
-			<tr><td>ih</td><td>it</td><td>ih t</td></tr>
-			<tr><td>iy</td><td>eat</td><td>iy t</td></tr>
-			<tr><td>jh</td><td>gee</td><td>jh iy</td></tr>
-			<tr><td>k</td><td>key</td><td>k iy</td></tr>
-			<tr><td>l</td><td>lee</td><td>l iy</td></tr>
-			<tr><td>m</td><td>me</td><td>m iy</td></tr>
-			<tr><td>n</td><td>knee</td><td>n iy</td></tr>
-			<tr><td>ng</td><td>ping</td><td>p ih ng</td></tr>
-			<tr><td>ow</td><td>oat</td><td>ow t</td></tr>
-			<tr><td>oy</td><td>toy</td><td>t oy</td></tr>
-			<tr><td>p</td><td>pee</td><td>p iy</td></tr>
-			<tr><td>r</td><td>read</td><td>r iy d</td></tr>
-			<tr><td>s</td><td>sea</td><td>s iy</td></tr>
-			<tr><td>sh</td><td>she</td><td>sh iy</td></tr>
-			<tr><td>t</td><td>tea</td><td>t iy</td></tr>
-			<tr><td>th</td><td>theta</td><td>th ey t ah</td></tr>
-			<tr><td>uh</td><td>hood</td><td>hh uh d</td></tr>
-			<tr><td>uw</td><td>two</td><td>t uw</td></tr>
-			<tr><td>v</td><td>vee</td><td>v iy</td></tr>
-			<tr><td>w</td><td>we</td><td>w iy</td></tr>
-			<tr><td>y</td><td>yield</td><td>y iy l d</td></tr>
-			<tr><td>z</td><td>zee</td><td>z iy</td></tr>
-			<tr><td>zh</td><td>seizure</td><td>s iy zh er</td></tr>
+        	<tr><td>aa</td><td><i>o</i>dd</td><td>aa d</td></tr>
+        	<tr><td>ae</td><td><i>a</i>t</td><td>ae t</td></tr>
+			<tr><td>ah</td><td>h<i>u</i>t</td><td>hh ah t</td></tr>
+			<tr><td>ao</td><td><i>ou</i>ght</td><td>ao t</td></tr>
+			<tr><td>aw</td><td>c<i>ow</i></td><td>k aw</td></tr>
+			<tr><td>ay</td><td>h<i>i</i>de</td><td>hh ay d</td></tr>
+			<tr><td>b</td><td><i>b</i>e</td><td>b iy</td></tr>
+			<tr><td>ch</td><td><i>ch</i>eese</td><td>ch iy z</td></tr>
+			<tr><td>d</td><td><i>d</i>ee</td><td>d iy</td></tr>
+			<tr><td>dh</td><td><i>th</i>ee</td><td>dh iy</td></tr>
+			<tr><td>eh</td><td><i>E</i>d</td><td>eh d</td></tr>
+			<tr><td>er</td><td>h<i>ur</i>t</td><td>hh er t</td></tr>
+			<tr><td>ey</td><td><i>a</i>te</td><td>ey t</td></tr>
+			<tr><td>f</td><td><i>f</i>ee</td><td>f iy</td></tr>
+			<tr><td>g</td><td><i>g</i>reen</td><td>g r iy n</td></tr>
+			<tr><td>hh</td><td><i>h</i>e</td><td>hh iy</td></tr>
+			<tr><td>ih</td><td><i>i</i>t</td><td>ih t</td></tr>
+			<tr><td>iy</td><td><i>ea</i>t</td><td>iy t</td></tr>
+			<tr><td>jh</td><td><i>g</i>ee</td><td>jh iy</td></tr>
+			<tr><td>k</td><td><i>k</i>ey</td><td>k iy</td></tr>
+			<tr><td>l</td><td><i>l</i>ee</td><td>l iy</td></tr>
+			<tr><td>m</td><td><i>m</i>e</td><td>m iy</td></tr>
+			<tr><td>n</td><td><i>kn</i>ee</td><td>n iy</td></tr>
+			<tr><td>ng</td><td>pi<i>ng</i></td><td>p ih ng</td></tr>
+			<tr><td>ow</td><td><i>oa</i>t</td><td>ow t</td></tr>
+			<tr><td>oy</td><td>t<i>oy</i></td><td>t oy</td></tr>
+			<tr><td>p</td><td><i>p</i>ee</td><td>p iy</td></tr>
+			<tr><td>r</td><td><i>r</i>ead</td><td>r iy d</td></tr>
+			<tr><td>s</td><td><i>s</i>ea</td><td>s iy</td></tr>
+			<tr><td>sh</td><td><i>sh</i>e</td><td>sh iy</td></tr>
+			<tr><td>t</td><td><i>t</i>ea</td><td>t iy</td></tr>
+			<tr><td>th</td><td><i>th</i>eta</td><td>th ey t ah</td></tr>
+			<tr><td>uh</td><td>h<i>oo</i>d</td><td>hh uh d</td></tr>
+			<tr><td>uw</td><td>tw<i>o</i></td><td>t uw</td></tr>
+			<tr><td>v</td><td><i>v</i>ee</td><td>v iy</td></tr>
+			<tr><td>w</td><td><i>w</i>e</td><td>w iy</td></tr>
+			<tr><td>y</td><td><i>y</i>ield</td><td>y iy l d</td></tr>
+			<tr><td>z</td><td><i>z</i>ee</td><td>z iy</td></tr>
+			<tr><td>zh</td><td>sei<i>z</i>ure</td><td>s iy zh er</td></tr>
 		</tbody>
 	</table>
       </div>
@@ -1107,7 +1109,57 @@ canvas{
         </button>
       </div>
       <div class="modal-body">
-		Intonation help.
+		<p>The <b>Speech String</b> text box contains a phonetic translation of the passage complete with prosody markup. Audition the speech string by clicking the <b>Listen</b> button.</p>
+		<p>This string is used as the argument to the <a href="https://www.lexaloffle.com/bbs/?pid=112754" >Speako8</a> <code>say</code> function.</p>
+		<p>The underscore character indicates a pause at the start of a clause or a stop consonant.</p>
+		<p>The numbers (separated by slashes) preceding the phonemes indicate the duration, intonation, and intensity of the sounds (phones) associated with the phonemes. These may be edited or added to change the prosody of the passage.</p>
+		<table class="table table-hover table-sm">
+        	<thead><tr><th>Value</th><th>Explanation</th></tr></thead>
+       		<tbody>
+        	<tr><td>1.nn</td><td>Increase duration by nn% of innate duration.</td</tr>
+        	<tr><td>-1.nn</td><td>Decrease duration by nn% of innate duration./td></tr>
+			<tr><td>2.nn</td><td>Raise volume by nn%.</td></tr>
+			<tr><td>-2.nn</td><td>Lower volume by nn%.<td></td></tr>	
+			<tr><td>3.nn</td><td>Raise fundamental voice pitch by nn% of intonation.</td></tr>
+			<tr><td>-3.nn</td><td>lower fundamental voice pitch by nn% of intonation.<td></td></tr>
+			<tr><td>3</td><td><td>Raise fundamental voice pitch by 100% of intonation.</td></tr>
+			<tr><td>-3</td><td>Lower fundamental voice pitch by 100% of intonation</td></tr>
+		</tbody>
+	</table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="helpPico" tabindex="-1" role="dialog" aria-labelledby="helpPico" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="helpPicoTitle">Voice Parameters Help</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		<p>The <b>Pico-8 console</b> plays the speech string. The string is initially loaded with the <b>Listen</b> button.  To repeat the speech, press ❎. If the console loses focus, click the silver frame.<p>
+		<p>Use the up and down arrows to navigate the  voice options menu. Use the left and right arrows to alter the values.  See the <a href="https://www.lexaloffle.com/bbs/?pid=112754" >Speako8</a> documentation for information on setting voice options in your own cartridges.</p>
+		<table class="table table-hover table-sm">
+        	<thead><tr><th>Option</th><th>Range</th><th>Explanation</th></tr></thead>
+       		<tbody>
+        	<tr><td>Pitch</td><td>60-230</td><td>Fundamental pitch of voice (F0) in hertz</td></tr>
+        	<tr><td>Rate</td><td>.1-2</td><td>Standard rate of speech divisor&mdash; below 1 is slower; above 1 is faster.</td></tr>
+			<tr><td>Volume</td><td>.1-2<td>Standard volume factor&mdash; below 1 is quieter; above 1 is louder.</td></tr>
+			<tr><td>Quality</td><td>.1-2</td><td>Glottis open period&mdash; below .5 is creakier voice; .5 is modal voice; 1 is breathy voice; above 1 is weaker voice.</td></tr>
+			<tr><td>Intonation</td><td>0-20</td><td>Degree of pitch prosody in hertz&mdash; set to zero for robotic monotone.</td></tr>
+			<tr><td>Inherent F0</td><td>0-20</td><td>Degree to which pitch (F0) in hertz varies for vowels&dash; set to zero for robotic monontone.</td></tr>
+			<tr><td>Shift</td><td>.8-1.2</td><td>Factor by which to shift formant frequencies (F1, F2, F3)&mdash; above  raises formant frequencies; below one lowers.</td></tr>
+			<tr><td>Bandwidth</td><td>.5-5</td><td>Factor by which to alter bandwidth of formant frequencies (F1, F2, F3)&mdash; below 1 narrows the bandwidth of the formants;  above 1 widens.  When formants are shifted upward, it is recommended to widen bandwidths as well.</td></tr>
+			<tr><td>Whisper</td><td>1 or 2</td><td>Speaking mode&mdash; Normal voice is 1; whispering is 2.</td></tr>
+		</tbody>
+	</table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
@@ -1132,7 +1184,7 @@ canvas{
 						</div>
 					</div>	
 					<div class="form-group">
-						<label for="phonetics">Phonetic Mark Up <small><a href="#" data-toggle="modal" data-target="#helpPhonetics">help</a></label></small></label>	
+						<label for="phonetics">Phonetics <small><a href="#" data-toggle="modal" data-target="#helpPhonetics">help</a></label></small></label>	
 						<div class="input-group">
 							<textarea id="phonetics" rows="5" class="form-control" aria-label="Phonetics"></textarea>
 						</div>
@@ -1151,6 +1203,7 @@ canvas{
 <!-- Add any content above the cart here -->
 
 <div class="col-lg">
+<div><small><a href="#" data-toggle="modal" data-target="#helpPico">help</a></label></small></div>	
 <div id="p8_frame_0" style="max-width:800px; max-height:800px; margin:auto; background-color:silver;"> <!-- double function: limit size, and display only this div for touch devices -->
 <div id="p8_frame" style="display:flex; width:100%; max-width:95vw; height:100%; max-height:95vh; margin:auto; ">
 	<div id="p8_container"
@@ -1158,7 +1211,7 @@ canvas{
 		onclick="p8_create_audio_context(); p8_run_cart();">
 
 		<div id="p8_start_button" class="p8_start_button" style="width:100%; height:100%; display:flex;">
-			<img width=80 height=80 style="margin:auto;"
+			<img width=80 height=80 style="margin:auto; display:none;"
 		src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAABpklEQVR42u3au23DQBCEYUXOXIGKcujQXUgFuA0XIKgW90Q9oEAg+Ljd27vd2RsCf058gEDqhofPj+OB6SMCAQlIQAIyAhKQgARkBAQDnM6XSRsB7/2e/tSA0//12fCAKsQX3ntDA4oRFwBRIc0AixE38BAhTQGLEAsBUSDNAXcRhYDRIZsAPlp99VECRoXsDpgN0g0wC6Q7IDpkGEBUyG6A0+vKBtkdMBukG2AWSHdAdMgwgKiQ4QDRIMMCokCGB4wOCQPYFVKw2cABNocUjl6wgE0gFashPKAZpHJ2TQNYBVmxW6cDFENWDv9pAUshCVgJScBKSAISkD9hPkT4GkNAMdzepyj8Kye852EBLe51CZHHWQK4JcThD1SlcHPEYY/0a+A0n6SkGZV6w6WZNb3g4Id1b7hwgGhwYQBR4dwB0eHcALPAdQfMBhcOEA0uDCAqnDsgOpwbYBa4poA/31+rZYFrBriFpwGMCtcEcA9PAhgdzhywBK8EEQXOFFCCtwaIBmcGKMWbI6LCmQBq8R6hw5kAMgISkIAEJCAjIAEJSEBGQI9ukV7lRn9nD+gAAAAASUVORK5CYII="/>
 		</div>
 

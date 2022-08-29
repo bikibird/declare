@@ -6,13 +6,13 @@ var phoneticize = function(passage)
 	passage=passage.toLowerCase().replaceAll(/\s+/g, ' ').replace(";",".").trim().replaceAll(" -","-").replaceAll("- ","-").replaceAll(" ,",",").replaceAll(", ",",").replaceAll(" .",".").replaceAll(". ",".").replaceAll(" ?","?").replaceAll("? ","?").replaceAll("’","'")
 	if (!passage[passage.length-1].match(/[\!\?\.]/g))passage+="."
 	var words=[]
-	var word={spelling:"",syntax:" ",pronounciations:[],functor:false} 
+	var word={spelling:"",syntax:" ",pronunciations:[],functor:false} 
 	function finalize(char)
 	{
 		word.syntax=char
 		if(functors.find(w=>w===word.spelling))word.functor=true
 		words.push(word)
-		return {spelling:"",syntax:char,pronounciations:[],functor:false} 
+		return {spelling:"",syntax:char,pronunciations:[],functor:false} 
 	}
 	for (let i = 0; i < passage.length; i++)
 	{
@@ -47,12 +47,12 @@ var phoneticize = function(passage)
 				word.spelling+=passage[i]
 		}
 	}
-	words.forEach(word=>word.pronounciations=word.pronounciations.concat(pronouncing.phonesForWord(word.spelling)))
+	words.forEach(word=>word.pronunciations=word.pronunciations.concat(pronouncing.phonesForWord(word.spelling)))
 	var result=""
 	words.forEach(word=>
 	{
 		var w=""
-		word.pronounciations.forEach((p,index)=>w+=(index>0?"[":"")+p.replaceAll(" ","/")+(index>0?"]":""))
+		word.pronunciations.forEach((p,index)=>w+=(index>0?"[":"")+p.replaceAll(" ","/")+(index>0?"]":""))
 		w+="/"+word.syntax+"/"
 		if (!word.functor) w="^/"+w
 		result+=w
