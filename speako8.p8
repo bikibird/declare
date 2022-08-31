@@ -1,7 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 34
 __lua__
---speako8 demo
+--speako8
 --by bikibird
 --loosely based on the klatt synthesizer
 #include speako8_lib.p8

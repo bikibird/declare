@@ -3,7 +3,7 @@ version 34
 __lua__
 --declare
 --by bikibird
-#include speako8.p8
+#include speako8_lib_min.p8
 left,right,up,down,fire1,fire2=0,1,2,3,4,5
 gpioaddress=0x5f80
 printc=function(text,y,c)
