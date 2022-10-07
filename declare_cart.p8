@@ -3,7 +3,7 @@ version 34
 __lua__
 --declare
 --by bikibird
-#include speako8_lib_min.p8
+#include speako8_lib.p8
 left,right,up,down,fire1,fire2=0,1,2,3,4,5
 gpioaddress=0x5f80
 printc=function(text,y,c)
@@ -40,12 +40,12 @@ function io()
 end
 function _init()
 	quote=""
-	menu=split"pitch,rate,volume,quality,intonation,inherent f0,shift,bandwidth,whisper"
+	menu=split"pitch,rate,volume,quality,intonation,inherent f0,shift,nasal,aspiration"
 	selection=1
-	speech={140,1,1,.5,10,10,1,1,1}
-	delta={5,.1,.2,.1,1,1,.01,.5,1}
-	minimum={50,.01,.1,.1,0,0,.01,.5,1}
-	maximum={400,10,5,5,200,200,3,10,2}
+	speaker={140,1,1,.25,10,10,1,0,1,1}
+	delta={5,.1,.2,.1,1,1,.01,.01,.25,.1}
+	minimum={50,.01,.1,.1,0,0,.01,0,.25,0}
+	maximum={400,10,5,5,200,200,3,5,10,10}
 	
 	less=
 	{
@@ -56,8 +56,9 @@ function _init()
 		'_/l/-1.40/3/ow/-1.37/-3/er',
 		'_/l/-1.40/3/ow/-1.37/-3/er',
 		'_/l/-1.40/3/ow/-1.37/-3/er',
-		'_/n/-1.35/3/eh/-1.09/r/-1.66/ow/-1.03/-3/er',
-		'_/-3/v/1.25/-3/oy/-1.10/-3/s/-1.64/-3/_/t'
+		'_/-3/l/1.25/-3/eh/1.12/-3/s',
+		'_/-3/v/1.25/-3/oy/-1.10/-3/s/-1.64/-3/_/t',
+		'_/-3/l/1.25/-3/eh/1.12/-3/s'
 	}
 	more=
 	{
@@ -68,11 +69,12 @@ function _init()
 		'_/hh/-1.16/3/ay/-1.37/3/er',
 		'_/hh/-1.16/3/ay/-1.37/3/er',
 		'_/hh/-1.16/3/ay/-1.37/3/er',
-		'_/w/-1.13/3/ay/-1.69/-3/_/d/-1.18/3/er',
-		'_/w/-1.41/3/ih/-1.24/-3/s/-1.59/-3/_/p/1.43/3/er/-1.64/3/_/d'
+		'_/-3/m/1.27/-3/ao/1.12/-3/r',
+		'_/w/-1.41/3/ih/-1.24/-3/s/-1.59/-3/_/p/1.43/3/er/-1.64/3/_/d',
+		'_/-3/m/1.27/-3/ao/1.12/-3/r',
 	}
-	
-	spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_bandwidth,spk8_whisper=unpack(speech)
+	spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_nasal,spk8_aspiration=unpack(speaker)
+	say"_/-1.62/ae/-1.11/-3/hh/1.09/3/ih/1.03/-3/m"
 	poke(gpioaddress,1) 
 end
 function _update()
@@ -83,16 +85,15 @@ function _update()
 		say(quote)
 	elseif (btnp(left)) then
 		mute()
-		if (speech[selection]>minimum[selection]) speech[selection]-=delta[selection]
-		speech[selection]=flr((speech[selection]+.005)*100)/100
-		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_bandwidth,spk8_whisper=unpack(speech)
+		if (speaker[selection]>minimum[selection]) speaker[selection]-=delta[selection]
+		speaker[selection]=flr((speaker[selection]+.005)*100)/100
+		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_nasal,spk8_aspiration=unpack(speaker)
 		say(less[selection])	
-
 	elseif (btnp(right)) then
 		mute()
-		if (speech[selection]<maximum[selection]) speech[selection]+=delta[selection]
-		speech[selection]=flr((speech[selection]+.005)*100)/100
-		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_bandwidth,spk8_whisper=unpack(speech)
+		if (speaker[selection]<maximum[selection]) speaker[selection]+=delta[selection]
+		speaker[selection]=flr((speaker[selection]+.005)*100)/100
+		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_nasal,spk8_aspiration=unpack(speaker)
 		say(more[selection])
 	elseif (btnp(up)) then 
 		mute()
@@ -103,7 +104,6 @@ function _update()
 		selection+=1
 		if (selection>#menu)selection=1
 	end
-
 end
 
 function _draw()
@@ -112,12 +112,12 @@ function _draw()
 	for i=1,#menu do
 		
 		if i==selection then
-			printc("< "..menu[i]..": "..speech[i].." >",(i-1)*10+15,7)
+			printc("< "..menu[i]..": "..speaker[i].." >",(i-1)*10+15,7)
 		else
-			printc(menu[i]..": "..speech[i],(i-1)*10+15,7)
+			printc(menu[i]..": "..speaker[i],(i-1)*10+15,7)
 		end	
 	end
-	printc("❎ say",105,7)	
+	printc("❎ say",110,7)	
 end
 
 __label__

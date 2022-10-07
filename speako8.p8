@@ -102,7 +102,7 @@ function _init()
 		{140,1,1,.5,10,10,1,0,1,1},
 		
 	}
-	spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_aspiration,spk8_whisper,spk8_nasal=unpack(speaker[1])
+	spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_nasal,spk8_aspiration=unpack(speaker[1])
 	spk8_volume=.2
 	say"_/-1.62/ae/-1.11/-3/hh/1.09/3/ih/1.03/-3/m"
 end
