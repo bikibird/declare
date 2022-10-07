@@ -1,7 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 34
 __lua__
---speako8
+--Speako8
 --by bikibird
 --loosely based on the klatt synthesizer
 #include speako8_lib.p8
@@ -29,16 +29,16 @@ function _update() --menu
 		mute()
 		selection-=1
 		if (selection<1)selection=#passage
-		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_bandwidth,spk8_whisper=unpack(speaker[selection])
+		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_aspiration,spk8_nasal,spk8_whisper,spk8_nasal=unpack(speaker[selection])
 		say(quote[selection])
 	elseif (btnp(right)) then
 		mute()
 		selection+=1
 		if (selection>#passage)selection=1
-		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_bandwidth,spk8_whisper=unpack(speaker[selection])
+		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_aspiration,spk8_whisper,spk8_nasal=unpack(speaker[selection])
 		say(quote[selection])
 	end	
-	speako8()
+	speako8()  
 end
 
 function _init()
@@ -66,7 +66,7 @@ function _init()
 
 	quote=
 	{
-		"_/-1.15/f/-1.25/r/-1.35/3/eh/-1.11/n/-1.73/_/d/-1.24/z/_/-1.36/r/-1.48/3/ow/-1.02/m/-1.65/ah/-1.13/n/-1.24/z/_/-1.70/_/k/-1.19/3/ah/-1.21/n/-1.74/_/t/-1.25/r/-1.67/iy/-1.02/m/-1.67/ih/-1.14/n/_/-1.20/l/-1.31/3/eh/-1.11/n/-1.72/_/d/-1.04/m/-1.25/iy/y/-1.26/ao/-1.09/r/1.28/-3/ih/1.57/-3/r/1.09/-3/z",
+		"_/-1.15/f/-1.25/r/-1.35/3/eh/-1.11/n/-1.73/_/d/-1.24/z/_/-1.36/r/-1.48/3/ow/-1.02/m/-1.65/ah/-1.13/n/-1.24/z/_/-1.70/_/k/-1.19/3/ah/-1.21/n/-1.74/_/t/-1.25/r/-1.67/iy/-1.02/m/-1.67/ih/-1.14/n/_/-1.20/l/-1.31/3/eh/-1.11/n/-1.72/_/d/h/-1.04/m/-1.25/iy/y/-1.26/ao/-1.09/r/1.28/-3/ih/1.57/-3/r/1.09/-3/z",
 
 		"_/-1.10/ay/-1.42/ae/-1.02/m/-1.30/s/-1.64/_/p/-1.15/3/iy/-1.68/_/k/-1.13/3/ow/-1.46/3/ey/-1.71/_/t/_/-1.54/ah/-1.18/s/-1.64/_/p/-1.11/3/iy/-1.66/_/ch/-1.18/s/-1.41/3/ih/-1.18/n/-1.25/th/-1.65/ah/-1.09/s/-1.54/ah/-1.09/s/-1.15/l/-1.16/3/ay/-1.66/_/b/-1.25/r/-1.63/eh/-1.09/r/-1.45/iy/f/-1.26/ao/-1.09/r/-1.62/_/p/-1.15/3/iy/-1.68/_/k/-1.13/3/ow/-1.19/-3/ey/-1.64/-3/_/t/_/1.11/ay/-1.67/_/k/-1.18/ae/-1.06/n/-1.18/s/-1.22/3/ey/m/-1.27/ow/-1.27/s/-1.72/_/t/-1.18/3/eh/-1.06/n/-1.67/iy/-1.09/-3/th/-1.15/-3/ih/1.08/-3/ng",
 
@@ -76,7 +76,7 @@ function _init()
 		"_/-1.10/ay/-1.67/_/k/-1.18/ae/-1.06/n/-1.35/iy/-1.05/v/-1.56/ih/-1.06/n/-1.07/w/-1.41/3/ih/-1.27/s/-1.64/_/p/-1.63/er/_/-1.66/_/b/-1.36/3/ah/-1.69/_/t/-1.12/3/ih/-1.72/_/t/-1.24/s/-1.47/ah/l/-1.43/3/ih/-1.69/_/t/-1.54/ah/-1.07/l/-1.71/_/k/-1.25/r/-1.43/3/iy/-1.59/-3/_/p/-1.18/-3/iy",
 
 		"_/hh/-1.26/uw/s/-1.17/3/eh/-1.06/z/-1.31/ih/-1.69/_/t/-1.64/_/b/-1.37/3/eh/-1.69/-3/_/t/-1.18/3/er/_/m/-1.25/iy/-1.38/ao/-1.09/r/-1.20/-3/y/1.49/3/uw",
-
+		
 		"_/-1.57/_/p/-1.27/3/iy/-1.69/_/t/-1.55/er/-1.57/_/p/1.03/3/ay/-1.59/_/p/-1.55/er/-1.57/_/p/-1.12/3/ih/-1.70/_/k/-1.72/_/t/-1.47/ah/-1.57/_/p/-1.10/3/eh/-1.68/_/k/-1.00/ah/-1.05/v/-1.62/_/p/-1.24/3/ih/-1.68/_/k/-1.54/ah/-1.12/l/-1.72/_/d/-1.62/_/p/-1.21/3/eh/-1.59/-3/_/p/1.22/-3/er/1.09/-3/z",
 
 		"_/r/-1.36/3/ah/-1.62/_/b/-1.55/er/-1.60/_/b/-1.35/3/ey/-1.62/_/b/-1.56/iy/-1.60/_/b/-1.36/3/ah/-1.68/_/g/-1.56/iy/-1.60/_/b/-1.38/3/ah/-1.03/m/-1.64/-3/_/p/1.22/-3/er/1.09/-3/z",
@@ -90,18 +90,19 @@ function _init()
 	}
 	speaker=
 	{
-		{140,1,1,.5,10,10,1,1,1},
-		{140,1,1,.5,10,10,1,1,1},
-		{230,.75,1,1,20,20,1.2,5,1},
-		{140,1,1,.5,10,10,1,1,2},
-		{140,1,1,.5,10,10,1,1,1},
-		{140,1,1,.5,10,10,1,1,1},
-		{140,1,1,.5,10,10,1,1,1},
-		{140,1,1,.5,10,10,1,1,1},
-		{140,1,1,.5,10,10,1,1,1},
-		{140,1,1,.5,10,10,1,1,1},
+		{140,1,1,.25,10,10,1,0,1,1},
+		{140,1,1,.25,10,10,1,0,1,1},
+		{140,1,1,.5,10,10,1,0,1,1},
+		{140,1,1,.5,10,10,1,0,1,1},
+		{200,1,1,1,15,15,1.4,0,1,5},
+		{200,1,1,.75,10,10,1.4,0,1,5},
+		{230,1,1,1,20,20,1.4,0,1,5},
+		{230,1,1,1,10,10,1.1,0,1,5},
+		{140,1,1,.5,10,10,1,0,1,1},
+		{140,1,1,.5,10,10,1,0,1,1},
+		
 	}
-	spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_bandwidth,spk8_whisper=unpack(speaker[1])
+	spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_aspiration,spk8_whisper,spk8_nasal=unpack(speaker[1])
 	spk8_volume=.2
 	say"_/-1.62/ae/-1.11/-3/hh/1.09/3/ih/1.03/-3/m"
 end
@@ -112,6 +113,7 @@ function _draw()
 		printc("unaccustomed as i am/to public speaking..." ,1,120,11)
 		print("next ➡️",100,120,11)
 	else
+		line (0,64,127,64,8)
 		for i=1,127 do
 			line(i,127-peek(0x8000+i-1)/2,i,127-peek(0x8000+i)/2,11)
 		end
