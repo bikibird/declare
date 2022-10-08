@@ -42,10 +42,10 @@ function _init()
 	quote=""
 	menu=split"pitch,rate,volume,quality,intonation,inherent f0,shift,nasal,aspiration"
 	selection=1
-	speaker={140,1,1,.25,10,10,1,0,1,1}
-	delta={5,.1,.2,.1,1,1,.01,.01,.25,.1}
-	minimum={50,.01,.1,.1,0,0,.01,0,.25,0}
-	maximum={400,10,5,5,200,200,3,5,10,10}
+	speaker={140,1,1,.25,10,10,1,1,0}
+	delta={5,.1,.2,.1,1,1,.01,.25,.1}
+	minimum={50,.01,.1,.1,0,0,.01,.25,0}
+	maximum={400,10,5,5,200,200,3,10,10}
 	
 	less=
 	{
