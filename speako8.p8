@@ -29,13 +29,13 @@ function _update() --menu
 		mute()
 		selection-=1
 		if (selection<1)selection=#passage
-		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_aspiration,spk8_nasal,spk8_whisper,spk8_nasal=unpack(speaker[selection])
+		spk8_pitch,spk8_rate,spk8_voicing,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_aspiration,spk8_nasal,spk8_whisper,spk8_nasal=unpack(speaker[selection])
 		say(quote[selection])
 	elseif (btnp(right)) then
 		mute()
 		selection+=1
 		if (selection>#passage)selection=1
-		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_aspiration,spk8_whisper,spk8_nasal=unpack(speaker[selection])
+		spk8_pitch,spk8_rate,spk8_voicing,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_aspiration,spk8_whisper,spk8_nasal=unpack(speaker[selection])
 		say(quote[selection])
 	end	
 	speako8()  
@@ -90,7 +90,7 @@ function _init()
 	}
 	speaker=
 	{
-		{140,1,1,.25,10,10,1,0,1,1},
+		{140,1,1,.25,10,10,1,0,1,1,},
 		{140,1,1,.25,10,10,1,0,1,1},
 		{140,1,1,.5,10,10,1,0,1,1},
 		{140,1,1,.5,10,10,1,0,1,1},
@@ -102,9 +102,11 @@ function _init()
 		{140,1,1,.5,10,10,1,0,1,1},
 		
 	}
-	spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_nasal,spk8_aspiration=unpack(speaker[1])
-	spk8_volume=.2
+	spk8_pitch,spk8_rate,spk8_voicing,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_nasal,spk8_aspiration=unpack(speaker[1])
+	spk8_volume=1
 	say"_/-1.62/ae/-1.11/-3/hh/1.09/3/ih/1.03/-3/m"
+	spk8_volume=1.5
+	spk8_tilt=24
 end
 
 function _draw()
