@@ -40,12 +40,12 @@ function io()
 end
 function _init()
 	quote=""
-	menu=split"pitch,rate,volume,quality,intonation,inherent f0,shift,nasal,aspiration"
+	menu=split"pitch,rate,voicing,quality,intonation,inherent f0,shift,bandwidth,aspiration,tilt"
 	selection=1
-	speaker={140,1,1,.25,10,10,1,1,0}
-	delta={5,.1,.2,.1,1,1,.01,.25,.1}
-	minimum={50,.01,.1,.1,0,0,.01,.25,0}
-	maximum={400,10,5,5,200,200,3,10,10}
+	speaker={140,1,1,.25,10,10,1,1,0,0}
+	delta={5,.1,.2,.1,1,1,.01,.25,.1,.1}
+	minimum={50,.01,.1,.1,0,0,.01,.25,0,0}
+	maximum={400,10,5,5,200,200,3,10,10,.9}
 	
 	less=
 	{
@@ -73,7 +73,9 @@ function _init()
 		'_/w/-1.41/3/ih/-1.24/-3/s/-1.59/-3/_/p/1.43/3/er/-1.64/3/_/d',
 		'_/-3/m/1.27/-3/ao/1.12/-3/r',
 	}
-	spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_nasal,spk8_aspiration=unpack(speaker)
+	--spk8_pitch,spk8_rate,spk8_voicing,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_bandwidth,spk8_aspiration,spk8_tilt=unpack(speaker)
+	vocals(speaker)
+	spk8_volume=1
 	say"_/-1.62/ae/-1.11/-3/hh/1.09/3/ih/1.03/-3/m"
 	poke(gpioaddress,1) 
 end
@@ -87,13 +89,13 @@ function _update()
 		mute()
 		if (speaker[selection]>minimum[selection]) speaker[selection]-=delta[selection]
 		speaker[selection]=flr((speaker[selection]+.005)*100)/100
-		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_nasal,spk8_aspiration=unpack(speaker)
+		spk8_pitch,spk8_rate,spk8_voicing,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_bandwidth,spk8_aspiration,tilt=unpack(speaker)
 		say(less[selection])	
 	elseif (btnp(right)) then
 		mute()
 		if (speaker[selection]<maximum[selection]) speaker[selection]+=delta[selection]
 		speaker[selection]=flr((speaker[selection]+.005)*100)/100
-		spk8_pitch,spk8_rate,spk8_volume,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_nasal,spk8_aspiration=unpack(speaker)
+		spk8_pitch,spk8_rate,spk8_voicing,spk8_quality,spk8_intonation,spk8_if0,spk8_shift,spk8_bandwidth,spk8_aspiration,tilt=unpack(speaker)
 		say(more[selection])
 	elseif (btnp(up)) then 
 		mute()
@@ -112,12 +114,12 @@ function _draw()
 	for i=1,#menu do
 		
 		if i==selection then
-			printc("< "..menu[i]..": "..speaker[i].." >",(i-1)*10+15,7)
+			printc("< "..menu[i]..": "..speaker[i].." >",(i-1)*10+5,7)
 		else
-			printc(menu[i]..": "..speaker[i],(i-1)*10+15,7)
+			printc(menu[i]..": "..speaker[i],(i-1)*10+5,7)
 		end	
 	end
-	printc("❎ say",110,7)	
+	printc("❎ say",115,7)	
 end
 
 __label__
