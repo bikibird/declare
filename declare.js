@@ -64,143 +64,188 @@ var syllabify=function(phoneticizedPassage)  //array of phones and prosody marke
 {
 
 	//https://en.wikipedia.org/wiki/English_phonology#Syllable_structure
-	var onsets="hh,l,r,m,n,ng,ch,jh,dh,f,s,sh,zh,k,p,t,g,b,d,th,v,z,w,y,pl,bl,kl,gl,pr,br,tr,dr,kr,gr,tw,dw,gw,kw,pw,fl,sl,thl,shl,vl,fr,thr,shr,hw,sw,thw,vw,py,by,ty,dy,ky,gy,my,ny,fy,vy,thy,sy,zy,hy,ly,sp,st,sk,sm,sn,sf,sth,spl,skl,spr,str,skr,skw,spy,sty,sky,sny,sfr"
-	var nuclei="aa,ae,ah,ao,aw,ay,eh,er,ey,ih,iy,ow,oy,uh,uw"
-	var stops="ch,b,d,g,jh,k,p,t"
+	var onsets="hh/l/r/m/n/ng/ch/jh/dh/f/s/sh/zh/k/p/t/g/b/d/th/v/z/w/y/pl/bl/kl/gl/pr/br/tr/dr/kr/gr/tw/dw/gw/kw/pw/fl/sl/thl/shl/vl/fr/thr/shr/hw/sw/thw/vw/py/by/ty/dy/ky/gy/my/ny/fy/vy/thy/sy/zy/hy/ly/sp/st/sk/sm/sn/sf/sth/spl/skl/spr/str/skr/skw/spy/sty/sky/sny/sfr"
+	var codas="l/lp/lb/lt/ld/lch/lzh/lf/lv/lth/ls/lz/lsh/lm/ln/r/m/md/mf/mz/mt/mth/mpt/mps/n/nf/nth/nz/nts/ntth/n/nd/nddh/ng/ngd/ngth/ngkt/ngks/ngkth/ngdh/ngkt/ch/dh/dhd/f/ft/s/sp/st/sk/th/fth/fths/sh/zh/k/ks/kst/ksth/kt/kts/p/pt/pts/pth/ps/t/tth/ts/g/b/d/dth/dz/th/v/z/zd/y"
+	var nuclei="aa/ae/ah/ao/aw/ay/eh/rr/ey/ih/iy/ow/oy/uh/uw/ar/er/ir/or/ur"
+	var stops="ch/b/d/dx/g/jh/k/p/t/tq"
+	var rhotacize={aa:"ar",eh:"er",ih:"ir",ao:"or",uh:"ur"}
+	var syllabicConsonant={l:"el",n:"en",m:"em"}
 	var contentWord=false
 	var syllable=[]
 	var onsetCluster=""
 	var onset=[]
+	var coda=[]
 	var count=0
 	var syllables=[]
 	word=[]
 	var stress=""
+	
 	var segments=phoneticizedPassage.replace(/\[(.*?)\]/g,"").split("/")  //remove bracketed phonemes
 	var prosody=1
 	var startWord=true,startPhrase=true,startClause=true,endWord=false,endPhrase=false,endClause=false
+	var phoneme,priorPhoneme
 	// prosody 0==default, 1=initial syllable of word, 2= last syllable of word, 3== start syllable of phrase, 4 ==last syllable of phrase, 5 == initial syllable of clause, 6==last syllable of clause
+
 	segments.forEach((segment,segmentIndex)=>
 	{
 		if (segment==="^") {contentWord=true}
 		else
 		{
-			stress=segment.replace(/[a-z]+/g,"")
+			priorPhoneme=phoneme
 			phoneme=segment.replace(/\d+/g, '')
-			
-			if (onsets.includes(onsetCluster+phoneme))
+			//er=>rr
+			if (phoneme=="er"){phoneme="rr"}  //rename phoneme
+			if (phoneme=="r" && "aa/eh/ih/ao/uh".includes(priorPhoneme)) //ar er ir or ur substitutions
 			{
-				onsetCluster+=phoneme
-				onset.push({duration:1,phoneme:phoneme,stress:stress,prosody,onset:true,nucleus:false,coda:false,rime:false,stop_consonant:stops.includes(phoneme),startWord:startWord,startPhrase:startPhrase,startClause:startClause,endWord:endWord,endPhrase:endPhrase,endClause:endClause,contentWord:contentWord})
+				syllables[syllables.length-1][syllables[syllables.length-1].length-1].phoneme=rhotacize[priorPhoneme]
 			}
-			else
+			else if(priorPhoneme=="ah" && stress==="0" && (phoneme=="l" || phoneme=="n" || phoneme=="m" )) //el en em substitutions.
 			{
-				if (nuclei.includes(phoneme))
+				syllables[syllables.length-1][syllables[syllables.length-1].length-1].phoneme=syllabicConsonant[phoneme]
+				syllables[syllables.length-1][syllables[syllables.length-1].length-1].stress=stress
+			}
+			else 
+			{
+				let s=segment.replace(/[a-z]+/g,"")
+				stress=isNaN(parseInt(s))?stress:s
+				if (onsets.includes(onsetCluster+phoneme))
 				{
-					syllable=syllable.concat(onset)
-					onset=[]
-					onsetCluster=""
-					syllable.push({duration:1,phoneme:phoneme,stress:stress,prosody,onset:false,nucleus:true,coda:false,rime:true,stop_consonant:stops.includes(phoneme),startWord:startWord,startPhrase:startPhrase,startClause:startClause,endWord:endWord,endPhrase:endPhrase,endClause:endClause,contentWord:contentWord}) //incorrect if coda found later...
-					syllables.push(syllable)
-					startWord=false
-					startPhrase=false
-					startClause=false
-					syllable=[]
-					count+=1
+					onsetCluster+=phoneme
+					onset.push({duration:1,phoneme:phoneme,stress:stress,prosody,onset:true,nucleus:false,coda:false,rime:false,stop_consonant:stops.includes(phoneme),startWord:startWord,startPhrase:startPhrase,startClause:startClause,endWord:endWord,endPhrase:endPhrase,endClause:endClause,contentWord:contentWord,startSyllable:false})
 				}
-				else //coda or prosody marker found
+				else
 				{
-					if (phoneme.match(/[\ \-\,\?\.]/g)) //word, phrase or clause boundary
+					if (nuclei.includes(phoneme))
 					{
-						if (onset.length>0)
-						{
-							onset.forEach(phone=>{phone.onset=false;phone.coda=true;phone.rime=true;phone.contentWord=contentWord})
-							syllables[syllables.length-1]=syllables[syllables.length-1].concat(onset) //add missing coda to previous syllable
-						}	
-						for (let index = syllables.length-count; index < syllables.length; index++) 
-						{
-							syllables[index].forEach(phone=>phone.polysyllabic=count>1)
-						}
-						count=0
-						switch (phoneme) 
-						{
-							case " ":
-								syllables[syllables.length-1].forEach(phone=>
-									{
-										phone.prosody=1
-										phone.endWord=true
-											
+						
+						syllable=syllable.concat(onset)
+						onset=[]
+						onsetCluster=""
+						
+						syllable.push({duration:1,phoneme:phoneme,stress:stress,prosody,onset:false,nucleus:true,coda:false,rime:true,stop_consonant:stops.includes(phoneme),startWord:startWord,startPhrase:startPhrase,startClause:startClause,endWord:endWord,endPhrase:endPhrase,endClause:endClause,contentWord:contentWord,startSyllable:false}) //incorrect if coda found later...
+						syllable.forEach(phone=>phone.stress=stress)
+						syllable[0].startSyllable=true
+						syllables.push(syllable)
 
+						syllable=[]
+						count+=1
+					}
+					else //coda or prosody marker found
+					{
+						if (phoneme.match(/[\ \-\,\?\.]/g)) //word, phrase or clause boundary
+						{
+							if (onset.length>0) //add missing coda to previous syllable
+
+							{
+								onset.forEach(phone=>
+								{
+									phone.onset=false
+									phone.coda=true
+									phone.rime=true
+									phone.contentWord=contentWord
+									phone.startSyllable=false
+								})
+								syllables[syllables.length-1]=syllables[syllables.length-1].concat(onset) 
+							}	
+							//populate syllable stress
+							syllables[syllables.length-1].forEach(phone=>{phone.stress=stress})
+							syllables[syllables.length-1][0].startSyllable=true
+							for (let index = syllables.length-count; index < syllables.length; index++) 
+							{
+								syllables[index].forEach(phone=>phone.polysyllabic=count>1)
+							}
+							count=0
+							switch (phoneme) 
+							{
+								case " ":
+									syllables[syllables.length-1].forEach(phone=>
+										{
+											phone.prosody=1
+											phone.endWord=true
+											phone.stress=stress	
+
+										})
+										startWord=true
+										endWord=false
+									break
+								case "-":
+									syllables[syllables.length-1].forEach(phone=>{
+										phone.prosody=2
+										phone.endPhrase=true
+										phone.endWord=true
+										if (syllables.length>1)
+										{
+											phone.startWord=false
+											phone.startPhrase=false
+											phone.startClause=false
+											phone.stress=stress
+										}
 									})
+									startPhrase=true
 									startWord=true
+									endPhrase=false
 									endWord=false
-								break
-							case "-":
+									break
+								case ".":
+								case",":
+								case "?":
 								syllables[syllables.length-1].forEach(phone=>{
-									phone.prosody=2
+									phone.prosody=3
+									phone.endClause=true
 									phone.endPhrase=true
 									phone.endWord=true
-									if (syllables.length>1)
+									phone.stress=stress
+
+									/*if (syllables.length>1)
 									{
 										phone.startWord=false
-										phone.phraseWord=false
+										phone.startPhrase=false
 										phone.startClause=false
-									}
+									}*/
+									if (phone.rime && phoneme === "?")phone.question=true
 								})
+								syllables[syllables.length-1][0].startSyllable=true
+								
+								startClause=true
 								startPhrase=true
 								startWord=true
+								endClause=false
 								endPhrase=false
 								endWord=false
-								break
-							case ".":
-							case",":
-							case "?":
-							syllables[syllables.length-1].forEach(phone=>{
-								phone.prosody=3
-								phone.endClause=true
-								phone.endPhrase=true
-								phone.endWord=true
-								if (syllables.length>1)
-								{
-									phone.startWord=false
-									phone.startPhrase=false
-									phone.startClause=false
-								}
-								if (phone.rime && phoneme === "?")phone.question=true
-							})
+									break
+								default:
+									break
+							}
 							
-
-							startClause=true
-							startPhrase=true
-							startWord=true
-							endClause=false
-							endPhrase=false
-							endWord=false
-								break
-							default:
-								break
+							
+							syllable=[]
+							onset=[]
+							onsetCluster=""
+							contentWord=false
+							stress=""
+						}	
+						else  //onset cluster + phoneme not valid onset so coda + start new syllable onset
+						{
+							
+							
+							onset.forEach(phone=>{phone.onset=false;phone.coda=true;phone.rime=true;phone.contentWord=contentWord})
+							//add missing coda to previous syllable 
+							syllables[syllables.length-1]=syllables[syllables.length-1].concat(onset) 
+							//populate syllable stress
+							syllables[syllables.length-1].forEach(phone=>{phone.stress=stress})
+							startWord=false
+							startPhrase=false
+							startClause=false
+							onset=[]
+							onsetCluster=""
+							syllable=[]
+							onset=[{duration:1,phoneme:phoneme,stress:stress,prosody,onset:true,nucleus:false,coda:false,rime:false,stop_consonant:stops.includes(phoneme),startWord:startWord,startPhrase:startPhrase,startClause:startClause,endWord:endWord,endPhrase:endPhrase,endClause:endClause,contentWord:true,startSyllable:false}]
+							syllables[syllables.length-1][0].startSyllable=true
+							onsetCluster=phoneme
 						}
-						
-						syllable=[]
-						onset=[]
-						onsetCluster=""
-						contentWord=false
-						
-					}	
-					else  //onset cluster + phoneme not valid onset so coda + start onset
-					{
-						onset.forEach(phone=>{phone.onset=false;phone.coda=true;phone.rime=true;phone.contentWord=contentWord})
-						syllables[syllables.length-1]=syllables[syllables.length-1].concat(onset) //add missing coda to previous syllable
 
-						startWord=false
-						startPhrase=false
-						startClause=false
-						onset=[]
-						onsetCluster=""
-						syllable=[]
-						onset=[{duration:1,phoneme:phoneme,stress:stress,prosody,onset:true,nucleus:false,coda:false,rime:false,stop_consonant:stops.includes(phoneme),startWord:startWord,startPhrase:startPhrase,startClause:startClause,endWord:endWord,endPhrase:endPhrase,endClause:endClause,contentWord:true}]
-						onsetCluster=phoneme
 					}
-				}
+				}	
 			}
 		}		
 	})
@@ -209,23 +254,41 @@ var syllabify=function(phoneticizedPassage)  //array of phones and prosody marke
 
 var intone=function(syllables)
 {
-	var consonants="hh,l,r,m,n,ng,ch,jh,dh,f,s,sh,zh,k,p,t,g,b,d,th,v,z,w,y"
-	var liquids="l,r"
-	var nasals="m,n,ng"
-	var sonorants="y,w,l,r,m,n,ng"
-	var voicedFricatives="v,z,dh,zh"
-	var voicedPlosives="b,d,g"
-	var voicelessPlosives="k,p,t"
 
-	var innateDuration={aa:1320,ae:1270,ah:770,ao:1320,aw:720,ay:690,eh:830,er:990,ey:1040,ih:720,iy:880,ow:1210,oy:1540,uh:880,uw:1170,hh:440,l:440,r:440,hh:440,m:390,n:360,ng:440,ch:385,jh:385,dh:275,f:660,s:690,sh:690,zh:385,k:360,p:470,t:360,g:360,b:440,d:360,th:606,v:330,z:410,w:440,y:440}
+	//https://archive.org/details/frontiersofspeec0000unse/page/287/mode/1up?view=theater
 
-	var minimumDuration={aa:440,ae:330,ah:275,ao:440,aw:550,ay:495,eh:330,er:330,ey:385,ih:220,iy:275,ow:385,oy:606,uh:275,uw:330,hh:110,l:220,r:165,m:330,n:193,ng:275,ch:275,jh:275,dh:165,f:330,s:275,sh:275,zh:220,k:275,p:275,t:220,g:275,b:275,d:220,th:220,v:220,z:220,w:330,y:220}	
+	var consonants="hh/l/el/lx/r/m/em/n/en/ng/ch/jh/dh/f/s/sh/zh/k/p/t/g/b/d/th/v/z/w/y"
+	var liquids="l/el/lx/r"
+	var nasals="m/n/ng/en/em"
+	var sonorants="y/w/l/el/lx/r/m/em/n/en/ng"
+	var voicedFricatives="v/z/dh/zh"
+	var voicedPlosives="b/d/g"
+	var voicelessPlosives="k/p/t"
+	var nonNasalSonorants="y/w/l/el/lx/r/aa/ae/ah/ao/aw/ay/eh/rr/ar/er/ir/or/ur/ey/ih/iy/ow/oy/uh/uw"
+	var vowels="aa/ae/ah/ao/aw/ay/eh/rr/ar/er/ir/or/ur/ey/ih/iy/ow/oy/uh/uw"
+	var innateDuration={aa:1320,ae:1270,ah:770,ao:1320,aw:720,ay:690,eh:830,rr:990,ar:960,er:1000,ir:840,or:880,ur:840,ey:1040,ih:720,iy:880,ow:1210,oy:1540,uh:880,uw:1170,hh:440,l:440,lx:500,el:880,r:440,hh:440,m:390,em:940,n:360,en:940,ng:440,ch:385,jh:385,dh:275,f:660,s:690,sh:690,zh:385,k:360,p:470,t:360,tq:360,g:360,b:440,d:360,dx:110,th:606,v:330,z:410,w:440,y:440}
+
+	var minimumDuration={aa:440,ae:330,ah:275,ao:440,aw:550,ay:495,eh:330,rr:330,ar:100,er:100,ir:100,or:100,ur:100,ey:385,ih:220,iy:275,ow:385,oy:606,uh:275,uw:330,hh:110,l:220,lx:385,el:610, r:165,m:330,em:550, n:193, en:550, ng:275,ch:275,jh:275,dh:165,f:330,s:275,sh:275,zh:220,k:275,p:275,t:220,tq:275,g:275,b:275,d:220,dx:110,th:220,v:220,z:220,w:330,y:220}	
 	var saying=""
-	
+
 	syllables.forEach((syllable,syllableIndex)=>
 	{
 		syllable.forEach((phone,phoneIndex)=>
 		{
+			//Substitutions:
+			
+			if (phone.coda)
+			{
+				//Rule a: use LX instead of L if L is in coda
+				if (phone.phoneme=="l"){phone.phoneme="lx"}
+			}
+
+			
+			
+			//Rule d: a voiceless plosive is not released if followed by another voiceless plosive if in the same clause boundary
+			//Rule e: insert a glottal stop before word initial stressed vowel if previous segment is syllabic (last sound in syllable?) or the previous segment is a voiced nonplossive and there is an intervening phrase boundary
+
+		
 
 			//Rule 1 insert 200 ms pause ahead of start of clause
 			if (phone.startClause && phoneIndex==0) saying+="_/"
@@ -236,8 +299,8 @@ var intone=function(syllables)
 			{
 				//Rule 3 shorten non-phrase final syllable nucleus by 60%. 
 				if(!phone.endPhrase && phone.nucleus) phone.duration*=.6
-				//Rule 3 lengthen phrase final postvocalic nasals and liquids by 1.4
-				if (phone.endPhrase && phone.coda && (liquids.includes(phone.phoneme)||nasals.includes(phone.phoneme))) phone.duration*=1.4
+				//Rule 3 lengthen phrase final postvocalic nasals and liquids by 1.4 is covered by Rule 2
+				//if (phone.endPhrase && phone.coda && (liquids.includes(phone.phoneme)||nasals.includes(phone.phoneme))) phone.duration*=1.4
 			}
 			//Rule 4 if nucleus is not in last syllable of word shorten by 85%
 			if(!phone.endWord && phone.nucleus)phone.duration*=.85
@@ -270,19 +333,22 @@ var intone=function(syllables)
 				if (phone.endphrase || phone.endClause){phone.duration*=1.2}
 				else{phone.duration*=1.06}
 			}
-			var nextPhone
-			if (phoneIndex < syllable.length-1){nextPhone=syllable[phoneIndex+1]}
+			var nextPhone  //the next sound segment regardless of any word, phrase, or clause boundaries
+			if (phoneIndex < syllable.length-1)
+			{
+				nextPhone=syllable[phoneIndex+1]
+			}
 			else
 			{
 				if (syllableIndex<syllables.length-1)
 				{
-					if (!syllables[syllableIndex+1][0].startWord) nextPhone=syllables[syllableIndex+1][0]
+					//if (!syllables[syllableIndex+1][0].startWord) nextPhone=syllables[syllableIndex+1][0]
+					nextPhone=syllables[syllableIndex+1][0]
 				}
 			}
-			//vowel proeeds consonant in same word.
+			//vowel precedes consonant in same word.
 			if (nextPhone && !nextPhone.startWord)
 			{
-				
 				//before voiced fricative lengthen 160%
 				if (voicedFricatives.includes(nextPhone.phoneme))phone.duration*=phone.endPhrase || phone.endClause?1.6:1.18
 				//before voiced plosive lengthen 120%
@@ -299,6 +365,26 @@ var intone=function(syllables)
 			{
 				if (syllableIndex>0) priorPhone=syllables[syllableIndex-1][syllables[syllableIndex-1].length-1]
 			}
+	
+			if (!phone.endClause && !phone.endPhrase && !phone.startClause && !phone.startPhrase)
+			{
+				//Rule b: use DX instead of D or T if within words and across word boundaries, but not across phrase and clause boundaries, if followed by a nonprimary stress vowel and preceeded by a non-nasal sonorant. "sat about" "latter"
+
+				if ((phone.phoneme==="d" || phone.phoneme==="t") && nonNasalSonorants.includes(priorPhone.phoneme) &&
+				nextPhone.nucleus && nextPhone.stress!=="1")
+				{
+					phone.phoneme="dx"
+					phoneme="dx"
+				}
+			}
+			//Rule c: use TQ instead of word final t if the next word starts with a stressed sonorant and the next word does not start a new phrase or clause.
+			if (phone.phoneme==="t" && phone.endWord && sonorants.includes(nextPhone.phoneme) && nextPhone.stress==="1")
+			{
+				phone.phoneme="tq"
+				phoneme="tq"
+			}
+			
+
 
 			//Rule 10 clusters of consonants or clusters of vowels disregarding word boundaries, but not phrase or clause boundary
 			if (priorPhone)
@@ -330,10 +416,38 @@ var intone=function(syllables)
 			if (stop_consonant || phoneme.match(/[\?\-\,\.]/g))
 			{
 				var duration=d/1100
+				if (phoneme==="dx")
+				{
+					phone.phoneme="d"
+				}
+				
+				
 			}
 			else
 			{
-				var duration=d/innateDuration[phoneme]
+				switch (phoneme) 
+				{
+					case "el":
+						phone.phoneme="l"
+						var duration=d/innateDuration.l
+						break
+						
+					case "lx":
+						phone.phoneme="l"
+						var duration=d/innateDuration.l
+						break  
+					case "en":
+						phone.phoneme="n"
+						var duration=d/innateDuration.n
+						break  	
+					case "em":
+						phone.phoneme="m"
+						var duration=d/innateDuration.m
+						break
+					
+					default:
+						var duration=d/innateDuration[phoneme]	
+				}		
 			}
 			durationText=Math.abs(Math.floor((1-duration)*100)).toString().padStart(2,"0")//get digits after decimal
 			if (durationText[duration.length-1]==0)durationText=durationText.slice(0,-1) //removing trailing zero
@@ -359,7 +473,7 @@ var intone=function(syllables)
 			else
 			{
 				if (phone.stop_consonant) saying+="_/"
-				saying+=phone.phoneme+"/"	
+				if (phone.phoneme !== "tq"){saying+=phone.phoneme+"/"}
 			}	
 			
 
