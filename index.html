@@ -991,7 +991,7 @@ canvas{
 	image-rendering: -moz-crisp-edges;
 	cursor:pointer;
 	background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAIAAABMXPacAAAARUlEQVR4Ae3dgQAAAACAoP2pFymSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACABsCAAAGB4kPcAAAAEHRFWHRMb2RlUE5HADIwMTEwMjIx41m2wQAAAABJRU5ErkJggg==");
-	-repeat center;
+	-repeat: center;
 	-webkit-background-size:cover; -moz-background-size:cover; -o-background-size:cover; background-size:cover;
 }
 
@@ -1327,11 +1327,11 @@ canvas{
 	{
 			
 		phonetics.value=phoneticize(e.target.value)
-		speech.value=intone(syllabify(phonetics.value))
+		speech.value=renderSpeechString(phonetics.value)+"1,1,1,_"
 	})
 	phonetics.addEventListener('input', (e) =>
 	{
-		speech.value=intone(syllabify(e.target.value))
+		speech.value=renderSpeechString(e.target.value)+"1,1,1,_"
 	})
 	document.getElementById('listen').addEventListener('click', (e) =>
 	{
