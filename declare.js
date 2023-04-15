@@ -2,7 +2,7 @@ var phoneticize = function(passage)
 {
 	//http://www.viviancook.uk/Words/StructureWordsList.htm
 	var functors="a,about,above,after,after,again,against,ago,ahead,all,almost,almost,along,already,also,although,always,am,among,an,and,any,are,aren't,around,as,at,away,backward,backwards,be,because,before,behind,below,beneath,beside,between,both,but,by,can,cannot,can't,cause,'cos,'cuz,could,couldn't,'d,despite,did,didn't,do,does,doesn't,don't,down,during,each,either,even,ever,every,except,for,forward,from,had,hadn't,has,hasn't,have,haven't,he,her,here,hers,herself,him,himself,his,how,however,i,if,in,inside,inspite,instead,into,is,isn't,it,its,itself,just,'ll,least,less,like,'m,many,may,mayn't,me,might,mightn't,mine,more,most,much,must,mustn't,my,myself,near,need,needn't,needs,neither,never,no,none,nor,not,now,of,off,often,on,once,only,onto,or,ought,oughtn't,our,ours,ourselves,out,outside,over,past,perhaps,quite,'re,rather,'s,seldom,several,shall,shan't,she,should,shouldn't,since,so,some,sometimes,soon,than,that,the,their,theirs,them,themselves,then,there,therefore,these,they,this,those,though,through,thus,till,to,together,too,towards,under,unless,until,up,upon,us,used,usedn't,usen't,usually,'ve,very,was,wasn't,we,well,were,weren't,what,when,where,whether,which,while,who,whom,whose,why,will,with,without,won't,would,wouldn't,yet,you,your,yours,yourself,yourselves".split(",")
-
+	var syllabic={AA:true,AE:true,AH:true,AO:true,AW:true,AR:true,EH:true,EL:true,EM:true,EN:true,ER:true,RR:true,EY:true,HH:true,IH:true,IR:true,IY:true,OW:true,OR:true,OY:true,UH:true,UW:true,UR:true}
 	passage=passage.toLowerCase().replaceAll(/\s+/g, ' ').replace(";",".").trim().replaceAll(" -","-").replaceAll("- ","-").replaceAll(" ,",",").replaceAll(", ",",").replaceAll(" .",".").replaceAll(". ",".").replaceAll(" ?","?").replaceAll("? ","?").replaceAll("’","'")
 	if (!passage[passage.length-1].match(/[\!\?\.]/g))passage+="."
 	var words=[]
@@ -47,7 +47,21 @@ var phoneticize = function(passage)
 				word.spelling+=passage[i]
 		}
 	}
-	words.forEach(word=>word.pronunciations=word.pronunciations.concat(pronouncing.phonesForWord(word.spelling)))
+	words.forEach(word=>
+	{
+		word.pronunciations=word.pronunciations.concat(pronouncing.phonesForWord(word.spelling))
+	
+
+	})
+	//Rule 6 if next word starts with vowel, prefer dh iy pronounciation of "the".
+	for (let i = 0; i < words.length-1; i++)
+	{
+		if (words[i].spelling==="the" && syllabic[words[i+1].pronunciations[0].substring(0,2)])
+		{
+			words[i].pronunciations=["dh iy0","dh ah0","dh ah1"]
+		}
+		
+	}
 	var phoneticizedPassage=""
 	words.forEach(word=>
 	{
@@ -401,6 +415,8 @@ var renderSpeechString=function(phoneticizedPassage)  //array of phones and pros
 									}	
 	
 								}	
+								if (clause[i].startWord && clause[i].nucleus && clause[i].stress==="1" &&i>0 && (clause[i-1].nucleus))
+								{speechString+="-1.38/_/"} //Rule 5 glottal stops between word ending in vowel and word starting with stressed vowel
 								var durationText=Math.abs(Math.floor((1-clause[i].duration)*100)).toString().padStart(2,"0")//get digits after decimal
 								if (durationText[durationText.length-1]=="0")durationText=durationText.slice(0,-1) //removing trailing zero
 								if (durationText!=="0")
