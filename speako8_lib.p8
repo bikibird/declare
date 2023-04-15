@@ -39,26 +39,16 @@ do
 
 	function say(speech)
 
-		local phonemes=split(speech,"/")
+		local segments=split(speech,";")
 		local c1,c2,c,f_glide,bw_glide,d2,volume,velocity,slide={},{}
-		local v1,v2,v_stress, d_stress, p_stress,h_phone,previous_phoneme=unpack(split("0,0,1,1,0,0")) 
+		local v0,v1,v2,v_stress, d_stress, p_stress,h_phone,previous_phoneme=unpack(split("0,0,0,1,1,0,0")) 
 		sounds={}
 		
-		for phoneme in all(phonemes) do
-			local stress=tonum(phoneme)
-			if stress then
-				local abs_stress=abs(stress)
-				local sign,stress_type,magnitude=sgn(stress),abs_stress\1,abs_stress & 0x.ffff
-				-- -.25 == 25% slower == 1-.25== .75 +.25 ==25% faster 1.25 
-				if (stress_type==1) d_stress=1+sign*magnitude
-				if (stress_type==2) v_stress=1+sign*magnitude
-				if stress_type==3 then
-					p_stress=sign
-					if (magnitude>0)p_stress*=magnitude
-				end
-			elseif phoneme=="hh" then
+		for segment in all(segments) do
+		
+			local d_stress,v_stress,p_stress,phoneme= unpack(split(segment))
+			if phoneme=="hh" then
 				h_phone=d_stress*440
-			
 			else
 				
 				for frame in all(phone[phoneme]) do
@@ -67,11 +57,12 @@ do
 					--c2 is assigned ending cascade for this phoneme frame 
 									
 
-					c,f_glide,bw_glide,d2,c1,v1,c2,v2,delta_f0={},{},{},flr(d*d_stress/spk8_rate+.5),c2,v2,formants,volume,p_stress*spk8_intonation+pitch*spk8_if0
+					c,f_glide,bw_glide,d2,c1,v1,c2,v2,delta_f0={},{},{},flr(d*d_stress/spk8_rate/2+.5),c2,v2,formants,volume,p_stress*spk8_intonation+pitch*spk8_if0
 					--c1 is previous phone's ending cascade, c2
 					--c2 is new phone's formants.
-					--v1 is previous phone's ending volume
-					--v2 is new phone's target volume
+					--v0 is past phone's ending volume
+					--v1 is current phone's target volume
+					--v2 is future phone's target volume
 					--formants will be blended from previous sound unless
 					if (phoneme=="_") then  -- sound is previous formants with volume fading quickly to zero
 						c2=c1 -- c1 and c2 are now previous phoneme's ending cascade, c2
@@ -97,13 +88,13 @@ do
 						add(sounds,{h_phone,1,0,0,6,pitch,delta_f0,v_stress,c,f_glide,bw_glide,c2})
 						h_phone=0
 					end
+					add(sounds,{d2,source,frication,v0,v1,pitch,delta_f0,v_stress,c,f_glide,bw_glide,c2})
 					add(sounds,{d2,source,frication,v1,v2,pitch,delta_f0,v_stress,c,f_glide,bw_glide,c2})
-					--add(sounds,{d2,source,frication,v2,v2,pitch,delta_f0,v_stress,c,f_glide,bw_glide,c2})
-						
+					
+					v0=v2 	
 					previous_phoneme=phoneme
 				end
-				
-				v_stress, d_stress, p_stress=1,1,0 
+
 			end	
 		end	
 
@@ -119,17 +110,15 @@ do
 					if duration < 1 then
 						if #sounds>0 then
 							duration,source,frication,v,v2,pitch,delta_f0,v_stress,cascade,f_step,bw_step,cascade2=unpack(deli(sounds,1))
-							acceleration=-2*(v2-v)/duration/duration
+							velocity =0
+							acceleration=2*(v2-v)/duration/duration
 							if acceleration < 0 then
-								velocity=acceleration*(.5 - duration)
-							else
-								
-								velocity=0
 								acceleration*=-1
+								velocity=acceleration*(.5 - duration)
 							end	
 
-							else
-							if (i>0) serial(0x808,buffer,i+1)
+						else
+						--	if (i>0) serial(0x808,buffer,i+1)  -- less than 23 milleseconds at end, not worth it and silence anyhow.
 							return
 						end
 					end

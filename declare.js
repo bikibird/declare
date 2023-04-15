@@ -390,7 +390,7 @@ var renderSpeechString=function(phoneticizedPassage)  //array of phones and pros
 
 							} 
 							//create speech string
-							speechString+="_/" //Rule 1
+							speechString+="1,1,1,_;" //Rule 1
 
 							for (let i = 0; i<clause.length; i++)
 							{
@@ -411,33 +411,42 @@ var renderSpeechString=function(phoneticizedPassage)  //array of phones and pros
 										!(voicelessPlosive[clause[i].phoneme] && i<clause.length-1 && voicelessPlosive[clause[i+1].phoneme])
 									)
 									{
-										clause[i].phoneme+="/"+clause[i].phoneme+"x" //t -> t/tx
+										clause[i].phoneme+=";1,1,1,"+clause[i].phoneme+"x" //t -> t/tx
 									}	
 	
 								}	
 								if (clause[i].startWord && clause[i].nucleus && clause[i].stress==="1" &&i>0 && (clause[i-1].nucleus))
-								{speechString+="-1.38/_/"} //Rule 5 glottal stops between word ending in vowel and word starting with stressed vowel
-								var durationText=Math.abs(Math.floor((1-clause[i].duration)*100)).toString().padStart(2,"0")//get digits after decimal
-								if (durationText[durationText.length-1]=="0")durationText=durationText.slice(0,-1) //removing trailing zero
-								if (durationText!=="0")
+								{speechString+=".38,1,1,_;"} //Rule 5 glottal stops between word ending in vowel and word starting with stressed vowel
+							//	var durationText=Math.abs(Math.floor((1-clause[i].duration)*100)).toString().padStart(2,"0") //get digits after decimal
+								
+								speechString+=(Math.floor(clause[i].duration*100)/100).toString().replace("0.",".")+","
+								//if (durationText[durationText.length-1]=="0")durationText=durationText.slice(0,-1) //removing trailing zero
+								/*if (durationText!=="0")
 								{
-									if (clause[i].duration<1){speechString+="-1."+durationText+"/"}
-									if (clause[i].duration>1){speechString+="1."+durationText+"/"}
-								}		
+									if (clause[i].duration<1){speechString+="-"+durationText+","}
+									if (clause[i].duration>1){speechString+=durationText+","}
+								}*/		
 
 								//Pitch Prosody https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4617729/
 								//https://pdf.sciencedirectassets.com/272464/1-s2.0-S0095447019X47002/1-s2.0-S0095447019309891/main.pdf
 			
 								if(clause[i].clauseFinal)
 								{
-									if (clause[i].question){speechString+="3/"}
-									else {speechString+="-3/"}
+									if (clause[i].question){speechString+=",1,"}
+									else {speechString+="1,-2,"}
 								}	 
 								else
 								{
-									if (clause[i].contentWord && clause[i].nucleus && clause[i].stress==="1") speechString+="3/"
+									if (clause[i].contentWord && clause[i].nucleus && clause[i].stress==="1") 
+									{
+										speechString+="1,2,"
+									}
+									else
+									{
+										speechString+="1,1,"
+									}	
 								}
-								speechString+=clause[i].phoneme+"/"
+								speechString+=clause[i].phoneme+";"
 							}
 							
 							clause=[]
