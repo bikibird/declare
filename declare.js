@@ -85,9 +85,11 @@ var renderSpeechString=function(phoneticizedPassage)  //array of phones and pros
 
 	var coda={l:true,lp:true,lb:true,lt:true,ld:true,lch:true,lzh:true,lf:true,lv:true,lth:true,ls:true,lz:true,lsh:true,lm:true,ln:true,r:true,m:true,md:true,mf:true,mz:true,mt:true,mth:true,mpt:true,mps:true,n:true,nf:true,nth:true,nz:true,nts:true,ntth:true,n:true,nd:true,nddh:true,nds:true,ng:true,ngd:true,ngth:true,ngkt:true,ngks:true,ngkth:true,ngdh:true,ngkt:true,ch:true,dh:true,dhd:true,f:true,ft:true,s:true,sp:true,st:true,sk:true,th:true,fth:true,fths:true,sh:true,zh:true,k:true,ks:true,kst:true,ksth:true,kt:true,kts:true,p:true,pt:true,pts:true,pth:true,ps:true,t:true,tth:true,ts:true,g:true,b:true,d:true,dth:true,dz:true,th:true,v:true,z:true,zd:true,y:true}
 	
-	var innateDuration={aa:1320,ae:1270,ah:770,ao:1320,aw:720,ay:690,eh:830,rr:990,ar:960,er:1000,ir:840,or:880,ur:840,ey:1040,ih:720,iy:880,ow:1210,oy:1540,uh:880,uw:1170,hh:440,l:440,lx:500,el:880,r:440,hh:440,m:390,em:940,n:360,en:940,ng:440,ch:385,jh:385,dh:275,f:660,s:690,sh:690,zh:385,k:360,p:470,t:360,tq:360,g:360,b:440,d:360,dx:110,th:606,v:330,z:410,w:440,y:440,lx:500,dx:110}
+	//Durations in milliseconds
 
-	var minimumDuration={aa:440,ae:330,ah:275,ao:440,aw:550,ay:495,eh:330,rr:330,ar:100,er:100,ir:100,or:100,ur:100,ey:385,ih:220,iy:275,ow:385,oy:606,uh:275,uw:330,hh:110,l:220,lx:385,el:610, r:165,m:330,em:550, n:193, en:550, ng:275,ch:275,jh:275,dh:165,f:330,s:275,sh:275,zh:220,k:275,p:275,t:220,g:275,b:275,d:220,dx:110,th:220,v:220,z:220,w:330,y:220}	
+	var innateDuration={aa:240,ae:230,ah:140,ao:240,aw:260,ay:250,eh:150,rr:180,ar:260,er:270,ir:230,or:240,ur:230,ey:190,ih:135,iy:155,ow:220,oy:280,uh:160,uw:210,hh:80,l:80,lx:90,el:260,r:80,m:70,em:170,n:60,en:170,ng:95,ch:70,jh:70,dh:50,f:100,s:105,sh:105,zh:70,k:80,p:90,t:75,g:80,b:85,d:75,dd:20,th:90,v:60,z:75,w:80,y:80}
+
+	var minimumDuration={aa:100,ae:80,ah:60,ao:100,aw:100,ay:150,eh:70,rr:80,ar:120,er:130,ir:100,or:130,ur:110,ey:100,ih:40,iy:55,ow:80,oy:150,uh:60,uw:70,hh:20,l:40,lx:70,el:110,r:30,m:60,em:110,n:50,en:100,ng:60,ch:50,jh:50,dh:30,f:80,s:60,sh:80,zh:40,k:60,p:50,t:50,g:60,b:60,d:50,dd:20,th:60,v:40,z:40,w:60,y:40}	
 
 
 	var rhotacize={aa:"ar",eh:"er",ih:"ir",ao:"or",uw:"ur"}
@@ -363,7 +365,7 @@ var renderSpeechString=function(phoneticizedPassage)  //array of phones and pros
 								if(!phrase[i-1].nucleus && !phrase[i].nucleus ){phrase[i].duration*=.7} //const follows const
 								//Rule 11 a 1 or 2 stress vowel or sonorant preceded by a voiceless plosive is lengthened b 25 ms or 140 ticks
 								if((sonorant[phrase[i].phoneme] || (phrase[i].nucleus && phrase[i].stress!=="0") ) && voicelessPlosive[phrase[i-1].phoneme])
-								{phrase[i].duration11=140} 
+								{phrase[i].duration11=25} 
 
 							}
 
@@ -432,8 +434,8 @@ var renderSpeechString=function(phoneticizedPassage)  //array of phones and pros
 			
 								if(clause[i].clauseFinal)
 								{
-									if (clause[i].question){speechString+=",1,"}
-									else {speechString+="1,-2,"}
+									if (clause[i].question){speechString+="1,2,"}
+									else {speechString+="1,-1,"}
 								}	 
 								else
 								{
