@@ -8,7 +8,7 @@ do
 	--=duration,source (frication=0 aspriation=1 voicing=2 silence=3),volume,velocity,slide,frication,inherent f0, f3, f3:bandwith,f2,f2:bw,f1,f1:bw,nasal frequency, nasal bandwidth
 	
 	
-	data=split("aa=1320,2,89,0,4,2,1,2600,160,1220,70,700,130,270,100;ae=630,2,89,0,4,2,.79,2430,300,1660,130,620,70,270,100/630,2,100,0,4,2,.79,2470,300,1490,130,650,70,270,100;ah=770,2,96,0,4,2,.79,2550,140,1220,50,620,80,270,100;ao=1320,2,93,0,4,2,.74,2570,80,990,100,600,90,270,100;aw=715,2,89,0,4,2,.79,2550,110,1230,70,640,80,270,100/715,2,89,0,4,2,0,2350,110,940,70,420,80,270,100;ay=685,2,93,0,4,2,.9,2550,200,1200,120,660,100,270,100/685,2,93,0,4,2,.223,2500,200,1880,120,400,100,270,100;eh=410,2,104,0,4,2,.44,2500,200,1680,90,530,60,270,100/410,2,104,0,4,2,.44,2530,200,1530,90,620,60,270,100;rr=495,2,108,0,4,2,.41,1540,110,1270,60,470,100,270,100/495,2,108,0,4,2,.41,1700,140,1500,80,450,60,270,100;ar=715,2,100,0,4,2,1,2380,110,1170,60,680,60,270,100/715,2,100,0,4,2,.41,1650,110,1400,60,520,60,270,100;er=740,2,100,0,4,2,.44,2400,140,1650,80,460,60,270,100/740,2,100,0,4,2,.41,1700,140,1500,80,450,60,270,100;ir=630,2,100,0,4,2,.23,2900,120,1900,80,320,70,270,100/630,2,100,0,4,2,.41,1750,120,1550,80,420,70,270,100;or=660,2,100,0,4,2,.74,2200,60,820,60,550,60,270,100/660,2,100,0,4,2,.41,1500,60,1300,60,490,60,270,100;ur=630,2,100,0,4,2,.36,2000,80,800,60,360,60,270,100/630,2,100,0,4,2,.41,1500,80,1150,60,390,60,270,100;ey=520,2,96,0,4,2,.44,2520,200,1720,100,480,70,270,100/520,2,96,0,4,2,.05,2600,200,2200,100,330,70,270,100;ih=370,2,100,0,4,2,.23,2670,140,1800,100,400,50,270,100/370,2,100,0,4,2,.23,2670,140,1800,100,400,50,270,100;iy=425,2,100,0,4,2,0,2960,400,2200,200,310,50,270,100/425,2,100,0,4,2,0,2980,400,2070,200,290,50,270,100;ow=575,2,100,0,4,2,.59,2300,70,1100,70,540,80,270,100/575,2,100,0,4,2,.59,2300,70,900,70,450,80,270,100;oy=513,2,108,4,0,2,.62,2400,160,960,120,550,80,270,100/513,2,108,0,4,2,.13,2450,160,1820,120,360,160,270,100/513,2,108,0,4,2,.13,2400,130,1820,50,360,80,270,100;uh=220,2,112,0,4,2,.36,2350,80,1100,100,450,80,270,100/220,2,112,0,4,2,.36,2390,80,1180,100,500,80,270,100;uw=575,2,117,0,4,2,.1,2200,140,1250,110,350,70,270,100/575,2,117,0,4,2,-.12,2200,140,900,110,320,70,270,100;l=440,2,68,0,4,2,0,2800,280,1050,100,330,50,270,100;lx=490,2,100,0,4,2,0,2850,70,800,60,450,80,270,100;el=1430,2,89,0,4,2,.79,2850,80,800,60,450,70,270,100;r=440,2,89,0,1,2,0,1560,70,1260,60,460,60,270,100;em=465,2,68,0,4,2,.79,2100,70,900,60,200,120,270,100/465,2,100,0,4,2,0,2150,200,1100,150,400,300,450,100;m=380,2,71,0,0,0,0,2150,200,1100,150,400,300,450,100;en=465,2,68,0,4,2,.79,2700,260,1400,300,480,40,270,100/465,2,100,0,4,2,0,2600,170,1600,100,200,60,450,100;n=330,2,71,0,0,0,0,2600,170,1600,100,200,60,450,100;ng=520,2,71,0,0,0,0,2050,100,1690,150,480,100,450,160;ch=380,2,0,0,0,0,0,2400,270,1700,110,300,200,270,100;chx=80,0,0,10,0,0,0,2400,270,1700,110,300,200,270,100;sh=570,0,0,6,0,0,0,2400,280,1650,110,400,200,270,100;zh=380,0,0,10,0,0,0,2400,250,1650,140,300,220,270,100;jh=380,2,0,0,0,0,0,2400,270,1700,110,200,50,270,100;jhx=55,2,79,30,0,0,0,0,2400,270,1700,110,200,50,270,100;dh=270,2,40,5,0,0,0,2700,190,1150,100,300,60,270,100;f=550,0,0,6,0,0,0,2100,180,1130,120,400,230,270,100;s=570,0,0,6,0,0,0,2700,220,1400,100,400,200,270,100;k=440,2,0,0,0,0,0,1900,280,1600,220,350,250,270,100;kx=140,0,0,10,0,0,0,1900,280,1600,220,350,250,270,100;p=490,2,0,0,0,0,0,2150,220,1100,150,400,300,270,100;px=44,0,0,10,0,0,0,2150,220,1100,150,400,300,270,100;t=410,2,0,0,0,0,0,2700,220,1400,180,300,300,270,100;tx=80,0,0,15,0,0,0,2700,220,1400,180,300,300,270,100;g=440,2,0,0,0,0,0,1900,190,1600,150,250,70,270,100;gx=110,2,79,0,0,0,0,1900,190,1600,150,250,70,270,100;b=460,2,0,0,0,0,0,2100,130,900,90,200,70,270,100;bx=30,2,79,0,0,0,0,2100,130,900,90,200,70,270,100;d=380,2,0,0,0,0,0,2700,180,1400,120,200,70,270,100;dx=55,2,79,0,0,0,0,2700,180,1400,120,200,70,270,100;dd=110,2,0,0,0,0,0,2700,250,1600,140,200,120,270,100;ddx=55,2,100,0,0,0,0,2700,250,1600,140,200,120,270,100;th=490,0,0,6,0,0,0,2700,200,1150,100,400,230,270,100;v=330,2,46,10,0,0,0,2100,130,1130,100,300,60,270,100;z=410,2,46,10,0,0,0,2700,190,1400,90,300,70,270,100;w=440,2,89,0,0,2,0,2150,60,610,80,290,50,270,100;y=440,2,89,0,0,2,0,3020,500,2070,250,240,40,270,100;hh=440,0,0,0,0,0,0,0,0,0,0,0,0,270,100;_=550,2,0,0,0,0,0,2500,120,1500,60,430,120,270,100/550,2,0,0,0,0,0,2500,120,1500,60,430,120,270,100",";")
+	data=split("aa=1320,2,89,0,4,2,1,260,16,122,7,70,13,27,10;ae=630,2,89,0,4,2,.79,243,30,166,13,62,7,27,10/630,2,100,0,4,2,.79,247,30,149,13,65,7,27,10;ah=770,2,96,0,4,2,.79,255,14,122,5,62,8,27,10;ao=1320,2,93,0,4,2,.74,257,8,99,10,60,9,27,10;aw=715,2,89,0,4,2,.79,255,11,123,7,64,8,27,10/715,2,89,0,4,2,0,235,11,94,7,42,8,27,10;ay=685,2,93,0,4,2,.9,255,20,120,12,66,10,27,10/685,2,93,0,4,2,.223,250,20,188,12,40,10,27,10;eh=410,2,104,0,4,2,.44,250,20,168,9,53,6,27,10/410,2,104,0,4,2,.44,253,20,153,9,62,6,27,10;rr=495,2,108,0,4,2,.41,154,11,127,6,47,10,27,10/495,2,108,0,4,2,.41,170,14,150,8,45,6,27,10;ar=715,2,100,0,4,2,1,238,11,117,6,68,6,27,10/715,2,100,0,4,2,.41,165,11,140,6,52,6,27,10;er=740,2,100,0,4,2,.44,240,14,165,8,46,6,27,10/740,2,100,0,4,2,.41,170,14,150,8,45,6,27,10;ir=630,2,100,0,4,2,.23,290,12,190,8,32,7,27,10/630,2,100,0,4,2,.41,175,12,155,8,42,7,27,10;or=660,2,100,0,4,2,.74,220,6,82,6,55,6,27,10/660,2,100,0,4,2,.41,150,6,130,6,49,6,27,10;ur=630,2,100,0,4,2,.36,200,8,80,6,36,6,27,10/630,2,100,0,4,2,.41,150,8,115,6,39,6,27,10;ey=520,2,96,0,4,2,.44,252,20,172,10,48,7,27,10/520,2,96,0,4,2,.05,260,20,220,10,33,7,27,10;ih=370,2,100,0,4,2,.23,267,14,180,10,40,5,27,10/370,2,100,0,4,2,.23,267,14,180,10,40,5,27,10;iy=425,2,100,0,4,2,0,296,40,220,20,31,5,27,10/425,2,100,0,4,2,0,298,40,207,20,29,5,27,10;ow=575,2,100,0,4,2,.59,230,7,110,7,54,8,27,10/575,2,100,0,4,2,.59,230,7,90,7,45,8,27,10;oy=513,2,108,4,0,2,.62,240,16,96,12,55,8,27,10/513,2,108,0,4,2,.13,245,16,182,12,36,16,27,10/513,2,108,0,4,2,.13,240,13,182,5,36,8,27,10;uh=220,2,112,0,4,2,.36,235,8,110,10,45,8,27,10/220,2,112,0,4,2,.36,239,8,118,10,50,8,27,10;uw=575,2,117,0,4,2,.1,220,14,125,11,35,7,27,10/575,2,117,0,4,2,-.12,220,14,90,11,32,7,27,10;l=440,2,68,0,4,2,0,280,28,105,10,33,5,27,10;lx=490,2,100,0,4,2,0,285,7,80,6,45,8,27,10;el=1430,2,89,0,4,2,.79,285,8,80,6,45,7,27,10;r=440,2,89,0,1,2,0,156,7,126,6,46,6,27,10;em=465,2,68,0,4,2,.79,210,7,90,6,20,12,27,10/465,2,100,0,4,2,0,215,20,110,15,40,30,45,10;m=380,2,71,0,0,0,0,215,20,110,15,40,30,45,10;en=465,2,68,0,4,2,.79,270,26,140,30,48,4,27,10/465,2,100,0,4,2,0,260,17,160,10,20,6,45,10;n=330,2,71,0,0,0,0,260,17,160,10,20,6,45,10;ng=520,2,71,0,0,0,0,205,10,169,15,48,10,45,16;ch=380,2,0,0,0,0,0,240,27,170,11,30,20,27,10;chx=80,0,7,0,0,0,0,-240,27,170,11,30,20,27,10;sh=570,0,1,1,0,0,0,-240,28,165,11,40,20,27,10;zh=380,1,1,79,1,0,0,-240,25,-165,14,30,22,27,10;jh=380,2,0,0,0,0,0,-240,27,170,11,20,5,27,10;jhx=55,2,79,.10,0,0,0,-240,27,170,11,20,5,27,10;dh=270,2,79,.4,0,0,0,270,19,115,10,30,6,27,10;f=550,0,100,0,0,0,0,210,18,113,12,40,23,27,10;s=570,0,0,1,0,0,0,270,22,140,10,40,20,27,10;k=440,2,0,0,0,0,0,190,28,160,22,35,25,27,10;kx=140,0,0,1,0,0,0,190,28,160,22,35,25,27,10;p=490,2,0,0,0,0,0,215,22,110,15,40,30,27,10;px=44,0,0,1,0,0,0,215,22,110,15,40,30,27,10;t=410,2,0,0,0,0,0,270,22,140,18,30,30,27,10;tx=80,0,1,0,0,0,0,270,22,140,18,30,30,27,10;g=440,2,0,0,0,0,0,190,19,160,15,25,7,27,10;gx=110,2,79,0,0,0,0,190,19,160,15,25,7,27,10;b=460,2,0,0,0,0,0,210,13,90,9,20,7,27,10;bx=30,2,79,0,0,0,0,210,13,90,9,20,7,27,10;d=380,2,0,0,0,0,0,270,18,140,12,20,7,27,10;dx=55,2,79,0,0,0,0,270,18,140,12,20,7,27,10;dd=110,2,0,0,0,0,0,270,25,160,14,20,12,27,10;ddx=55,2,100,0,0,0,0,270,25,160,14,20,12,27,10;th=490,0,0,1,0,0,0,270,20,115,10,40,23,27,10;v=330,2,46,1,0,0,0,210,13,113,10,30,6,27,10;z=410,2,46,1,0,0,0,270,19,140,9,30,7,27,10;w=440,2,89,0,0,2,0,215,6,61,8,29,5,27,10;y=440,2,89,0,0,2,0,302,50,207,25,24,4,27,10;hh=440,0,0,0,0,0,0,0,0,0,0,0,0,27,100;_=550,2,0,0,0,0,0,250,12,150,6,43,12,27,10/550,2,0,0,0,0,0,250,12,150,6,43,12,27,10;~=400,1,1,1,1,1,0,250,12,150,6,43,12,27,10",";")
 --=duration,source (frication=0 aspriation=1 voicing=2 silence=3),volume,frication,velocity,slide,inherent f0, f3, f3:bandwith,f2,f2:bw,f1,f1:bw,nasal frequency, nasal bandwidth
 	
 
@@ -27,7 +27,7 @@ do
 			add(phone[key],frame)
 		end
 	end
-	local f0,w0,nasalize,yzc,ylnz1c,ylnz2c,ylnp1c,ylnp2c,sample,x0,noise,t,duration,counter,velocity,v,buffer,b100,c100,acceleration,f_step,bw_step,source,delta_f0,y0,y1,y2,p0,p1,p2,frication,pitch,cascade,cascade2,formants,open,b1,amplitude,v_stress=unpack(split"140,40,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0x8000,0x1.233b,-0x.52d4")
+	local f0,w0,yzc,ylnz1c,ylnz2c,ylnp1c,ylnp2c,sample,x0,noise,t,duration,counter,velocity,v,buffer,b100,c100,acceleration,source,delta_f0,y0,y1,y2,p0,p1,p2,frication,pitch,cascade,cascade2,formants,open,b1,amplitude,v_stress,v1,v2,parallel,parallel_sample=unpack(split"140,40,0,0,0,0,0,0,0,0,0,0,0,0,0,0x8000,0x1.233b,-0x.52d4")
 	sounds={}
 	 
 	-- b coefficient first factor = =2*exp(-pi()*bandwidth/5512.5)  
@@ -42,8 +42,8 @@ do
 	function say(speech)
 
 		local segments=split(speech,";")
-		local c1,c2,c,d2,volume,velocity,slide={},{}
-		local v0,v1,v2,v_stress, d_stress, p_stress,h_phone,previous_phoneme=unpack(split("0,0,0,1,1,0,0")) 
+		local c1,c2,c,d2,slide={},{}
+		local v1,v2,v_stress, d_stress, p_stress,h_phone,phoneme, previous_phoneme,d=unpack(split("0,0,1,1,0,0")) 
 		local function copy_cascade()
 			cascade={}
 			for m=1,#c do
@@ -52,23 +52,23 @@ do
 		end
 		local function add_sound()
 			copy_cascade()
-			if  h_phone >0 then  -- hh with formants borrowed from vowel
-				add(sounds,{h_phone,1,0,16,16,pitch,delta_f0,v_stress,cascade,c2})
-				v1=16
+			
+			add(sounds,{max(d2,1),source,af,v1,v2,pitch,delta_f0,v_stress,cascade,c2})	
+			?d2.." "..v1.." "..v2.." "..cascade[1][1].." "..c2[1][1]
+		--[[	if  h_phone >0 then  -- hh with formants borrowed from vowel
+				add(sounds,{h_phone,1,1,1,10,pitch,delta_f0,v_stress,cascade,c2})
+				v1=1
 				h_phone=0
 				copy_cascade()
-			end
-			add(sounds,{max(d2,1),source,frication,v1,v2,pitch,delta_f0,v_stress,cascade,c2})	
+			end]]
 		end
 				
 		for i, segment in pairs(segments) do
 		
-			local d_stress,v_stress,p_stress,phoneme= unpack(split(segment))
+			d_stress,v_stress,p_stress,phoneme= unpack(split(segment))
 			
 			for frame in all(phone[phoneme]) do
-				if phoneme=="hh" then
-					h_phone=max(frame[1]*d_stress/spk8_rate,1)
-				else
+				if phoneme!="hh" then
 					
 					v1=v2 --v1 is now past phone's ending volume, v2
 					
@@ -80,12 +80,12 @@ do
 						add_sound()
 					end	
 										
-					d,source,v2,frication,velocity,slide,pitch,formants=unpack(frame) --unpack next frame and make it current
+					d,source,v2,af,velocity,slide,pitch,formants=unpack(frame) --unpack next frame and make it current
 					--if (phoneme=="_") frication=previous_frication
 					--cascade c is empty table, previous ending cascade assigned to c1
 					--c2 is assigned ending cascade for this phoneme frame 
 				
-					c,d2,c1,c2,delta_f0={},max(d*d_stress/spk8_rate\2,1),c2,formants,p_stress*spk8_intonation+pitch*spk8_if0
+					d2,c1,c2,delta_f0=max(d*d_stress/spk8_rate\2,1),c2,formants,p_stress*spk8_intonation+pitch*spk8_if0
 					
 					--c1 is previous phone's ending cascade, c2
 					--c2 is new phone's formants.
@@ -102,13 +102,15 @@ do
 					
 					add_sound()
 					previous_phoneme=phoneme
+				else 	-- phoneme = hh
+					h_phone=max(frame[1]*d_stress/spk8_rate,1)	
 				end
 			end	
 		end	
-		y0,y1,y2=split"0,0,0",split"0,0,0",split"0,0,0"
-		p0,p1,p2=split"0,0,0",split"0,0,0",split"0,0,0"
-		ylnp2c,ylnp1c,t=0,0,0
-
+		
+		y0,y1,y2,p0,p1,p2=split"0,0,0",split"0,0,0",split"0,0,0",split"0,0,0",split"0,0,0",split"0,0,0"
+		ylnp2c,ylnp1c,t,velocity=0,0,0,0
+		
 	end
 	function speaking() return #sounds>0 end
 	function mute() sounds,duration,counter={},0,0 end
@@ -119,45 +121,48 @@ do
 				if t % w0 ==0 then
 					if counter< 1 then
 						if #sounds>0 then
-							duration,source,frication,v1,v2,pitch,delta_f0,v_stress,cascade,cascade2=unpack(deli(sounds,1))
+							duration,source,af,v1,v2,pitch,delta_f0,v_stress,cascade,cascade2=unpack(deli(sounds,1))
 							if (source !=2) f0= spk8_pitch+delta_f0
 							velocity,t,v,counter =0,0,v1,duration
-							acceleration=2*(v2-v)/duration/duration
-							if acceleration < 0 then
+						--[[	acceleration=2*(v2-v)/duration/duration
+							if acceleration > 0 then
 								acceleration*=-1
 								velocity=acceleration*(.5 - duration)
-							end
+							end]]
 						else
-							--if (i>0) serial(0x808,buffer,i+1)  
 							return
 						end
 					end
 					amplitude,t=v*(1-spk8_aspiration)*v_stress*3,0
 				end
-				
-					noise=.75*noise+.25*(rnd(1)-.5)
-					sample=0
+					
+					noise=.75*noise+.25*rnd(amplitude)
+					parallel_sample=noise*af --af is amplitude of frication
+					sample = amplitude
 					if source !=3 then --if not silence
-
-						parallel=noise*frication
-						parallel_sample=parallel
+						--parallel=noise*frication
+						--parallel_sample=parallel
+						
 						if source > 1 then  -- voiced phones
 							-- KLGLOTT88 model of glottal wave
 							f0= (spk8_pitch+delta_f0)*.02+f0*.98 --moving average of pitch n=50		
 							w0=ceil(5512.5/f0)
 							open=w0*spk8_quality
 							if (t<open) then		--opening phase of vocal folds
-								x0=(1-spk8_tilt)*amplitude*((t/open)^2 -(t/open)^3) +spk8_tilt*x0
+								x0=(1-spk8_tilt)*sample*((t/open)^2 -(t/open)^3) +spk8_tilt*x0
 							else
 								x0=spk8_tilt*x0  --taper off amplitude
 							end
 							-- sample = glottal wave + aspiration - dc offset
-							sample=x0+noise*spk8_aspiration-amplitude*spk8_quality/12
+							sample=x0+noise*spk8_aspiration-sample*spk8_quality/12
+						
+						elseif source ==1 then	--hh phone
+							sample=parallel_sample
 						end
 						--resonate to create formants (iir filter-- Klatt Synth 1980)
 						for k,resonator in pairs(cascade) do
-							local bw,f=mid(1,resonator[2]*spk8_bandwidth\10,#b_factor),resonator[1]*spk8_shift
-							b1=cos(f/5512.5)	
+							local bw,f=mid(1,resonator[2]*spk8_bandwidth\1,#b_factor),resonator[1]
+							b1=cos(f*spk8_shift/551.25)	
 							if k==4 then -- nasal filter
 								if source != 0 then  --no nasality for voiceless fricatives
 									local b0=b100*b1  -- calculate b coefficient
@@ -173,31 +178,32 @@ do
 								local b0,c0=b_factor[bw]*b1,-c_factor[bw]
 								local a0=1-b0-c0
 								y0[k]=a0*sample +b0*y1[k] + c0*y2[k]
-								p0[k]=a0*parallel_sample +b0*p1[k] + c0*p2[k]
-
-								sample=y0[k]  --process voiced, hh, and silence as cascaded formants
-								parallel+=p0[k] -- parallel formants for frication
+								sample=y0[k]  --process voiced and hh as cascaded formants
+								if f<0 then 
+									p0[k]=a0*noise*af +b0*p1[k] + c0*p2[k]
+									parallel_sample+=p0[k] -- parallel formants for frication
+								end
+									
+								
 							end
 										
 							if counter>0 then
-								resonator[1]+=(cascade2[k][1]-resonator[1])/counter
-								resonator[2]+=(cascade2[k][2]-resonator[2])/counter
+								--if (k==1) printh(resonator[1],"freq")
+								resonator[1]+=(sgn(f)*abs(cascade2[k][1])-f)/counter
+								resonator[2]+=(cascade2[k][2]-bw)/counter
 							end	
 							
 							
 						end
-						--if (source ==0) then 
-						--	sample=parallel --unvoiced fricatives
-						--else	
-							--sample+=parallel--add frication
-						--end	
-						v+=velocity
-						velocity+=acceleration
+						
+						--v+=velocity
+						v+=(v2-v)/counter
+					--	velocity+=acceleration
 					end
 			
 					t+=1
 					counter-=1
-					poke(buffer+i,(sample+parallel)*spk8_volume+128)
+					poke(buffer+i,(sample+parallel_sample)*spk8_volume+128)
 			--	end	
 			end
 			serial(0x808,buffer,128)	
