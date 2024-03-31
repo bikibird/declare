@@ -3,7 +3,7 @@ version 34
 __lua__
 do
 
-	--poke(0x5f36,@0x5f36^^0x20) --turn off pcm channel dampening
+	poke(0x5f36,@0x5f36^^0x20) --turn off pcm channel dampening
 
 	--=duration,source (frication=0 aspriation=1 voicing=2 silence=3),volume,velocity,slide,frication,inherent f0, f3, f3:bandwith,f2,f2:bw,f1,f1:bw,nasal frequency, nasal bandwidth
 	
@@ -27,7 +27,7 @@ do
 			add(phone[key],frame)
 		end
 	end
-	local f0,w0,yzc,ylnz1c,ylnz2c,ylnp1c,ylnp2c,sample,x0,noise,t,duration,counter,velocity,v,buffer,b100,c100,acceleration,source,delta_f0,y0,y1,y2,p0,p1,p2,frication,pitch,cascade,cascade2,formants,open,b1,amplitude,v_stress,v1,v2,parallel,parallel_sample=unpack(split"140,40,0,0,0,0,0,0,0,0,0,0,0,0,0,0x8000,0x1.233b,-0x.52d4")
+	local f00,f0,w0,yzc,ylnz1c,ylnz2c,ylnp1c,ylnp2c,sample,x0,noise,t,duration,counter,velocity,v,buffer,b100,c100,bz,source,delta_f0,y0,y1,y2,p0,p1,p2,frication,pitch,cascade,cascade2,formants,open,b1,amplitude,v_stress,v1,v2,parallel,parallel_sample=unpack(split"140,140,40,0,0,0,0,0,0,0,0,0,0,0,0,0,0x8000,0x1.233b,-0x.52d4,0x1.159")
 	sounds={}
 	 
 	-- b coefficient first factor = =2*exp(-pi()*bandwidth/5512.5)  
@@ -54,7 +54,7 @@ do
 			copy_cascade()
 			
 			add(sounds,{max(d2,1),source,af,v1,v2,pitch,delta_f0,v_stress,cascade,c2})	
-			?d2.." "..v1.." "..v2.." "..cascade[1][1].." "..c2[1][1]
+			--?d2.." "..v1.." "..v2.." "..cascade[1][1].." "..c2[1][1]
 		--[[	if  h_phone >0 then  -- hh with formants borrowed from vowel
 				add(sounds,{h_phone,1,1,1,10,pitch,delta_f0,v_stress,cascade,c2})
 				v1=1
@@ -112,101 +112,87 @@ do
 		ylnp2c,ylnp1c,t,velocity=0,0,0,0
 		
 	end
-	function speaking() return #sounds>0 end
-	function mute() sounds,duration,counter={},0,0 end
+	function speaking()
+		return #sounds>0
+	end
+	function mute()
+		sounds,duration,counter={},0,0 
+	end
 	function speako8()
-
-		while stat(108)<1920 do
-			for i=0,127 do
+		local one_minus_aspiration,shift=1-spk8_aspiration,spk8_shift/551.25
+		while stat(108)<256 do
+			for i=0,255  do
 				if t % w0 ==0 then
 					if counter< 1 then
 						if #sounds>0 then
 							duration,source,af,v1,v2,pitch,delta_f0,v_stress,cascade,cascade2=unpack(deli(sounds,1))
-							if (source !=2) f0= spk8_pitch+delta_f0
-							velocity,t,v,counter =0,0,v1,duration
-						--[[	acceleration=2*(v2-v)/duration/duration
-							if acceleration > 0 then
-								acceleration*=-1
-								velocity=acceleration*(.5 - duration)
-							end]]
+							if source !=2 then
+								f0= spk8_pitch+delta_f0
+								f00=f0
+							end
+							t,v,counter =0,v1,duration							
 						else
 							return
 						end
 					end
-					amplitude,t=v*(1-spk8_aspiration)*v_stress*3,0
-				end
+					amplitude,t=v*one_minus_aspiration*v_stress*.15,0
 					
-					noise=.75*noise+.25*rnd(amplitude)
+				end
+				--noise=.75*noise+.25*rnd(amplitude)
+				noise=rnd(amplitude)
+				
+				if source !=3 then --if not silence
 					parallel_sample=noise*af --af is amplitude of frication
-					sample = amplitude
-					if source !=3 then --if not silence
-						--parallel=noise*frication
-						--parallel_sample=parallel
-						
-						if source > 1 then  -- voiced phones
-							-- KLGLOTT88 model of glottal wave
-							f0= (spk8_pitch+delta_f0)*.02+f0*.98 --moving average of pitch n=50		
-							w0=ceil(5512.5/f0)
-							open=w0*spk8_quality
-							if (t<open) then		--opening phase of vocal folds
-								x0=(1-spk8_tilt)*sample*((t/open)^2 -(t/open)^3) +spk8_tilt*x0
-							else
-								x0=spk8_tilt*x0  --taper off amplitude
-							end
-							-- sample = glottal wave + aspiration - dc offset
-							sample=x0+noise*spk8_aspiration-sample*spk8_quality/12
-						
-						elseif source ==1 then	--hh phone
-							sample=parallel_sample
-						end
-						--resonate to create formants (iir filter-- Klatt Synth 1980)
-						for k,resonator in pairs(cascade) do
-							local bw,f=mid(1,resonator[2]*spk8_bandwidth\1,#b_factor),resonator[1]
-							b1=cos(f*spk8_shift/551.25)	
-							if k==4 then -- nasal filter
-								if source != 0 then  --no nasality for voiceless fricatives
-									local b0=b100*b1  -- calculate b coefficient
-									local a0 =1-b0-c100
-									yzc=(sample - b0*ylnz1c - c100*ylnz2c)/a0
-									ylnz2c,ylnz1c,b0=ylnz1c,sample,b100*cos(270/5512.5)
-									sample=a0*yzc+b0*ylnp1c+ c100*ylnp2c
-									ylnp2c,ylnp1c=ylnp1c,sample 
-								end	
-							else -- formant filters
-								y2[k],y1[k]=y1[k],y0[k]
-								p2[k],p1[k]=p1[k],p0[k]
-								local b0,c0=b_factor[bw]*b1,-c_factor[bw]
-								local a0=1-b0-c0
-								y0[k]=a0*sample +b0*y1[k] + c0*y2[k]
-								sample=y0[k]  --process voiced and hh as cascaded formants
-								if f<0 then 
-									p0[k]=a0*noise*af +b0*p1[k] + c0*p2[k]
-									parallel_sample+=p0[k] -- parallel formants for frication
-								end
-									
-								
-							end
-										
-							if counter>0 then
-								--if (k==1) printh(resonator[1],"freq")
-								resonator[1]+=(sgn(f)*abs(cascade2[k][1])-f)/counter
-								resonator[2]+=(cascade2[k][2]-bw)/counter
-							end	
-							
-							
-						end
-						
-						--v+=velocity
-						v+=(v2-v)/counter
-					--	velocity+=acceleration
+					ps=parallel_sample
+					sample=amplitude
+					if source > 1 then  -- voiced phones
+						local s=t/w0*64  --sfx sample
+						local s_flr=flr(s)
+						local s_interpolation=s-s_flr
+						sample*=(peek(0x3200+0+s_flr)*s_interpolation+peek(0x3200+0+s_flr+1)*(1-s_interpolation))/256
+						f0= (f00)*.02+f0*.98 --moving average of pitch n=50		
+						w0=ceil(5512.5/f0)
+						sample+=noise*spk8_aspiration
+					elseif source ==1 then	--hh phone
+						sample=parallel_sample
 					end
-			
-					t+=1
-					counter-=1
-					poke(buffer+i,(sample+parallel_sample)*spk8_volume+128)
-			--	end	
+					--resonate to create formants (iir filter-- Klatt Synth 1980)
+					for k,resonator in pairs(cascade) do
+						local bw,f=mid(1,resonator[2]*spk8_bandwidth\1,#b_factor),resonator[1]
+						b1=cos(f*shift)	
+						if k==4 then -- nasal filter
+							if source != 0 then  --no nasality for voiceless fricatives
+								local b0=b100*b1  -- calculate b coefficient
+								local a0 =1-b0-c100
+								yzc=(sample - b0*ylnz1c - c100*ylnz2c)/a0
+								ylnz2c,ylnz1c=ylnz1c,sample
+								sample=a0*yzc+bz*ylnp1c+ c100*ylnp2c --bz==b100*cos(270/5512.5)
+								ylnp2c,ylnp1c=ylnp1c,sample 
+							end	
+						else -- formant filters
+							y2[k],y1[k]=y1[k],y0[k]
+							p2[k],p1[k]=p1[k],p0[k]
+							local b0,c0=b_factor[bw]*b1,-c_factor[bw]
+							local a0=1-b0-c0
+							y0[k]=a0*sample +b0*y1[k] + c0*y2[k]
+							sample=y0[k]  --process voiced and hh as cascaded formants
+							if f<0 then 
+								p0[k]=a0*ps +b0*p1[k] + c0*p2[k]
+								parallel_sample+=p0[k] -- parallel formants for frication
+							end
+						end
+						if counter>0 then
+							resonator[1]+=(sgn(f)*abs(cascade2[k][1])-f)/counter
+							resonator[2]+=(cascade2[k][2]-bw)/counter
+						end	
+					end
+					v+=(v2-v)/counter
+				end
+				t+=1
+				counter-=1
+				poke(buffer+i,(sample+parallel_sample)*spk8_volume+128)
 			end
-			serial(0x808,buffer,128)	
+			serial(0x808,buffer,256)	
 		end
 	end	
 end
