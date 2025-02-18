@@ -132,6 +132,8 @@ do
 				noise=.75*noise+.25*rnd(amplitude)
 				--noise=.5*amplitude - rnd(amplitude)
 				sample=amplitude
+				
+				
 				if source !=3 then --if not silence
 					parallel_sample=noise*af --af is amplitude of frication
 					ps=parallel_sample
@@ -141,6 +143,7 @@ do
 						local s_flr=flr(s)
 						local s_interpolation=s-s_flr
 						sample*=(peek(0x3200+0+s_flr)*s_interpolation+peek(0x3200+0+s_flr+1)*(1-s_interpolation))/256
+						
 						f0= (f00)*.02+f0*.98 --moving average of pitch n=50		
 						w0=ceil(5512.5/f0)
 						sample+=noise*spk8_aspiration
@@ -148,6 +151,7 @@ do
 						sample=parallel_sample
 					end
 					--resonate to create formants (iir filter-- Klatt Synth 1980)
+
 					for k,resonator in pairs(cascade) do
 						local bw,f=mid(1,resonator[2]*spk8_bandwidth\1,#b_factor),resonator[1]
 						b1=cos(f*shift)	
@@ -155,9 +159,14 @@ do
 							if source != 0 then  --no nasality for voiceless fricatives
 								local b0=b100*b1  -- calculate b coefficient
 								local a0 =1-b0-c100
+								?1
+								?b0
+								?c100
+								?a0
+								stop()
 								yzc=(sample - b0*ylnz1c - c100*ylnz2c)/a0
-								ylnz2c,ylnz1c=ylnz1c,sample
-								sample=a0*yzc+bz*ylnp1c+ c100*ylnp2c --bz==b100*cos(270/5512.5)
+								ylnz2c,ylnz1,sample=ylnz1c,sample,yzc
+								sample=a0*sample+bz*ylnp1c+ c100*ylnp2c --bz==b100*cos(270/5512.5)
 								ylnp2c,ylnp1c=ylnp1c,sample 
 							end	
 						else -- formant filters
@@ -165,6 +174,7 @@ do
 							p2[k],p1[k]=p1[k],p0[k]
 							local b0,c0=b_factor[bw]*b1,-c_factor[bw]
 							local a0=1-b0-c0
+						
 							y0[k]=a0*sample +b0*y1[k] + c0*y2[k]
 							sample=y0[k]  --process voiced and hh as cascaded formants
 							if f<0 then 
