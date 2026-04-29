@@ -4,7 +4,7 @@ __lua__
 --Speako8
 --by bikibird
 --loosely based on the klatt synthesizer
-#include speako8_lib2.p8
+#include speako8_lib.p8
 left,right,up,down,fire1,fire2=0,1,2,3,4,5
 
 printc=function(p)

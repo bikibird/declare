@@ -151,11 +151,13 @@ do
 					for k,resonator in pairs(cascade) do
 						local bw,f=mid(1,resonator[2]*spk8_bandwidth\1,#b_factor),resonator[1]
 						b1=cos(f*shift)	
+						b1=cos(270/5512.5)
 						if k==4 then -- nasal filter
 							if source != 0 then  --no nasality for voiceless fricatives
 								local b0=b100*b1  -- calculate b coefficient
 								local a0 =1-b0-c100
 								yzc=(sample - b0*ylnz1c - c100*ylnz2c)/a0
+
 								ylnz2c,ylnz1c=ylnz1c,sample
 								sample=a0*yzc+bz*ylnp1c+ c100*ylnp2c --bz==b100*cos(270/5512.5)
 								ylnp2c,ylnp1c=ylnp1c,sample 
